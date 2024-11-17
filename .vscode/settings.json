@@ -1,3 +1,16 @@
 {
-    "workbench.colorTheme": "Default Dark Modern"
-}
+    "workbench.colorTheme": "Default Dark Modern",
+    "editor.inlineSuggest.enabled": true,
+    "editor.suggest.showIcons": true,
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": true,
+      "strings": true
+    },
+    "editor.tabCompletion": "on",
+    "editor.suggestSelection": "first",
+    "editor.acceptSuggestionOnEnter": "on",
+    "tabnine.experimentalAutoImports": true,
+    "tabnine.inlineSuggestions": true
+  }
+   

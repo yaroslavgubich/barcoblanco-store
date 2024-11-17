@@ -1,8 +1,24 @@
-export default function HomePage() {
+import React from 'react'
+
+const Home = () => {
   return (
-    <div>
-      <h1>Welcome to My Next.js App</h1>
-      <p>This is a valid page component.</p>
-    </div>
-  );
+<>
+
+Hero Banner
+
+<div className='products-heading'>
+<h2>Popular Products</h2>
+</div>
+
+<div className="procuts-container">
+  {['product 1', 'product 2'].map((product)=>product)}
+</div>
+      Footer
+
+
+
+    </>
+  )
 }
+
+export default Home
