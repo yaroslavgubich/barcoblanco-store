@@ -1,13 +1,30 @@
+import React from "react";
 import { Product, HeroBanner } from "./components";
-const Home = () => {
+import { client } from "./lib/client";
+
+const Home = async () => {
+  // Fetch products and banner data from Sanity
+  const query = '*[_type == "product"]';
+  const products = await client.fetch(query);
+
+  const bannerQuery = '*[_type == "banner"]';
+  const bannerData = await client.fetch(bannerQuery);
+
   return (
     <>
-      <HeroBanner />
+      {/* Render the Hero Banner */}
+      <HeroBanner heroBanner={bannerData.length ? bannerData[0] : null} />
+
       <div className="products-heading">
         <h2>Popular Products</h2>
       </div>
-      <div className="procuts-container">{["product 1", "product 2"]}</div>
-      Footer
+
+      {/* Render the Products */}
+      <div className="products-container">
+        {products.map((product) => (
+          <Product key={product._id} product={product} />
+        ))}
+      </div>
     </>
   );
 };

@@ -7,9 +7,9 @@ const HeroBanner = ({ heroBanner }) => {
   return (
     <div className="hero-banner-container">
       <div>
-        <p className="beats-solo">{heroBanner.smallText}</p>
-        <h3>{heroBanner.midText}</h3>
-        <h1>{heroBanner.largeText1}</h1>
+        <p className="beats-solo">{heroBanner}</p>
+        <h3>{heroBanner}</h3>
+        <h1>{heroBanner}</h1>
         {/* <img
           src={urlFor(heroBanner.image)}
           alt="headphones"
@@ -17,12 +17,12 @@ const HeroBanner = ({ heroBanner }) => {
         /> */}
 
         <div>
-          <Link href={`/product/${heroBanner.product}`}>
-            <button type="button">{heroBanner.buttonText}</button>
+          <Link href={`/product/${heroBanner}`}>
+            <button type="button">Order</button>
           </Link>
           <div className="desc">
             <h5>Description</h5>
-            <p>{heroBanner.desc}</p>
+            <p>{heroBanner}</p>
           </div>
         </div>
       </div>
