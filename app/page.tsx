@@ -1,6 +1,7 @@
 import React from "react";
-import { Product, HeroBanner } from "./components";
+import { Product, HeroBanner, Footer } from "./components";
 import { client } from "./lib/client";
+
 
 const Home = async () => {
   // Fetch products and banner data from Sanity
@@ -15,9 +16,7 @@ const Home = async () => {
       {/* Render the Hero Banner */}
       <HeroBanner heroBanner={bannerData.length ? bannerData[0] : null} />
 
-      <div className="products-heading">
-        <h2>Popular Products</h2>
-      </div>
+      <Product/>
 
       {/* Render the Products */}
       <div className="products-container">
@@ -25,6 +24,7 @@ const Home = async () => {
           <Product key={product._id} product={product} />
         ))}
       </div>
+      <Footer />
     </>
   );
 };
