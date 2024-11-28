@@ -1,13 +1,20 @@
-import { Product, HeroBanner } from "./components";
-const Home = () => {
+import React from "react";
+import { Product, HeroBanner, Footer } from "./components";
+import { client } from "./lib/client";
+
+const Home = async () => {
+  // Fetch banner data from Sanity
+  const bannerQuery = '*[_type == "banner"]';
+  const bannerData = await client.fetch(bannerQuery);
+
+  // Console log the banner data to see its structure
+ console.log("Server-Side Banner Data:", bannerData);
+ console.log("Server-Side Banner Data first element:", bannerData[0]);
   return (
     <>
-      <HeroBanner />
-      <div className="products-heading">
-        <h2>Popular Products</h2>
-      </div>
-      <div className="procuts-container">{["product 1", "product 2"]}</div>
-      Footer
+      <HeroBanner heroBanner={bannerData?.[0]} />
+      <Product />
+      <Footer />
     </>
   );
 };
