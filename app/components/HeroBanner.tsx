@@ -1,11 +1,17 @@
 import React from "react";
 import Link from "next/link";
 import { urlFor } from "../lib/client";
+// import { getStaticProps } from "next/dist/build/templates/pages";
+
+//sanity query to fetch data for banner
+
 const HeroBanner = ({ heroBanner }) => {
   return (
     <div className="hero-banner-container">
       <div>
-        <p className="beats-solo">{heroBanner}SMALL TEXT</p>
+        <p className="beats-solo">
+          {heroBanner?.smallText || "Error ⚠️"} SMALL TEXT
+        </p>
         <h3>MID TEXT</h3>
         <h1>LARGE TEXT</h1>
 
