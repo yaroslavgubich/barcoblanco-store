@@ -15,6 +15,7 @@ const Product = ({ product }) => {
 
   return (
     <div>
+
       <Link href={`/product/${slug.current}`}>
         <div className="product-card">
           <img
