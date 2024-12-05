@@ -1,5 +1,5 @@
 import React from "react";
-import { HeroBanner, Product, AboutSection, Categories } from "./components";
+import { HeroBanner, Product, AboutSection, Categories, PopularProducts } from "./components";
 import { client } from "./lib/client";
 
 const Home = async () => {
@@ -15,13 +15,8 @@ const Home = async () => {
     <>
       <HeroBanner heroBanner={bannerData?.[0]} />
       <Categories />
-
-      <h1>Popular Products</h1>
-      <div className="products-container">
-        {productsData?.map((product) => (
-          <Product key={product._id} product={product} />
-        ))}
-      </div>
+      
+      <PopularProducts productsData={productsData} />
 
       <AboutSection />
     </>
