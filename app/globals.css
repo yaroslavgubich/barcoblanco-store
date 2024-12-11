@@ -16,6 +16,7 @@ body,
     Helvetica Neue,
     sans-serif;
   box-sizing: border-box;
+  scroll-behavior: smooth;
 }
 ::-webkit-scrollbar {
   width: 0px;
@@ -29,7 +30,6 @@ a {
 .main-container {
   max-width: 1400px;
   margin: auto;
-  width: 100%;
 }
 .layout {
   padding: 10px;
