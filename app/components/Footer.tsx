@@ -3,7 +3,7 @@ import { urlFor } from "../lib/client";
 
 const Footer: FunctionComponent = () => {
   return (
-    <footer className="footer">
+    <footer id="footer" className="footer">
       <div className="footer-content">
         {/* Left Section */}
         <div className="footer-section left">
