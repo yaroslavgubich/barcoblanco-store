@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Logo from "../components/Logo";
 import {
   AppBar,
   Toolbar,
@@ -19,6 +20,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { StyledLink, NavLinks, NavLinkItem } from "./NavbarStyles";
 import HomeIcon from "@mui/icons-material/Home";
+
 const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false); // State to manage Drawer
@@ -49,7 +51,7 @@ const Navbar = () => {
           aria-label="menu"
           onClick={toggleDrawer(true)}
         >
-          <MenuOutlinedIcon />
+          <MenuOutlinedIcon fontSize="large" />
         </IconButton>
 
         {/* Drawer */}
@@ -63,7 +65,6 @@ const Navbar = () => {
             <List
               sx={{ display: "flex", gap: "20px", flexDirection: "column" }}
             >
-              {/* Home Icon */}
               <ListItem
                 sx={{
                   display: "flex",
@@ -81,7 +82,7 @@ const Navbar = () => {
                     textDecoration: "none",
                   }}
                 >
-                  <HomeIcon sx={{ marginRight: "8px" }} /> Home
+                  <HomeIcon sx={{ marginRight: "8px" }} />
                 </StyledLink>
               </ListItem>
 
@@ -103,18 +104,7 @@ const Navbar = () => {
         </Drawer>
 
         {/* Clickable logo to go home */}
-        <Typography
-          variant="h6"
-          component="a"
-          href="/"
-          sx={{
-            textDecoration: "none",
-            color: "inherit",
-            fontWeight: "bold",
-          }}
-        >
-          Barcoblanco
-        </Typography>
+        <Logo />
 
         {/* Navigation Links */}
         <Box
@@ -127,7 +117,7 @@ const Navbar = () => {
             gap: 2,
           }}
         >
-          <StyledLink href="/categories-container">Categories</StyledLink>
+          <StyledLink href="/#categories-section">Categories</StyledLink>
           <StyledLink href="/#about">About Us</StyledLink>
           <StyledLink href="/#footer">Contact Us</StyledLink>
         </Box>
