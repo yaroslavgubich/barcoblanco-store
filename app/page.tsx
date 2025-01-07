@@ -17,7 +17,7 @@ const Home = async () => {
   const bannerData = await client.fetch(bannerQuery);
   const productsData = await client.fetch(productQuery);
   const footerData = await client.fetch(footerQuery);
-
+ 
   return (
     <>
       <HeroBanner heroBanner={bannerData?.[0]} />
