@@ -5,6 +5,7 @@ import {
   AboutSection,
   Categories,
   PopularProducts,
+  
 } from "./components";
 import { client } from "./lib/client";
 import {
@@ -12,6 +13,9 @@ import {
   productQuery,
   footerQuery,
 } from "./sanity_barcoblanco/queries";
+import Features from "./components/Features";
+
+
 
 const Home = async () => {
   const bannerData = await client.fetch(bannerQuery);
@@ -24,7 +28,8 @@ const Home = async () => {
       <Categories />
 
       <PopularProducts productsData={productsData} />
-
+       <Features/>
+   
       <AboutSection />
     </>
   );
