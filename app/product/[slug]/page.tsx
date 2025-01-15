@@ -2,6 +2,7 @@ import React from "react";
 import ProductDetails from "../../components/ProductDetails";
 import { client } from "../../lib/client";
 
+
 const fetchProductData = async (slug: string) => {
   const query = `*[_type == "product" && slug.current == $slug][0]`;
   const params = { slug };
