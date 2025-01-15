@@ -7,8 +7,8 @@ const Product = ({ product, isDetailPage = false }) => {
   const { image = [], name, slug, price, description } = product;
 
   // Assign imageUrl based on whether an image exists
-  const imageUrl =  
-    image.length > 0
+  const imageUrl =
+    image?.length > 0 // Safely check if image exists and has elements
       ? urlFor(image[0]) // If there’s an image, use it
       : "/images/placeholder.svg"; // Otherwise, use a placeholder image
 
@@ -30,7 +30,7 @@ const Product = ({ product, isDetailPage = false }) => {
         </div>
       ) : (
         // Card View (default for homepage or product listing)
-        <Link href={`/product/${slug.current}`}>
+        <Link href={`/product/${slug?.current}`}>
           <div className="product-card">
             <img
               src={imageUrl}
