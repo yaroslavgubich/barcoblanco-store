@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import { client } from "../../lib/client";
 import { categoryProductQuery } from "../../sanity_barcoblanco/queries/categoryProductQuery";
 import Product from "../../components/Product";
@@ -9,14 +11,22 @@ interface Props {
   searchParams: { page?: string };
 }
 
-export default async function CategoryPage({ params, searchParams }: Props) {
+export default function CategoryPage({ params, searchParams }: Props) {
   const { slug } = params;
-  const currentPage = parseInt(searchParams.page || "1", 10);
-  const productsPerPage = 9; // Number of products per page
+  const [productsData, setProductsData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(searchParams.page || "1", 10)
+  );
+  const productsPerPage = 9;
 
   // Fetch products for the category
-  const productsData = await client.fetch(categoryProductQuery(slug));
-  const totalProducts = productsData.length;
+  React.useEffect(() => {
+    const fetchProducts = async () => {
+      const data = await client.fetch(categoryProductQuery(slug));
+      setProductsData(data);
+    };
+    fetchProducts();
+  }, [slug]);
 
   // Pagination indices
   const indexOfLastProduct = currentPage * productsPerPage;
@@ -52,7 +62,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
       </div>
 
       {/* Pagination */}
-      {totalProducts > productsPerPage && (
+      {productsData.length > productsPerPage && (
         <div
           style={{
             display: "flex",
@@ -61,11 +71,9 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           }}
         >
           <Pagination
-            count={Math.ceil(totalProducts / productsPerPage)} // Total pages
+            count={Math.ceil(productsData.length / productsPerPage)} // Total pages
             page={currentPage}
-            onChange={(event, value) =>
-              (window.location.href = `/category/${slug}?page=${value}`)
-            }
+            onChange={(event, value) => setCurrentPage(value)} // Update current page
             color="primary"
           />
         </div>
