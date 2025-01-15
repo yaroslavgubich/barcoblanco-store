@@ -118,6 +118,7 @@ span.text-red {
   transform: scale(1, 1);
   transition: transform 0.5s ease;
   color: #324d67;
+  /* border: solid 1px blue; */
 }
 .product-card:hover {
   transform: scale(1.1, 1.1);
@@ -137,6 +138,7 @@ span.text-red {
   margin-top: 6px;
   color: black;
 }
+
 /*hero banner*/
 
 .hero-banner-container {

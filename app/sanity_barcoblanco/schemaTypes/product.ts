@@ -72,6 +72,13 @@ export default {
       },
       validation: (Rule) => Rule.required().warning('Category is required.'),
     },
+    {
+      name: 'width',
+      title: 'Width',
+      type: 'number',
+      description: 'Width of the product in centimeters',
+      validation: (Rule) => Rule.required().positive().warning('Width is required.'),
+    },
   ],
   preview: {
     select: {
