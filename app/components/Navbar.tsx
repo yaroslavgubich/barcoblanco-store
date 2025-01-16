@@ -64,6 +64,7 @@ const BurgerMenuHeader = styled("div")(({ theme }) => ({
   padding: "16px",
   backgroundColor: "#f5f5f5",
   borderBottom: "1px solid #ddd",
+  fontSize: "24px",
 }));
 
 const BurgerMenuLogo = styled("img")({
@@ -77,7 +78,7 @@ const BurgerMenuContainer = styled(Box)(({ theme }) => ({
   height: "100%",
   display: "flex",
   flexDirection: "column",
-  fontSize: "24px",
+ 
 }));
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -123,7 +124,7 @@ const Navbar = () => {
           </List>
           <Divider />
           <List>
-            <Typography variant="body1" sx={{ padding: "16px 16px 8px", fontWeight: "bold", color: '#008c99', fontSize:"36px"}}>
+            <Typography variant="body1" sx={{ padding: "16px 16px 8px", fontWeight: "bold", color: '#008c99', fontSize:"24px"}}>
               Каталог
             </Typography>
             <ListItem button>
@@ -156,16 +157,15 @@ const Navbar = () => {
          
           <Divider />
           <Box sx={{ padding: "16px" }}> 
-            <Typography variant="body1" sx={{ marginBottom: "8px", fontWeight: "bold", color: '#008c99', fontSize:"36px" }}>
+            <Typography variant="body1" sx={{ marginBottom: "8px", fontWeight: "bold", color: '#008c99', fontSize:"24px" }}>
               Контакти
             </Typography>
             <Typography variant="body2">+380-99-22-33-453</Typography>
             <Typography variant="body2">+380-99-22-33-453</Typography>
             <Typography variant="body2" sx={{ marginTop: "16px" }}>
-              Пн-Пт: 09:00 - 17:00
+              Вт-Вс: 09:00 - 20:00
             </Typography>
-            <Typography variant="body2">Субота: 09:00 - 15:00</Typography>
-            <Typography variant="body2">Вихідний: Неділя</Typography>
+            <Typography variant="body2">Вихідний: Понеділок</Typography>
           </Box>
         </BurgerMenuContainer>
       </Drawer>
