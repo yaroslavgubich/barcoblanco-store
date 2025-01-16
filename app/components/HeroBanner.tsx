@@ -41,7 +41,6 @@ const HeroBanner = ({ heroBanner }) => {
           )}
             {/* Render Description */}
             <div className="desc">
-              <h5>Description</h5>
               <p>{heroBanner.desc || "No description available"}</p>
             </div>
         </div>
