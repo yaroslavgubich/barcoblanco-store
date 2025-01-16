@@ -77,6 +77,7 @@ const BurgerMenuContainer = styled(Box)(({ theme }) => ({
   height: "100%",
   display: "flex",
   flexDirection: "column",
+  fontSize: "24px",
 }));
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -111,22 +112,18 @@ const Navbar = () => {
           </BurgerMenuHeader>
           <Divider />
           <List>
-            <ListItem button onClick={() => scrollToSection("about")}>
-              <ListItemText primary="Про нас" />
+            <ListItem button>
+              <ShoppingCartIcon sx={{ marginRight: "8px", color: "#008c99" }} />
+              <ListItemText primary="Кошик" />
             </ListItem>
-            <ListItem button onClick={() => scrollToSection("guarantee")}>
-              <ListItemText primary="Гарантія" />
-            </ListItem>
-            <ListItem button onClick={() => scrollToSection("delivery")}>
-              <ListItemText primary="Доставка та оплата" />
-            </ListItem>
-            <ListItem button onClick={() => router.push("/contacts")}>
-              <ListItemText primary="Контакти" />
+            <ListItem button>
+              <PersonIcon sx={{ marginRight: "8px", color: "#008c99" }} />
+              <ListItemText primary="Особистий кабінет" />
             </ListItem>
           </List>
           <Divider />
           <List>
-            <Typography variant="body1" sx={{ padding: "16px 16px 8px", fontWeight: "bold" }}>
+            <Typography variant="body1" sx={{ padding: "16px 16px 8px", fontWeight: "bold", color: '#008c99', fontSize:"36px"}}>
               Каталог
             </Typography>
             <ListItem button>
@@ -141,18 +138,25 @@ const Navbar = () => {
           </List>
           <Divider />
           <List>
-            <ListItem button>
-              <ShoppingCartIcon sx={{ marginRight: "8px", color: "#008c99" }} />
-              <ListItemText primary="Кошик" />
+            <ListItem button onClick={() => scrollToSection("about")}>
+              <ListItemText primary="Про нас" />
             </ListItem>
-            <ListItem button>
-              <PersonIcon sx={{ marginRight: "8px", color: "#008c99" }} />
-              <ListItemText primary="Особистий кабінет" />
+            <ListItem button onClick={() => scrollToSection("guarantee")}>
+              <ListItemText primary="Гарантія" />
+            </ListItem>
+            <ListItem button onClick={() => scrollToSection("delivery")}>
+              <ListItemText primary="Доставка та оплата" />
+            </ListItem>
+            <ListItem button onClick={() => router.push("/contacts")}>
+              <ListItemText primary="Контакти" />
             </ListItem>
           </List>
           <Divider />
-          <Box sx={{ padding: "16px" }}>
-            <Typography variant="body1" sx={{ marginBottom: "8px" }}>
+
+         
+          <Divider />
+          <Box sx={{ padding: "16px" }}> 
+            <Typography variant="body1" sx={{ marginBottom: "8px", fontWeight: "bold", color: '#008c99', fontSize:"36px" }}>
               Контакти
             </Typography>
             <Typography variant="body2">+380-99-22-33-453</Typography>
