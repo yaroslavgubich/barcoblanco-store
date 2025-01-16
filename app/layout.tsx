@@ -10,10 +10,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="uk">
       <body>
         <header>
           <Navbar />
+          <div id="google_translate_element"></div>
         </header>
         <main className="main-container">{children}</main>
         <footer id="footer">

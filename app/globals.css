@@ -34,6 +34,18 @@ a {
 .layout {
   padding: 10px;
 }
+/*Перевод*/
+/* Styling für den Übersetzungs-Dropdown */
+#google_translate_element {
+  display: flex;
+  justify-content: center; /* Zentriere das Widget */
+  margin-top: 20px; /* Abstand nach oben */
+}
+
+.goog-te-menu-frame {
+  display: none;
+}
+
 
 .navbar-container {
   display: flex;

@@ -15,6 +15,8 @@ import {
 } from "./sanity_barcoblanco/queries";
 import Features from "./components/Features";
 import CallButton from "./components/CallBtn";
+import TranslateWidget from "./components/TranslateWidget";
+
 
 
 
@@ -32,6 +34,7 @@ const Home = async () => {
        <Features/>
     <CallButton/>
       <AboutSection />
+      <TranslateWidget />
     </>
   );
 };

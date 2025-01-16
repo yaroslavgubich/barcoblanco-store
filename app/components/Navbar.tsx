@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import {
   AppBar,
@@ -79,6 +79,8 @@ const BurgerMenuContainer = styled(Box)(({ theme }) => ({
   flexDirection: "column",
   fontSize: "24px",
 }));
+
+
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("UA");
@@ -91,8 +93,9 @@ const Navbar = () => {
     setDrawerOpen(open);
   };
 
-  const handleLanguageChange = (language) => {
+  const handleLanguageChange = (language: React.SetStateAction<string>) => {
     setSelectedLanguage(language);
+  
   };
 
   const scrollToSection = (id) => {
@@ -104,6 +107,9 @@ const Navbar = () => {
 
   return (
     <>
+      {/* Übersetzungs-Element */}
+      <div id="google_translate_element" style={{ display: "flex" }}></div>
+
       {/* Выезжающее меню */}
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
         <BurgerMenuContainer>
