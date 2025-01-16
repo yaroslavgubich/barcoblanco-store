@@ -7,25 +7,8 @@ export default {
       name: 'image',
       title: 'Image',
       type: 'array',
-      of: [
-        {
-          type: 'image',
-          fields: [
-            {
-              name: 'alt',
-              title: 'Alt Text',
-              type: 'string',
-              description: 'Alternative text for the image (important for accessibility and SEO).',
-              options: {
-                isHighlighted: true, // Displays input directly in the image editor
-              },
-            },
-          ],
-        },
-      ],
-      options: {
-        hotspot: true, // Enables image cropping and focal point selection
-      },
+      of: [{type: 'image'}],
+      options: {hotspot: true},
     },
     {
       name: 'name',
@@ -38,10 +21,7 @@ export default {
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      options: {
-        source: 'name',
-        maxLength: 90,
-      },
+      options: {source: 'name', maxLength: 90},
       validation: (Rule) => Rule.required().warning('Slug is required.'),
     },
     {
@@ -72,11 +52,24 @@ export default {
       },
       validation: (Rule) => Rule.required().warning('Category is required.'),
     },
+    {
+      name: 'width',
+      title: 'Width',
+      type: 'number',
+      validation: (Rule) => Rule.min(0).warning('Width must be a positive number.'),
+    },
+    {
+      name: 'isPopular', // New field for popular products
+      title: 'Popular',
+      type: 'boolean',
+      description: 'Mark this product as popular to display in the popular products section.',
+      initialValue: false, // Default value
+    },
   ],
   preview: {
     select: {
       title: 'name',
-      media: 'image.0', // Displays the first image in the array as a preview
+      media: 'image.0',
       subtitle: 'category',
     },
   },

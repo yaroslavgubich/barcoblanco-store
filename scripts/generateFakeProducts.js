@@ -1,4 +1,4 @@
-import { client } from "../app/lib/client.js";
+import { client } from "../app/lib/client.js"; // Adjust the path if needed
 import { faker } from "@faker-js/faker";
 
 const uploadedImageIds = [
@@ -11,16 +11,18 @@ const uploadedImageIds = [
 
 const categories = ["mirrors", "wardrobe", "cabinet", "waterproof"];
 
-const fakeProducts = Array.from({ length: 2 }, () => ({
+const fakeProducts = Array.from({ length: 50}, () => ({
   _type: "product",
   name: faker.commerce.productName(),
   slug: {
     _type: "slug",
     current: faker.helpers.slugify(faker.commerce.productName()),
   },
-  price: parseFloat(faker.commerce.price(10, 1000, 2)),
+  price: parseFloat(faker.commerce.price(10, 1000, 2)), // Random price between $10 and $1000
   details: faker.commerce.productDescription(),
-  category: faker.helpers.arrayElement(categories),
+  category: faker.helpers.arrayElement(categories), // Random category
+  width: faker.number.int({ min: 10, max: 300 }), // Random width between 10 and 300 cm
+  isPopular: faker.datatype.boolean(), // Randomly mark some products as popular
   image: [
     {
       _type: "image",
@@ -46,3 +48,4 @@ const uploadProducts = async () => {
 };
 
 uploadProducts();
+console.log("Sanity Token (from environment):", process.env.SANITY_TOKEN);

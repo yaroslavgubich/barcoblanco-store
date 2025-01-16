@@ -17,7 +17,7 @@ export default function CategoryPage({ params, searchParams }: Props) {
   const [currentPage, setCurrentPage] = useState(
     parseInt(searchParams.page || "1", 10)
   );
-  const productsPerPage = 9;
+  const productsPerPage = 20; // Updated to 20 products per page
 
   // Fetch products for the category
   React.useEffect(() => {
