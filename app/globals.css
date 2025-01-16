@@ -34,16 +34,20 @@ a {
 .layout {
   padding: 10px;
 }
-/*Перевод*/
-/* Styling für den Übersetzungs-Dropdown */
-#google_translate_element {
-  display: flex;
-  justify-content: center; /* Zentriere das Widget */
-  margin-top: 20px; /* Abstand nach oben */
-}
 
-.goog-te-menu-frame {
+/*Перевод*/
+#google_translate_element {
+  font-family: Arial, sans-serif;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
   display: none;
+}
+/* Die Auswahlbox anpassen */
+.goog-te-combo {
+  border: 1px solid #ccc;
+  padding: 5px;
+  font-size: 14px;
 }
 
 

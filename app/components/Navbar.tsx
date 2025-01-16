@@ -107,8 +107,6 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Übersetzungs-Element */}
-      <div id="google_translate_element" style={{ display: "flex" }}></div>
 
       {/* Выезжающее меню */}
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
