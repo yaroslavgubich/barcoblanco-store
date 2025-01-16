@@ -1,158 +1,139 @@
 "use client";
 
 import React, { useState } from "react";
-import Logo from "../components/Logo";
+import { styled } from "@mui/material/styles";
 import {
   AppBar,
   Toolbar,
   IconButton,
   Box,
-  Badge,
-  InputBase,
+  Typography,
   Drawer,
   List,
   ListItem,
   ListItemText,
-  Typography,
+  Divider,
+  Badge,
 } from "@mui/material";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import SearchIcon from "@mui/icons-material/Search";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import { StyledLink, NavLinks, NavLinkItem } from "./NavbarStyles";
-import HomeIcon from "@mui/icons-material/Home";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import PersonIcon from "@mui/icons-material/Person";
+import { useRouter } from "next/navigation";
+
+const BurgerMenuHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  padding: "16px",
+  backgroundColor: "#f5f5f5",
+  borderBottom: "1px solid #ddd",
+}));
+
+const BurgerMenuLogo = styled("img")({
+  height: "40px",
+  marginRight: "16px",
+});
+
+const BurgerMenuContainer = styled(Box)(({ theme }) => ({
+  width: 250,
+  backgroundColor: "#f5f5f5",
+  height: "100%",
+  display: "flex",
+  flexDirection: "column",
+}));
 
 const Navbar = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [drawerOpen, setDrawerOpen] = useState(false); // State to manage Drawer
-
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-    console.log("Search Term:", event.target.value);
-  };
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const router = useRouter();
 
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
   };
 
-  const cartItems = 1;
+  const scrollToSection = (id) => {
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#1996a3" }}>
-      <Toolbar
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        {/* Menu Icon to toggle Drawer */}
-        <IconButton
-          color="inherit"
-          aria-label="menu"
-          onClick={toggleDrawer(true)}
-        >
-          <MenuOutlinedIcon fontSize="large" />
-        </IconButton>
-
-        {/* Drawer */}
-        <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
-          <Box
-            sx={{ width: 250 }}
-            role="presentation"
-            onClick={toggleDrawer(false)}
-            onKeyDown={toggleDrawer(false)}
-          >
-            <List
-              sx={{ display: "flex", gap: "20px", flexDirection: "column" }}
-            >
-              <ListItem
-                sx={{
-                  display: "flex",
-                  justifyContent: "center", // Center horizontally
-                  alignItems: "center", // Center vertically
-                  padding: "10px",
-                  border: "1px solid red", // Optional: Consistent styling with other items
-                }}
-              >
-                <StyledLink
-                  href="/"
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    textDecoration: "none",
-                  }}
-                >
-                  <HomeIcon sx={{ marginRight: "8px" }} />
-                </StyledLink>
-              </ListItem>
-
-              {/* Other Menu Items */}
-              <ListItem sx={{ border: "1px solid red" }}>
-                <StyledLink href="/#footer">Contact Us</StyledLink>
-              </ListItem>
-              <ListItem sx={{ border: "1px solid red" }}>
-                <StyledLink href="/#about">About Us</StyledLink>
-              </ListItem>
-              <ListItem sx={{ border: "1px solid red" }}>
-                <StyledLink href="/#categories">Categories</StyledLink>
-              </ListItem>
-              <ListItem sx={{ border: "1px solid red" }}>
-                <StyledLink href="/#order-call">Order a Call</StyledLink>
-              </ListItem>
-            </List>
+    <>
+      {/* Burger Menu */}
+      <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
+        <BurgerMenuContainer>
+          <BurgerMenuHeader>
+            <BurgerMenuLogo src="icons/logo.svg" alt="Логотип" />
+          </BurgerMenuHeader>
+          <Divider />
+          <List>
+            <ListItem button onClick={() => scrollToSection("about")}>
+              <ListItemText primary="Про нас" />
+            </ListItem>
+            <ListItem button onClick={() => scrollToSection("guarantee")}>
+              <ListItemText primary="Гарантія" />
+            </ListItem>
+            <ListItem button onClick={() => scrollToSection("delivery")}>
+              <ListItemText primary="Доставка та оплата" />
+            </ListItem>
+            <ListItem button onClick={() => router.push("/contacts")}>
+              <ListItemText primary="Контакти" />
+            </ListItem>
+          </List>
+          <Divider />
+          <Box sx={{ padding: "16px" }}>
+            <Typography variant="body1" sx={{ marginBottom: "8px" }}>
+              Контакти
+            </Typography>
+            <Typography variant="body2">+380-99-22-33-453</Typography>
+            <Typography variant="body2">+380-99-22-33-453</Typography>
+            <Typography variant="body2" sx={{ marginTop: "16px" }}>
+              Пн-Пт: 09:00 - 17:00
+            </Typography>
+            <Typography variant="body2">Субота: 09:00 - 15:00</Typography>
+            <Typography variant="body2">Вихідний: Неділя</Typography>
           </Box>
-        </Drawer>
+        </BurgerMenuContainer>
+      </Drawer>
 
-        {/* Clickable logo to go home */}
-        <Logo />
-
-        {/* Navigation Links */}
-        <Box
-          component="nav"
+      {/* Navigation Bar */}
+      <AppBar
+        position="static"
+        elevation={0}
+        sx={{ backgroundColor: "transparent", marginTop: "10px" }}
+      >
+        <Toolbar
           sx={{
-            display: {
-              xs: "none",
-              sm: "flex",
-            },
+            maxWidth: "1400px",
+            width: "100%",
+            margin: "0 auto",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "0 1rem",
             gap: 2,
           }}
         >
-          <StyledLink href="/#categories-section">Categories</StyledLink>
-          <StyledLink href="/#about">About Us</StyledLink>
-          <StyledLink href="/#footer">Contact Us</StyledLink>
-        </Box>
+          {/* Logo and Burger Menu */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <IconButton sx={{ color: "#008c99" }} onClick={toggleDrawer(true)}>
+              <MenuOutlinedIcon fontSize="large" />
+            </IconButton>
+          </Box>
 
-        {/* Search Bar */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            backgroundColor: "#ffffff",
-            borderRadius: "4px",
-            padding: "0 8px",
-            width: {
-              xs: "50%",
-              sm: "30%",
-            },
-          }}
-        >
-          <SearchIcon sx={{ color: "gray" }} />
-          <InputBase
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-            sx={{ ml: 1, flex: 1 }}
-          />
-        </Box>
-
-        {/* Cart Icon */}
-        <IconButton edge="end" color="inherit" aria-label="cart">
-          <Badge badgeContent={cartItems} color="error">
-            <ShoppingCartIcon />
-          </Badge>
-        </IconButton>
-      </Toolbar>
-    </AppBar>
+          {/* Shopping Cart and Profile */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <IconButton sx={{ color: "#008c99" }}>
+              <Badge badgeContent={4} color="error">
+                <ShoppingCartIcon />
+              </Badge>
+            </IconButton>
+            <IconButton sx={{ color: "#008c99" }}>
+              <PersonIcon />
+            </IconButton>
+          </Box>
+        </Toolbar>
+      </AppBar>
+    </>
   );
 };
 

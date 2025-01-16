@@ -2,13 +2,13 @@
 function Categories() {
   return (
     <section className="categories-section">
-      <h3 className="categories-title">Категорії</h3>
+      {/* <h1 className="categories-title">Категорії</h1> */}
       <div className="categories-container">
         {/* Category Item - Mirrors */}
         <div className="category-item">
           <img src="/images/Дзеркала.png" alt="Дзеркала" />
           <div className="category-overlay">
-            <h4>Дзеркала</h4>
+            <p>Дзеркала</p>
           </div>
         </div>
 
@@ -16,7 +16,7 @@ function Categories() {
         <div className="category-item">
           <img src="/images/Шафи.png" alt="Шафи" />
           <div className="category-overlay">
-            <h4>Шафи</h4>
+            <p>Шафи</p>
           </div>
         </div>
 
@@ -24,7 +24,7 @@ function Categories() {
         <div className="category-item">
           <img src="/images/Тумби.png" alt="Тумби" />
           <div className="category-overlay">
-            <h4>Тумби</h4>
+            <p>Тумби</p>
           </div>
         </div>
 
@@ -32,7 +32,7 @@ function Categories() {
         <div className="category-item">
           <img src="/images/WATER.png" alt="Тумби" />
           <div className="category-overlay">
-            <h4>Water</h4>
+            <p>Water</p>
           </div>
         </div>
 

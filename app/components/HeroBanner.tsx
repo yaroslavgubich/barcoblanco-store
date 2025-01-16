@@ -9,44 +9,38 @@ const HeroBanner = ({ heroBanner }) => {
 
   return (
     <div className="hero-banner-container">
-
-
-
-
-        <div className="hero-banner-container-left">
-          <h1>{heroBanner.largeText1 || heroBanner.largeText2 || "error"}</h1>
-          <h3>{heroBanner.midText || "error"}</h3>
-          <p className="banner-small-text">
-            {heroBanner.smallText ? heroBanner.smallText : "Error ⚠️"}
-          </p>
-            <div className="hero-banner-container-lower">
-              <Link href={`/product/${heroBanner.product || "default-product"}`}>
-                <button className="order-button" type="button">
-                  {heroBanner.buttonText || "Order"}
-                </button>
-              </Link>
-            </div>
+      {/* Left Banner Section */}
+      <div className="hero-banner-container-left">
+        <h1 className="hero-banner-title">
+          {heroBanner.largeText1 || heroBanner.largeText2 || "Default Title"}
+        </h1>
+        <h3 className="hero-banner-subtitle">
+          {heroBanner.midText || "Default Subtitle"}
+        </h3>
+        <div className="hero-banner-container-lower">
+          <Link href={`/product/${heroBanner.product || "default-product"}`}>
+            <button className="order-button" type="button">
+              {heroBanner.buttonText || "Order Now"}
+            </button>
+          </Link>
         </div>
+      </div>
 
-
-          
-          {/* Right banner container */}
-        <div className="hero-banner-container-right">
-          {heroBanner.image && heroBanner.image.asset && (
-            <img
+      {/* Right Banner Section */}
+      <div className="hero-banner-container-right">
+        {heroBanner.image && heroBanner.image.asset && (
+          <img
             src={urlFor(heroBanner.image).url()}
             alt="Hero Banner"
             className="hero-banner-image"
-            />
-          )}
-            {/* Render Description */}
-            <div className="desc">
-              <h5>Description</h5>
-              <p>{heroBanner.desc || "No description available"}</p>
-            </div>
-        </div>
+          />
+        )}
+      </div>
     </div>
   );
 };
 
 export default HeroBanner;
+
+
+

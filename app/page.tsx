@@ -14,6 +14,7 @@ import {
   footerQuery,
 } from "./sanity_barcoblanco/queries";
 import Features from "./components/Features";
+import CallButton from "./components/CallBtn";
 
 
 
@@ -29,7 +30,7 @@ const Home = async () => {
 
       <PopularProducts productsData={productsData} />
        <Features/>
-   
+    <CallButton/>
       <AboutSection />
     </>
   );
