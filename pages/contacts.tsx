@@ -105,7 +105,7 @@ const Contacts = () => {
                 style={{ height: "30px", width: "30px" }}
               />
               <Typography variant="body1" sx={{ fontSize: "24px" }}>
-                +380-99-22-33-453
+              +380-66-69-24-322
               </Typography>
             </Box>
           </Box>
