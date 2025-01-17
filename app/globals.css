@@ -231,6 +231,7 @@ span.text-red {
 .products-heading p {
   font-size: 16px;
   font-weight: 200;
+
 }
 
 .cart-wrapper {
@@ -380,57 +381,56 @@ span.text-red {
 }
 /*about section */
 .about-section {
-  max-width: 1400px; 
-  margin: 0 auto; 
+  max-width: 1400px;
+  margin: 0 auto;
   border-radius: 12px;
-  margin-bottom: 80px; 
- 
+  margin-bottom: 80px;
+  padding: 0 100px; /* Отступы по бокам */
 }
 
 .about-content {
   display: flex;
-  justify-content: space-between; 
+  justify-content: space-between;
   align-items: center;
-  flex-wrap: nowrap; 
+  flex-wrap: nowrap;
   gap: 20px;
 }
 
 .about-text {
-  flex: 1; 
-  max-width: 50%; 
-  font-family: "Roboto", sans-serif; 
+  flex: 1;
+  max-width: 50%;
+  font-family: "Roboto", sans-serif;
   margin-right: 20px;
 }
 
 .about-image {
-  flex: 1; 
-  max-width: 50%; 
+  flex: 1;
+  max-width: 50%;
   text-align: center;
 }
 
 .about-image img {
   max-width: 100%;
   height: auto;
-  border-radius: 12px; 
-  
+  border-radius: 12px;
 }
 
 .about-text h3 {
-  font-size: 36px; 
+  font-size: 36px;
   color: #008c99;
   margin-bottom: 20px;
-  font-weight: 700; 
+  font-weight: 700;
 }
 
 .about-text p {
-  font-size: 1.1em; 
+  font-size: 1.1em;
   line-height: 1.8;
   margin-bottom: 20px;
   color: #333;
 }
 
 .about-text strong {
-  font-weight: 700; 
+  font-weight: 700;
 }
 
 .catalog-button {
@@ -438,25 +438,45 @@ span.text-red {
   font-size: 18px;
   font-weight: 600;
   margin-top: 20px;
-  padding: 12px 24px; 
+  padding: 12px 24px;
   background-color: #008c99;
   color: #fff;
   text-decoration: none;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .catalog-button:hover {
-  background-color: #007387; /* Более темный оттенок при наведении */
-  transform: scale(1.05); /* Легкое увеличение при наведении */
+  background-color: #007387;
+  transform: scale(1.05);
 }
 
 /* Responsive Styles */
+@media (max-width: 1300px) {
+  .about-content {
+    flex-direction: column; /* Перенос блоков в колонку */
+    gap: 30px; /* Расстояние между блоками */
+    text-align: center; /* Центрирование текста и кнопки */
+  }
+
+  .about-text {
+    max-width: 100%; /* Растягиваем текст на всю ширину */
+    margin-right: 0;
+  }
+
+  .about-image {
+    max-width: 100%; /* Растягиваем изображение на всю ширину */
+    margin: 0 auto; /* Центрирование изображения */
+  }
+}
+
 @media (max-width: 768px) {
   .about-content {
     flex-direction: column; /* Вертикальное расположение блоков */
     gap: 30px; /* Увеличен отступ между блоками */
+    padding: 0 20px; /* Отступы для мобильной версии */
+    text-align: center; /* Центрирование текста и кнопки */
   }
 
   .about-text {
@@ -473,14 +493,20 @@ span.text-red {
   }
 
   .about-text p {
-    font-size: 1em; /* Слегка уменьшен размер текста */
+    font-size: 1em; 
+  }
+
+  .catalog-button {
+    margin: 0 auto; /* Центрирование кнопки */
   }
 }
 
 
+
+
 /* footer */
 
-.footer {
+ .footer {
   background-color: #008c99;
   color: white;
   padding: 2rem 1rem;
@@ -553,8 +579,8 @@ span.text-red {
   transform: scale(1.2);
   }
   
-  /* Адаптивные стили */
-  @media (max-width: 350px) {
+   /* Адаптивные стили  */
+   @media (max-width: 350px) {
     .footer-content {
       padding: 0 0.5rem; 
       }
@@ -573,7 +599,7 @@ span.text-red {
       width: 20px;
       height: 20px;
     }
-  }
+  } 
 
 .cart-heading .heading {
   margin-left: 10px;
@@ -656,10 +682,12 @@ span.text-red {
 }
 /*product*/
 .popular_products{
-  font-size: 36px; 
+  font-size: 36px;
   color: #008c99;
   margin-bottom: 20px;
-  font-weight: 700; 
+  font-weight: 700;
+  text-align: left; /* Выравнивание текста слева */
+  margin-left: 100px; /* Отступ слева */
 }
 .products-container {
   display: flex;
@@ -756,6 +784,14 @@ span.text-red {
   .product-price {
   font-size: 12px;
   }
+  }
+
+
+  @media (max-width: 1300px) {
+    .popular_products {
+      text-align: center;
+      margin-left: 0; /* Убираем отступ слева при центрировании */
+    }
   }
   
   /* Адаптивность для больших экранов */

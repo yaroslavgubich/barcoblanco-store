@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" >
       <body>
         <header>
           <Navbar />
@@ -18,6 +18,7 @@ export default function RootLayout({ children }) {
         <main className="main-container">{children}</main>
         <footer id="footer">
           <Footer />
+          
         </footer>
       </body>
     </html>

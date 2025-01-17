@@ -232,7 +232,8 @@ const Navbar = () => {
                 component="img"
                 src="icons/logo.svg"
                 alt="Логотип"
-                sx={{ height: isMobile ? 30 : 40, marginLeft: "2rem" }}
+                sx={{ height: isMobile ? 30 : 40, marginLeft: "2rem", cursor: "pointer" }}
+                onClick={() => router.push("/")}
               />
             )}
           </Box>
@@ -287,6 +288,7 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
 
 
 
