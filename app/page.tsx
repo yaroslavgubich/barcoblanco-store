@@ -19,6 +19,7 @@ import TranslateWidget from "./components/TranslateWidget";
 
 
 
+
 const Home = async () => {
   const bannerData = await client.fetch(bannerQuery);
   const productsData = await client.fetch(productQuery);
@@ -27,6 +28,7 @@ const Home = async () => {
   return (
     <>
       <HeroBanner heroBanner={bannerData?.[0]} />
+      
       <Categories />
 
       <PopularProducts productsData={productsData} />

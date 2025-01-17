@@ -158,6 +158,9 @@ const Navbar = () => {
             <ListItem button onClick={() => router.push("/contacts")}>
               <ListItemText primary="Контакти" />
             </ListItem>
+            <ListItem>
+              <ListItemText primary="Test order form" />
+            </ListItem>
           </List>
           <Divider />
 
@@ -258,6 +261,7 @@ const Navbar = () => {
 
           {/* Переключатель языка, корзина и личный кабинет */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+
             <Typography
               sx={{
                 color: selectedLanguage === "UA" ? "#008c99" : "#ccc",

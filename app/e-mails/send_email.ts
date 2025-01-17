@@ -9,8 +9,8 @@ app.use(bodyParser.json());
 const transporter = nodemailer.createTransport({
   service: 'gmail', // Beispiel mit Gmail; du kannst andere Anbieter verwenden
   auth: {
-    user: 'deine-email@gmail.com', // Deine E-Mail-Adresse
-    pass: 'dein-passwort',         // Dein Passwort oder App-Passwort
+    user: 'barcoblancotest@gmail.com', // Deine E-Mail-Adresse
+    pass: 'barcoblancotest2025',         // Dein Passwort oder App-Passwort
   },
 });
 
@@ -21,7 +21,7 @@ app.post('/api/sendOrder', async (req, res) => {
   try {
     // Bestätigungs-E-Mail an den Kunden
     await transporter.sendMail({
-      from: 'deine-email@gmail.com',
+      from: 'barcoblancotest@gmail.com',
       to: email,
       subject: 'Bestellbestätigung',
       text: `Hallo ${name},\n\nVielen Dank für Ihre Bestellung!\n\nDetails:\n${orderDetails}`,
@@ -29,7 +29,7 @@ app.post('/api/sendOrder', async (req, res) => {
 
     // E-Mail an Lagermitarbeiter
     await transporter.sendMail({
-      from: 'deine-email@gmail.com',
+      from: 'barcoblancotest@gmail.com',
       to: 'lager-email@example.com', // Lager-Mitarbeiter-Adresse
       subject: 'Neue Bestellung',
       text: `Neue Bestellung von ${name}:\n\n${orderDetails}`,
