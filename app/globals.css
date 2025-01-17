@@ -36,18 +36,37 @@ a {
 }
 
 /*Перевод*/
-#google_translate_element {
+/* Schriftart und Farben anpassen */
+#google_translate_element select {
   font-family: Arial, sans-serif;
-  padding: 10px;
-  background-color: #f0f0f0;
+  color: #008c99;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
   border-radius: 5px;
+  padding: 5px;
+}
+
+/* Dropdown-Menü zentrieren */
+#google_translate_element {
+  text-align: center;
+  margin: 10px 0;
   display: none;
 }
+
 /* Die Auswahlbox anpassen */
 .goog-te-combo {
   border: 1px solid #ccc;
   padding: 5px;
   font-size: 14px;
+}
+
+.goog-te-banner-frame {
+  display: none;
+  
+}
+
+body {
+  top: 0px !important; /* Verhindert Verschiebungen durch das Banner */
 }
 
 

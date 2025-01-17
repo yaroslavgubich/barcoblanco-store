@@ -19,7 +19,7 @@ const TranslateWidget = () => {
           {
             pageLanguage: "uk",
             includedLanguages: "en,uk",
-            layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+            layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
           },
           "google_translate_element"
         );

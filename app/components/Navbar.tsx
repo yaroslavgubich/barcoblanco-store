@@ -147,7 +147,7 @@ const Navbar = () => {
           <Divider />
           <List>
             <ListItem button onClick={() => scrollToSection("about")}>
-              <ListItemText primary="Welcome_message" />
+              <ListItemText primary="Про нас" />
             </ListItem>
             <ListItem button onClick={() => scrollToSection("guarantee")}>
               <ListItemText primary="Гарантія" />
