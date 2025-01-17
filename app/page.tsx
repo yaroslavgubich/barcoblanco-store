@@ -16,8 +16,7 @@ import {
 import Features from "./components/Features";
 import CallButton from "./components/CallBtn";
 import TranslateWidget from "./components/TranslateWidget";
-
-
+//import "./i18n/i18n"
 
 
 const Home = async () => {

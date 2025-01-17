@@ -23,6 +23,8 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PersonIcon from "@mui/icons-material/Person";
 import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/navigation";
+//import { useTranslation } from "react-i18next"; 
+
 
 // Стили для поиска
 const Search = styled("div")(({ theme }) => ({
@@ -82,20 +84,22 @@ const BurgerMenuContainer = styled(Box)(({ theme }) => ({
 
 
 const Navbar = () => {
+  //console.log("i18n instance:", i18n);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("UA");
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isMedium = useMediaQuery("(max-width: 1150px)");
   const router = useRouter();
+  //const { t, i18n } = useTranslation();
 
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
   };
 
-  const handleLanguageChange = (language: React.SetStateAction<string>) => {
-    setSelectedLanguage(language);
-  
+  const handleLanguageChange = (language) => {
+    setSelectedLanguage(language)
+    //i18n.changeLanguage(language); // Ändert die Sprache in i18next
   };
 
   const scrollToSection = (id) => {
@@ -143,7 +147,7 @@ const Navbar = () => {
           <Divider />
           <List>
             <ListItem button onClick={() => scrollToSection("about")}>
-              <ListItemText primary="Про нас" />
+              <ListItemText primary="Welcome_message" />
             </ListItem>
             <ListItem button onClick={() => scrollToSection("guarantee")}>
               <ListItemText primary="Гарантія" />
