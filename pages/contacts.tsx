@@ -2,6 +2,8 @@ import React from "react";
 import { Box, Typography, Link } from "@mui/material";
 import Navbar from "../app/components/Navbar";
 import Footer from "../app/components/Footer";
+import CallButton from "../app/components/CallButton";
+import "../app/globals.css"
 
 const Contacts = () => {
   return (
@@ -26,7 +28,7 @@ const Contacts = () => {
             textAlign: "center",
             marginBottom: { xs: "2rem", md: "0" },
             display: { xs: "none", md: "block" },
-            height: "auto", // Поддержка высоты изображения
+            height: "455px", // Поддержка высоты изображения
           }}
         >
           <img
@@ -126,7 +128,7 @@ const Contacts = () => {
           </Typography>
 
           {/* Социальные сети */}
-          <Box sx={{ display: "flex", gap: "20px", justifyContent: { xs: "center", md: "flex-start" } }}>
+          <Box sx={{ display: "flex", gap: "40px", justifyContent: { xs: "center", md: "flex-start" } }}>
             <Link href="https://www.instagram.com" target="_blank">
               <img
                 src="/icons/instagram.png"
@@ -151,7 +153,7 @@ const Contacts = () => {
           </Box>
         </Box>
       </Box>
-
+      <CallButton/>
       <Footer />
     </>
   );

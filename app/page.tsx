@@ -14,7 +14,7 @@ import {
   footerQuery,
 } from "./sanity_barcoblanco/queries";
 import Features from "./components/Features";
-import CallButton from "./components/CallBtn";
+import CallButton from "./components/CallButton";
 
 
 
