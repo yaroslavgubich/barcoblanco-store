@@ -158,7 +158,7 @@ const Navbar = () => {
             <ListItem button onClick={() => router.push("/contacts")}>
               <ListItemText primary="Контакти" />
             </ListItem>
-            <ListItem>
+            <ListItem button onClick={() => router.push("/Testform")}>
               <ListItemText primary="Test order form" />
             </ListItem>
           </List>
