@@ -142,10 +142,10 @@ const Navbar = () => {
             <ListItem button onClick={() => scrollToSection("about")}>
               <ListItemText primary="Про нас" />
             </ListItem>
-            <ListItem button onClick={() => scrollToSection("guarantee")}>
+            <ListItem button onClick={() => router.push("/guarantee")}>
               <ListItemText primary="Гарантія" />
             </ListItem>
-            <ListItem button onClick={() =>  scrollToSection("guarantee")}>
+            <ListItem button onClick={() =>  router.push("/delivery")}>
               <ListItemText primary="Доставка та оплата" />
             </ListItem>
             <ListItem button onClick={() => router.push("/contacts")}>
