@@ -3,7 +3,7 @@ import Link from "next/link";
 function Categories() {
   return (
     <section className="categories-section">
-      <h3 className="categories-title">Категорії</h3>
+      {/* <h1 className="categories-title">Категорії</h1> */}
       <div className="categories-container">
         {/* Category Item - Mirrors */}
         <Link href="/category/mirrors">

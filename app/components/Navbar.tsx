@@ -1,159 +1,307 @@
 "use client";
 
 import React, { useState } from "react";
-import Logo from "../components/Logo";
+import { styled, alpha } from "@mui/material/styles";
 import {
   AppBar,
   Toolbar,
   IconButton,
   Box,
-  Badge,
+  Typography,
   InputBase,
+  Badge,
   Drawer,
   List,
   ListItem,
   ListItemText,
-  Typography,
+  Divider,
+  useMediaQuery,
 } from "@mui/material";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import SearchIcon from "@mui/icons-material/Search";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import { StyledLink, NavLinks, NavLinkItem } from "./NavbarStyles";
-import HomeIcon from "@mui/icons-material/Home";
+import SearchIcon from "@mui/icons-material/Search";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import PersonIcon from "@mui/icons-material/Person";
+import { useTheme } from "@mui/material/styles";
+import { useRouter } from "next/navigation";
 
+// Стили для поиска
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: "20px",
+  backgroundColor: "transparent",
+  marginLeft: 0,
+  marginRight: theme.spacing(2),
+  width: "535px",
+  border: "1px solid #008c99",
+  display: "flex",
+  alignItems: "center",
+  padding: "4px 8px",
+}));
+
+const SearchIconWrapper = styled("div")(({ theme }) => ({
+  color: "#008c99",
+  marginRight: "8px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: "#008c99",
+  flexGrow: 1,
+  border: "none",
+  outline: "none",
+  fontSize: "16px",
+  backgroundColor: "transparent",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(1, 1, 1, 0),
+    width: "100%",
+  },
+}));
+const BurgerMenuHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  padding: "16px",
+  backgroundColor: "#f5f5f5",
+  borderBottom: "1px solid #ddd",
+  fontSize: "24px",
+}));
+
+const BurgerMenuLogo = styled("img")({
+  height: "40px",
+  marginRight: "16px",
+});
+
+const BurgerMenuContainer = styled(Box)(({ theme }) => ({
+  width: 250,
+  backgroundColor: "#f5f5f5",
+  height: "100%",
+  display: "flex",
+  flexDirection: "column",
+
+}));
 const Navbar = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [drawerOpen, setDrawerOpen] = useState(false); // State to manage Drawer
-
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-    console.log("Search Term:", event.target.value);
-  };
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState("UA");
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMedium = useMediaQuery("(max-width: 1150px)");
+  const router = useRouter();
 
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
   };
 
-  const cartItems = 1;
+  const handleLanguageChange = (language) => {
+    setSelectedLanguage(language);
+  };
+
+  const scrollToSection = (id) => {
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#1996a3" }}>
-      <Toolbar
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        {/* Menu Icon to toggle Drawer */}
-        <IconButton
-          color="inherit"
-          aria-label="menu"
-          onClick={toggleDrawer(true)}
-        >
-          <MenuOutlinedIcon fontSize="large" />
-        </IconButton>
+    <>
+      {/* Выезжающее меню */}
+      <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
+        <BurgerMenuContainer>
+          <BurgerMenuHeader>
+            <BurgerMenuLogo src="icons/logo.svg" alt="Логотип" />
+          </BurgerMenuHeader>
+          <Divider />
+          <List>
+            <ListItem button>
+              <ShoppingCartIcon sx={{ marginRight: "8px", color: "#008c99" }} />
+              <ListItemText primary="Кошик" />
+            </ListItem>
+            <ListItem button>
+              <PersonIcon sx={{ marginRight: "8px", color: "#008c99" }} />
+              <ListItemText primary="Особистий кабінет" />
+            </ListItem>
+          </List>
+          <Divider />
+          <List>
+            <Typography variant="body1" sx={{ padding: "16px 16px 8px", fontWeight: "bold", color: '#008c99', fontSize: "24px" }}>
+              Каталог
+            </Typography>
+            <ListItem button>
+              <ListItemText primary="Тумби" />
+            </ListItem>
+            <ListItem button>
+              <ListItemText primary="Шафи" />
+            </ListItem>
+            <ListItem button>
+              <ListItemText primary="Дзеркала" />
+            </ListItem>
+          </List>
+          <Divider />
+          <List>
+            <ListItem button onClick={() => scrollToSection("about")}>
+              <ListItemText primary="Про нас" />
+            </ListItem>
+            <ListItem button onClick={() => router.push("/guarantee")}>
+              <ListItemText primary="Гарантія" />
+            </ListItem>
+            <ListItem button onClick={() =>  router.push("/delivery")}>
+              <ListItemText primary="Доставка та оплата" />
+            </ListItem>
+            <ListItem button onClick={() => router.push("/contacts")}>
+              <ListItemText primary="Контакти" />
+            </ListItem>
+          </List>
+          <Divider />
 
-        {/* Drawer */}
-        <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
-          <Box
-            sx={{ width: 250 }}
-            role="presentation"
-            onClick={toggleDrawer(false)}
-            onKeyDown={toggleDrawer(false)}
-          >
-            <List
-              sx={{ display: "flex", gap: "20px", flexDirection: "column" }}
-            >
-              <ListItem
-                sx={{
-                  display: "flex",
-                  justifyContent: "center", // Center horizontally
-                  alignItems: "center", // Center vertically
-                  padding: "10px",
-                  border: "1px solid red", // Optional: Consistent styling with other items
-                }}
-              >
-                <StyledLink
-                  href="/"
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    textDecoration: "none",
-                  }}
-                >
-                  <HomeIcon sx={{ marginRight: "8px" }} />
-                </StyledLink>
-              </ListItem>
 
-              {/* Other Menu Items */}
-              <ListItem sx={{ border: "1px solid red" }}>
-                <StyledLink href="/#footer">Contact Us</StyledLink>
-              </ListItem>
-              <ListItem sx={{ border: "1px solid red" }}>
-                <StyledLink href="/#about">About Us</StyledLink>
-              </ListItem>
-              <ListItem sx={{ border: "1px solid red" }}>
-                <StyledLink href="/#categories">Categories</StyledLink>
-              </ListItem>
-              <ListItem sx={{ border: "1px solid red" }}>
-                <StyledLink href="/#order-call">Order a Call</StyledLink>
-              </ListItem>
-            </List>
+          <Divider />
+          <Box sx={{ padding: "16px" }}>
+            <Typography variant="body1" sx={{ marginBottom: "8px", fontWeight: "bold", color: '#008c99', fontSize: "24px" }}>
+              Контакти
+            </Typography>
+            <Typography variant="body2">+380-99-22-33-453</Typography>
+            <Typography variant="body2">+380-99-22-33-453</Typography>
+            <Typography variant="body2" sx={{ marginTop: "16px" }}>
+              Вт-Нед: 09:00 - 20:00
+            </Typography>
+            <Typography variant="body2">Вихідний: Понеділок</Typography>
           </Box>
-        </Drawer>
+        </BurgerMenuContainer>
+      </Drawer>
 
-        {/* Clickable logo to go home */}
-        <Logo />
 
-        {/* Navigation Links */}
+      {/* Меню категорий */}
+      {!isMobile && (
         <Box
-          component="nav"
           sx={{
-            display: {
-              xs: "none",
-              sm: "flex",
-            },
+            backgroundColor: "#008c99",
+            display: "flex",
+            justifyContent: "center",
+            padding: "0.5rem 0",
+            fontFamily: "Roboto, sans-serif",
+            fontWeight: 500,
+          }}
+        >
+          <Typography
+            sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}
+            onClick={() => scrollToSection("about")}
+          >
+            Про нас
+          </Typography>
+          <Typography
+            sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}
+            onClick={() => router.push("/guarantee")}
+          >
+            Гарантія
+          </Typography>
+          <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}
+          onClick={() => router.push("/delivery")}>
+            Доставка та оплата
+          </Typography>
+          <Typography
+            sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}
+            onClick={() => router.push("/contacts")}
+          >
+            Контакти
+          </Typography>
+        </Box>
+      )}
+
+      {/* Основная навигация */}
+      <AppBar
+        position="static"
+        elevation={0}
+        sx={{ backgroundColor: "transparent", marginTop: "10px" }}
+      >
+        <Toolbar
+          sx={{
+            maxWidth: "1400px",
+            width: "100%",
+            margin: "0 auto",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "0 1rem",
             gap: 2,
           }}
         >
-          <StyledLink href="/#categories-section">Categories</StyledLink>
-          <StyledLink href="/#about">About Us</StyledLink>
-          <StyledLink href="/#footer">Contact Us</StyledLink>
-        </Box>
+          {/* Логотип и кнопка меню */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <IconButton sx={{ color: "#008c99" }} onClick={toggleDrawer(true)}>
+              <MenuOutlinedIcon fontSize="large" />
+            </IconButton>
+            {!isMedium && (
+              <Box
+                component="img"
+                src="icons/logo.svg"
+                alt="Логотип"
+                sx={{ height: isMobile ? 30 : 40, marginLeft: "2rem", cursor: "pointer" }}
+                onClick={() => router.push("/")}
+              />
+            )}
+          </Box>
 
-        {/* Search Bar */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            backgroundColor: "#ffffff",
-            borderRadius: "4px",
-            padding: "0 8px",
-            width: {
-              xs: "50%",
-              sm: "30%",
-            },
-          }}
-        >
-          <SearchIcon sx={{ color: "gray" }} />
-          <InputBase
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-            sx={{ ml: 1, flex: 1 }}
-          />
-        </Box>
+          {/* Поиск */}
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Пошук"
+              inputProps={{ "aria-label": "search" }}
+            />
+          </Search>
 
-        {/* Cart Icon */}
-        <IconButton edge="end" color="inherit" aria-label="cart">
-          <Badge badgeContent={cartItems} color="error">
-            <ShoppingCartIcon />
-          </Badge>
-        </IconButton>
-      </Toolbar>
-    </AppBar>
+          {/* Переключатель языка, корзина и личный кабинет */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Typography
+              sx={{
+                color: selectedLanguage === "UA" ? "#008c99" : "#ccc",
+                cursor: "pointer",
+                fontWeight: selectedLanguage === "UA" ? "bold" : "normal",
+              }}
+              onClick={() => handleLanguageChange("UA")}
+            >
+              UA
+            </Typography>
+            <Typography sx={{ color: "#008c99", cursor: "default" }}>|</Typography>
+            <Typography
+              sx={{
+                color: selectedLanguage === "EN" ? "#008c99" : "#ccc",
+                cursor: "pointer",
+                fontWeight: selectedLanguage === "EN" ? "bold" : "normal",
+              }}
+              onClick={() => handleLanguageChange("EN")}
+            >
+              EN
+            </Typography>
+            <IconButton sx={{ color: "#008c99" }}>
+              <Badge badgeContent={4} color="error">
+                <ShoppingCartIcon />
+              </Badge>
+            </IconButton>
+            <IconButton sx={{ color: "#008c99" }}>
+              <PersonIcon />
+            </IconButton>
+          </Box>
+        </Toolbar>
+      </AppBar>
+    </>
   );
 };
 
 export default Navbar;
+
+
+
+
+
+
+
+
+
+
+
+
+
