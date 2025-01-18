@@ -749,43 +749,72 @@ span.text-red {
 .btn:hover {
   transform: scale(1.1, 1.1);
 }
-/*product*/
-.popular_products{
-  font-size: 36px;
-  color: #008c99;
-  margin-bottom: 20px;
-  font-weight: 700;
-  text-align: left; /* Выравнивание текста слева */
-  margin-left: 100px; /* Отступ слева */
-}
-.products-container {
+
+
+.popular-products-container {
   display: flex;
-  flex-wrap: wrap; /* Разрешить перенос элементов на следующую строку */
-  justify-content: center; /* Горизонтальное выравнивание */
-  gap: 100px; /* Расстояние между продуктами */
-  margin-bottom: 80px;
-  }
-  
-  /* Стиль для отдельного продукта */
-  .product {
+  flex-wrap: nowrap;
+  justify-content: center;
+  margin-top: 20px;
   width: 100%;
-  max-width: 200px; /* Ограничение максимальной ширины продукта */
+}
+.popular-products-wrapper {
+  overflow: hidden; /* Hide overflow */
+  position: relative;
+  width: 100%; /* Full-width container */
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.popular-products-title {
   text-align: center;
-  }
-  
-  /* Карточка продукта */
-  .product-card {
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-  }
-  
-  /* Обертка изображения */
-  .product-image-wrapper {
+  margin-bottom: 20px;
+}
+
+.popular-products-marquee {
+  display: flex;
+  overflow: hidden; /* Ensure content stays inside the visible area */
   position: relative;
   width: 100%;
-  height: auto;
+}
+
+.popular-products-track {
+  display: flex;
+  gap: 7px; /* Space between products */
+  animation: scroll-left 250s linear infinite; /* Infinite scrolling animation */
+}
+
+@keyframes scroll-left {
+  from {
+    transform: translateX(0); /* Start position */
   }
+  to {
+    transform: translateX(
+      -50%
+    ); /* Scroll half the width (first set of items) */
+  }
+}
+
+  /* Стиль для отдельного продукта */
+  .product {
+    width: 100%;
+    max-width: 200px; /* Ограничение максимальной ширины продукта */
+    text-align: center;
+    }
+    
+    /* Карточка продукта */
+    .product-card {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    }
+    
+    /* Обертка изображения */
+    .product-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: auto;
+    }
   
   /* Изображение продукта */
   .product-image {
@@ -853,14 +882,6 @@ span.text-red {
   .product-price {
   font-size: 12px;
   }
-  }
-
-
-  @media (max-width: 1300px) {
-    .popular_products {
-      text-align: center;
-      margin-left: 0; /* Убираем отступ слева при центрировании */
-    }
   }
   
   /* Адаптивность для больших экранов */
