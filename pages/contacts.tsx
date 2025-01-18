@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Typography, Link } from "@mui/material";
 import Navbar from "../app/components/Navbar";
 import Footer from "../app/components/Footer";
+import CallButton from "../app/components/CallButton";
 import "../app/globals.css"
 
 const Contacts = () => {
@@ -27,7 +28,7 @@ const Contacts = () => {
             textAlign: "center",
             marginBottom: { xs: "2rem", md: "0" },
             display: { xs: "none", md: "block" },
-            height: "auto", // Поддержка высоты изображения
+            height: "455px", // Поддержка высоты изображения
           }}
         >
           <img
@@ -104,7 +105,7 @@ const Contacts = () => {
                 style={{ height: "30px", width: "30px" }}
               />
               <Typography variant="body1" sx={{ fontSize: "24px" }}>
-                +380-99-22-33-453
+              +380-66-69-24-322
               </Typography>
             </Box>
           </Box>
@@ -127,7 +128,7 @@ const Contacts = () => {
           </Typography>
 
           {/* Социальные сети */}
-          <Box sx={{ display: "flex", gap: "20px", justifyContent: { xs: "center", md: "flex-start" } }}>
+          <Box sx={{ display: "flex", gap: "40px", justifyContent: { xs: "center", md: "flex-start" } }}>
             <Link href="https://www.instagram.com" target="_blank">
               <img
                 src="/icons/instagram.png"
@@ -152,7 +153,7 @@ const Contacts = () => {
           </Box>
         </Box>
       </Box>
-
+      <CallButton/>
       <Footer />
     </>
   );

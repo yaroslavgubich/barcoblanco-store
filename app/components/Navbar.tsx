@@ -78,7 +78,7 @@ const BurgerMenuContainer = styled(Box)(({ theme }) => ({
   height: "100%",
   display: "flex",
   flexDirection: "column",
- 
+
 }));
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -124,7 +124,7 @@ const Navbar = () => {
           </List>
           <Divider />
           <List>
-            <Typography variant="body1" sx={{ padding: "16px 16px 8px", fontWeight: "bold", color: '#008c99', fontSize:"24px"}}>
+            <Typography variant="body1" sx={{ padding: "16px 16px 8px", fontWeight: "bold", color: '#008c99', fontSize: "24px" }}>
               Каталог
             </Typography>
             <ListItem button>
@@ -142,10 +142,10 @@ const Navbar = () => {
             <ListItem button onClick={() => scrollToSection("about")}>
               <ListItemText primary="Про нас" />
             </ListItem>
-            <ListItem button onClick={() => scrollToSection("guarantee")}>
+            <ListItem button onClick={() => router.push("/guarantee")}>
               <ListItemText primary="Гарантія" />
             </ListItem>
-            <ListItem button onClick={() => scrollToSection("delivery")}>
+            <ListItem button onClick={() =>  router.push("/delivery")}>
               <ListItemText primary="Доставка та оплата" />
             </ListItem>
             <ListItem button onClick={() => router.push("/contacts")}>
@@ -154,16 +154,16 @@ const Navbar = () => {
           </List>
           <Divider />
 
-         
+
           <Divider />
-          <Box sx={{ padding: "16px" }}> 
-            <Typography variant="body1" sx={{ marginBottom: "8px", fontWeight: "bold", color: '#008c99', fontSize:"24px" }}>
+          <Box sx={{ padding: "16px" }}>
+            <Typography variant="body1" sx={{ marginBottom: "8px", fontWeight: "bold", color: '#008c99', fontSize: "24px" }}>
               Контакти
             </Typography>
             <Typography variant="body2">+380-99-22-33-453</Typography>
             <Typography variant="body2">+380-99-22-33-453</Typography>
             <Typography variant="body2" sx={{ marginTop: "16px" }}>
-              Вт-Вс: 09:00 - 20:00
+              Вт-Нед: 09:00 - 20:00
             </Typography>
             <Typography variant="body2">Вихідний: Понеділок</Typography>
           </Box>
@@ -189,10 +189,14 @@ const Navbar = () => {
           >
             Про нас
           </Typography>
-          <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>
+          <Typography
+            sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}
+            onClick={() => router.push("/guarantee")}
+          >
             Гарантія
           </Typography>
-          <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>
+          <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}
+          onClick={() => router.push("/delivery")}>
             Доставка та оплата
           </Typography>
           <Typography
