@@ -1,13 +1,14 @@
 import { createClient } from "@sanity/client";
 import imageUrlBuilder from "@sanity/image-url";
+import dotenv from "dotenv";
+dotenv.config();
 
-// Create a Sanity client instance
 export const client = createClient({
   projectId: "0opk9qht",
   dataset: "dataset",
   apiVersion: "2023-11-11",
   useCdn: true,
-  token: process.env.NEXT_PUBLIC_SANITY_TOKEN,
+  token: process.env.SANITY_TOKEN,
 });
 
 // Create an image URL builder

@@ -105,7 +105,76 @@ span.text-red {
   text-align: center;
   font-weight: 600;
 }
+.popular-products-container {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  margin-top: 20px;
+  width: 100%;
+}
+.popular-products-wrapper {
+  overflow: hidden; /* Hide overflow */
+  position: relative;
+  width: 100%; /* Full-width container */
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
 
+.popular-products-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.popular-products-marquee {
+  display: flex;
+  overflow: hidden; /* Ensure content stays inside the visible area */
+  position: relative;
+  width: 100%;
+}
+
+.popular-products-track {
+  display: flex;
+  gap: 7px; /* Space between products */
+  animation: scroll-left 250s linear infinite; /* Infinite scrolling animation */
+}
+
+@keyframes scroll-left {
+  from {
+    transform: translateX(0); /* Start position */
+  }
+  to {
+    transform: translateX(
+      -50%
+    ); /* Scroll half the width (first set of items) */
+  }
+}
+
+.product-card {
+  cursor: pointer;
+  transform: scale(1, 1);
+  transition: transform 0.5s ease;
+  color: #324d67;
+  margin: 6px;
+  /* border: solid 1px blue; */
+}
+.product-card:hover {
+  transform: scale(1.05);
+}
+.product-image {
+  border-radius: 15px;
+  background-color: #ebebeb;
+  transform: scale(0.9, 0.9);
+  transition: transform 0.5s ease;
+}
+
+.product-name {
+  font-weight: 500;
+}
+.product-price {
+  font-weight: 800;
+  margin-top: 6px;
+  color: black;
+}
 
 /*hero banner*/
 

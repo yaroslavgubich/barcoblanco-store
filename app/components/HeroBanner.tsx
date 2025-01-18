@@ -33,9 +33,13 @@ const HeroBanner = ({ heroBanner }) => {
             src={urlFor(heroBanner.image).url()}
             alt="Hero Banner"
             className="hero-banner-image"
-          />
-        )}
-      </div>
+            />
+          )}
+            {/* Render Description */}
+            <div className="desc">
+              <p>{heroBanner.desc || "No description available"}</p>
+            </div>
+        </div>
     </div>
   );
 };

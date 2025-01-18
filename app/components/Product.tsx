@@ -3,32 +3,51 @@ import React from "react";
 import Link from "next/link";
 import { urlFor } from "../lib/client";
 
-const Product = ({ product, addToCart }) => {
-const { image = [], name, slug, price } = product;
+const Product = ({ product, isDetailPage = false }) => {
+  const { image = [], name, slug, price, description, width } = product;
 
-const imageUrl = image.length > 0 ? urlFor(image[0]) : "/images/placeholder.svg";
+  // Assign imageUrl based on whether an image exists
+  const imageUrl =
+    image?.length > 0
+      ? urlFor(image[0]) // If there’s an image, use it
+      : "/images/placeholder.svg"; // Otherwise, use a placeholder image
 
-const handleAddToCart = (e) => {
-e.preventDefault(); // Останавливаем переход по ссылке
-addToCart(product); // Добавляем товар в корзину
-};
-
-return (
-<div className="product">
-<Link href={`/product/${slug.current}`}>
-<div className="product-card">
-<div className="product-image-wrapper">
-<img src={imageUrl} alt={name} className="product-image" />
-<div className="product-cart-icon" onClick={handleAddToCart}>
-<img src="/icons/cart.png" alt="Add to cart" />
-</div>
-</div>
-<p className="product-name">{name}</p>
-<p className="product-price">{price} грн</p>
-</div>
-</Link>
-</div>
-);
+  return (
+    <div>
+      {isDetailPage ? (
+        // Detailed View (for product details page)
+        <div className="product-details">
+          <img
+            src={imageUrl}
+            width={400} // Larger image for detailed view
+            height={400}
+            className="product-image"
+            alt={name}
+          />
+          <h1 className="product-name">{name}</h1>
+          <p className="product-price">${price}</p>
+          <p className="product-description">{description}</p>
+          <p className="product-width">Width: {width} cm</p>
+        </div>
+      ) : (
+        // Card View (default for homepage or product listing)
+        <Link href={`/product/${slug.current}`}>
+          <div className="product-card">
+            <img
+              src={imageUrl}
+              width={250}
+              height={250}
+              className="product-image"
+              alt={name}
+            />
+            <p className="product-name">{name}</p>
+            <p className="product-price">${price}</p>
+            <p className="product-width">Width: {width} cm</p>
+          </div>
+        </Link>
+      )}
+    </div>
+  );
 };
 
 export default Product;
