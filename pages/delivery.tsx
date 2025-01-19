@@ -3,23 +3,20 @@
 import React from "react";
 import { Box, Typography, Container } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useRouter } from "next/navigation";
 import Navbar from "../app/components/Navbar";
 import Footer from "../app/components/Footer";
 import CallButton from "../app/components/CallButton";
 import "../app/globals.css";
 
 const DeliverySection = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(2), // Уменьшение отступов
+  padding: theme.spacing(2),
   borderRadius: "8px",
-  marginTop: theme.spacing(3), // Уменьшение верхнего отступа
+  marginTop: theme.spacing(3),
   fontFamily: "Roboto, sans-serif",
   textAlign: "center",
 }));
 
 const Delivery = () => {
-  const router = useRouter();
-
   return (
     <>
       <Navbar />
@@ -49,17 +46,31 @@ const Delivery = () => {
           <Typography
             variant="body1"
             paragraph
-            sx={{ fontFamily: "Roboto, sans-serif", fontSize: "18px", marginBottom: "1.5rem" }}
+            sx={{
+              fontFamily: "Roboto, sans-serif",
+              fontSize: "18px",
+              marginBottom: "1.5rem",
+            }}
           >
             <strong>Оплата:</strong>
           </Typography>
-          <Box sx={{ fontFamily: "Roboto, sans-serif", fontSize: "18px", marginBottom: "2rem" }}>
+          <Box
+            sx={{
+              fontFamily: "Roboto, sans-serif",
+              fontSize: "18px",
+              marginBottom: "2rem",
+            }}
+          >
             LiqPay або по домовленості
           </Box>
           <Typography
             variant="body1"
             paragraph
-            sx={{ fontFamily: "Roboto, sans-serif", fontSize: "18px", marginBottom: "1.5rem" }}
+            sx={{
+              fontFamily: "Roboto, sans-serif",
+              fontSize: "18px",
+              marginBottom: "1.5rem",
+            }}
           >
             <strong>Доставка:</strong>
           </Typography>
@@ -71,15 +82,23 @@ const Delivery = () => {
           <Typography
             variant="body1"
             paragraph
-            sx={{ fontFamily: "Roboto, sans-serif", fontSize: "18px", marginTop: "2rem" }}
+            sx={{
+              fontFamily: "Roboto, sans-serif",
+              fontSize: "18px",
+              marginTop: "2rem",
+            }}
           >
-            Якщо у вас виникли додаткові запитання, зв'яжіться з нами за
+            Якщо у вас виникли додаткові запитання, зв&apos;яжіться з нами за
             телефоном:
           </Typography>
           <Typography
             variant="body1"
             paragraph
-            sx={{ fontWeight: "bold", fontFamily: "Roboto, sans-serif", fontSize: "18px" }}
+            sx={{
+              fontWeight: "bold",
+              fontFamily: "Roboto, sans-serif",
+              fontSize: "18px",
+            }}
           >
             +380-66-69-24-322
           </Typography>
@@ -111,5 +130,3 @@ const Delivery = () => {
 };
 
 export default Delivery;
-
-
