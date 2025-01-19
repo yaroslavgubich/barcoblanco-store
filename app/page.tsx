@@ -5,8 +5,9 @@ import {
   AboutSection,
   Categories,
   PopularProducts,
+  
 } from "./components";
-import { client } from "./client";
+import { client } from "./lib/client";
 import {
   bannerQuery,
   productQuery,
@@ -15,19 +16,21 @@ import {
 import Features from "./components/Features";
 import CallButton from "./components/CallButton";
 
+
+
 const Home = async () => {
   const bannerData = await client.fetch(bannerQuery);
   const productsData = await client.fetch(productQuery);
   const footerData = await client.fetch(footerQuery);
-
+ 
   return (
     <>
       <HeroBanner heroBanner={bannerData?.[0]} />
       <Categories />
 
       <PopularProducts productsData={productsData} />
-      <Features />
-      <CallButton />
+       <Features/>
+    <CallButton/>
       <AboutSection />
     </>
   );
