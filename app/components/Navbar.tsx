@@ -1,3 +1,11 @@
+// import React from "react";
+
+// const Navbar: React.FC = () => {
+//   return <div>{/* Add your Navbar implementation here */}</div>;
+// };
+
+// export default Navbar;
+
 "use client";
 
 import React, { useState } from "react";
@@ -11,7 +19,7 @@ import {
   InputBase,
   Badge,
   Drawer,
-  
+
   useMediaQuery,
 } from "@mui/material";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
