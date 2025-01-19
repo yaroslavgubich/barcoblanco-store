@@ -1,36 +1,11 @@
-import React from "react";
-import {
-  HeroBanner,
-  Product,
-  AboutSection,
-  Categories,
-  PopularProducts,
-} from "./components";
-import { client } from "./client";
-import {
-  bannerQuery,
-  productQuery,
-  footerQuery,
-} from "./sanity_barcoblanco/queries";
-import Features from "./components/Features";
-import CallButton from "./components/CallButton";
+import React from 'react'
 
-const Home = async () => {
-  const bannerData = await client.fetch(bannerQuery);
-  const productsData = await client.fetch(productQuery);
-  const footerData = await client.fetch(footerQuery);
-
+const page = () => {
   return (
-    <>
-      <HeroBanner heroBanner={bannerData?.[0]} />
-      <Categories />
+    <div>
+      
+    </div>
+  )
+}
 
-      <PopularProducts productsData={productsData} />
-      <Features />
-      <CallButton />
-      <AboutSection />
-    </>
-  );
-};
-
-export default Home;
+export default page
