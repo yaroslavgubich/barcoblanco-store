@@ -19,7 +19,6 @@ import {
   InputBase,
   Badge,
   Drawer,
-
   useMediaQuery,
 } from "@mui/material";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
@@ -142,7 +141,7 @@ const Navbar: React.FC = () => {
             {!isMedium && (
               <Box
                 component="img"
-                src="icons/logo.svg"
+                src="../../public/icons/logo.svg"
                 alt="Логотип"
                 sx={{
                   height: isMobile ? 30 : 40,
