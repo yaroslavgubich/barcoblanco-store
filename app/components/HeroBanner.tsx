@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { urlFor } from "../client";
 
 interface HeroBannerImage {
@@ -49,10 +50,12 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ heroBanner }) => {
       {/* Right Banner Section */}
       <div className="hero-banner-container-right">
         {heroBanner.image && heroBanner.image.asset && (
-          <img
-            src={urlFor(heroBanner.image).url()}
+          <Image
+            src={urlFor(heroBanner.image).url() || "/default-image.jpg"}
             alt="Hero Banner"
             className="hero-banner-image"
+            width={500} // Adjust as per design
+            height={500} // Adjust as per design
           />
         )}
         {/* Render Description */}

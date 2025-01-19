@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 function Categories() {
   return (
@@ -8,7 +9,12 @@ function Categories() {
         {/* Category Item - Mirrors */}
         <Link href="/category/mirrors">
           <div className="category-item">
-            <img src="/images/mirror.png" alt="Дзеркала" />
+            <Image
+              src="/images/mirror.png"
+              alt="Дзеркала"
+              width={200}
+              height={200}
+            />
             <div className="category-overlay">
               <h4>Дзеркала</h4>
             </div>
@@ -18,7 +24,12 @@ function Categories() {
         {/* Category Item - Wardrobe */}
         <Link href="/category/wardrobe">
           <div className="category-item">
-            <img src="/images/wardrobe.png" alt="Шафи" />
+            <Image
+              src="/images/wardrobe.png"
+              alt="Шафи"
+              width={200}
+              height={200}
+            />
             <div className="category-overlay">
               <h4>Шафи</h4>
             </div>
@@ -28,7 +39,12 @@ function Categories() {
         {/* Category Item - Cabinet */}
         <Link href="/category/cabinet">
           <div className="category-item">
-            <img src="/images/cabinet.png" alt="Тумби" />
+            <Image
+              src="/images/cabinet.png"
+              alt="Тумби"
+              width={200}
+              height={200}
+            />
             <div className="category-overlay">
               <h4>Тумби</h4>
             </div>
@@ -38,7 +54,12 @@ function Categories() {
         {/* Category Item - Waterproof */}
         <Link href="/category/waterproof">
           <div className="category-item">
-            <img src="/images/waterproof.jpg" alt="Водонепроникні" />
+            <Image
+              src="/images/waterproof.jpg"
+              alt="Водонепроникні"
+              width={200}
+              height={200}
+            />
             <div className="category-overlay">
               <h4>Водонепроникні</h4>
             </div>

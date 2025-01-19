@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { urlFor } from "../client";
 
 interface ProductProps {
@@ -31,7 +32,7 @@ const Product: React.FC<ProductProps> = ({ product, isDetailPage = false }) => {
       {isDetailPage ? (
         // Detailed View (for product details page)
         <div className="product-details">
-          <img
+          <Image
             src={imageUrl}
             width={400} // Larger image for detailed view
             height={400}
@@ -51,7 +52,7 @@ const Product: React.FC<ProductProps> = ({ product, isDetailPage = false }) => {
         // Card View (default for homepage or product listing)
         <Link href={`/product/${slug.current}`}>
           <div className="product-card">
-            <img
+            <Image
               src={imageUrl}
               width={250}
               height={250}
