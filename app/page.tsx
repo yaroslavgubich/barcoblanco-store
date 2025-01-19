@@ -7,12 +7,12 @@ import {
   PopularProducts,
   
 } from "./components";
-import { client } from "./lib/client";
+import { client } from "./client";
 import {
   bannerQuery,
   productQuery,
   footerQuery,
-} from "./sanity_barcoblanco/queries";
+} from "../sanity/queries";
 import Features from "./components/Features";
 import CallButton from "./components/CallButton";
 
