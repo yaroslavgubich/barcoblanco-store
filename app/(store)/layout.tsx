@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../../app/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import Navbar from "../../components/ui/Navbar";
+
+// Google Fonts configuration
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -23,9 +26,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider dynamic>
-      <html lang="en">
-        <body>{children}</body>
+    <ClerkProvider>
+      <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+        <body className="bg-white text-gray-900">
+          {/* Navbar */}
+          <Navbar />
+          {/* Main content */}
+          <main>{children}</main>
+        </body>
       </html>
     </ClerkProvider>
   );
