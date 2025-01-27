@@ -2,11 +2,16 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Image from "next/image";
 import { Menu, Search, ShoppingCart, User } from "lucide-react";
+import Logo from "./Logo";
 
 type Language = "UA" | "EN";
 
@@ -36,13 +41,7 @@ const Navbar: React.FC = () => {
             className="hidden cursor-pointer md:block"
             onClick={() => router.push("/")}
           >
-            <Image
-              src="/icons/logo.svg"
-              alt="Логотип"
-              width={40}
-              height={40}
-              className="h-10"
-            />
+            <Logo />
           </div>
         </div>
 
@@ -90,8 +89,12 @@ const Navbar: React.FC = () => {
       {/* Burger Menu Drawer */}
       <Sheet open={drawerOpen} onOpenChange={setDrawerOpen}>
         <SheetContent side="left" className="w-[250px] bg-gray-50 p-4">
-          <div className="mb-4">
-            <h2 className="text-2xl font-bold text-cyan-700">Контакти</h2>
+          {/* Required for accessibility: SheetHeader + SheetTitle */}
+          <SheetHeader>
+            <SheetTitle>Контакти</SheetTitle>
+          </SheetHeader>
+
+          <div className="mt-4">
             <p className="text-sm">+380-99-22-33-453</p>
             <p className="mt-4 text-sm">Вт-Нед: 09:00 - 20:00</p>
             <p className="text-sm">Вихідний: Понеділок</p>
