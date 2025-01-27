@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
-// import Image from "next/image";
-// import { urlFor } from "../../sanity/lib/client";
+import Image from "next/image";
+import { urlFor } from "../../sanity/lib/client";
 
 interface HeroBannerImage {
   asset?: {
@@ -47,7 +47,7 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ heroBanner }) => {
         </div>
       </div>
       {/* Right Banner Section */}
-      {/* <div className="hero-banner-container-right">
+      <div className="hero-banner-container-right">
         {heroBanner.image && heroBanner.image.asset && (
           <Image
             src={urlFor(heroBanner.image).url() || "/default-image.jpg"}
@@ -57,11 +57,11 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ heroBanner }) => {
             height={500} // Adjust as per design
           />
         )}
-        {/* Render Description */}
+      </div>
+      {/* Render Description */}
       <div className="desc">
         <p>{heroBanner.desc || "No description available"}</p>
-      </div>{" "}
-      */
+      </div>
     </div>
   );
 };

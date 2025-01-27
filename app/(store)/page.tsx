@@ -1,13 +1,30 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
+import {
+  HeroBanner,
+  AboutSection,
+  Categories,
+  PopularProducts,
+} from "../../components/ui";
+import { client } from "../../sanity/lib/client";
+import { bannerQuery, productQuery } from "../../sanity/lib/queries";
+import Features from "../../components/ui/Features";
+import CallButton from "../../components/ui/CallButton";
 
-const page = () => {
+const Home = async () => {
+  const bannerData = await client.fetch(bannerQuery);
+  const productsData = await client.fetch(productQuery);
+
   return (
-    <div>
-      <h1>Hehell123</h1>
-      <Button>Click me</Button>
-    </div>
+    <>
+      <HeroBanner heroBanner={bannerData?.[0]} />
+      <Categories />
+
+      <PopularProducts productsData={productsData} />
+      <Features />
+      <CallButton />
+      <AboutSection />
+    </>
   );
 };
 
-export default page;
+export default Home;

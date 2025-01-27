@@ -1,5 +1,5 @@
 import React from "react";
-import { Product } from "../components";
+import { Product } from "../ui";
 
 const PopularProducts = ({ productsData }) => {
   return (
