@@ -6,19 +6,19 @@ const Footer = () => {
   return (
     <footer id="footer" className="footer">
       <div className="footer-content">
-        {/* Левая секция */}
+        {/* Left Section */}
         <div className="footer-section">
           <h3>Контакти:</h3>
           <p>+38 (066) 69-24-322</p>
           <p>avsdom@ukr.net</p>
         </div>
 
-        {/* Средняя секция */}
+        {/* Middle Section */}
         <div className="footer-section">
           <h3>Інформація</h3>
           <ul>
             <li>
-              <Link href="/about">Про нас</Link>
+              <Link href="/">Про нас</Link>
             </li>
             <li>
               <Link href="/guarantee">Гарантія</Link>
@@ -29,7 +29,7 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Правая секция */}
+        {/* Right Section */}
         <div className="footer-section">
           <h3>Ми працюємо:</h3>
           <p>Вт-Нед: з 9.00 до 20.00</p>
@@ -37,12 +37,13 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Социальные сети */}
+      {/* Social Media Links */}
       <div className="footer-social">
         <a
           href="https://telegram.org"
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Telegram"
         >
           <Image
             src="/icons/telegram_icon.svg"
@@ -52,10 +53,15 @@ const Footer = () => {
             className="social-icon"
           />
         </a>
-        <a href="https://viber.com" target="_blank" rel="noopener noreferrer">
+        <a
+          href="https://viber.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Viber"
+        >
           <Image
             src="/icons/facebook_icon.svg"
-            alt="Viber"
+            alt="Facebook"
             width={30}
             height={30}
             className="social-icon"
@@ -65,6 +71,7 @@ const Footer = () => {
           href="https://instagram.com"
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Instagram"
         >
           <Image
             src="/icons/instagram_icon.svg"
