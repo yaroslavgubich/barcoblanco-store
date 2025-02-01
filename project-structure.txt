@@ -1,0 +1,112 @@
+.
+├── app
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── (store)
+│   │   ├── layout.tsx
+│   │   ├── order
+│   │   │   └── page.tsx
+│   │   ├── page.tsx
+│   │   └── productDetails
+│   │       └── [slug]
+│   │           └── page.tsx
+│   └── studio
+│       └── [[...tool]]
+│           ├── layout.tsx
+│           └── page.tsx
+├── components
+│   ├── OrderForm.tsx
+│   └── ui
+│       ├── AboutSection.tsx
+│       ├── button.tsx
+│       ├── CallButton.tsx
+│       ├── card.tsx
+│       ├── Cart.tsx
+│       ├── Categories.tsx
+│       ├── Features.tsx
+│       ├── Footer.tsx
+│       ├── form.tsx
+│       ├── HeroBanner.tsx
+│       ├── index.js
+│       ├── input.tsx
+│       ├── label.tsx
+│       ├── Layout.tsx
+│       ├── Logo.tsx
+│       ├── Navbar.tsx
+│       ├── PopularProducts.jsx
+│       ├── ProductDetails.tsx
+│       ├── Product.tsx
+│       ├── sheet.tsx
+│       └── textarea.tsx
+├── components.json
+├── eslint.config.mjs
+├── lib
+│   └── utils.ts
+├── middleware.ts
+├── next.config.ts
+├── next-env.d.ts
+├── package.json
+├── package-lock.json
+├── pages
+│   ├── contacts.tsx
+│   ├── delivery.tsx
+│   ├── guarantee.tsx
+│   └── purchaseForm.tsx
+├── postcss.config.mjs
+├── project-structure.txt
+├── public
+│   ├── icons
+│   │   ├── cart.png
+│   │   ├── facebook_icon.svg
+│   │   ├── first.png
+│   │   ├── fourth.png
+│   │   ├── instagram_icon.svg
+│   │   ├── instagram.png
+│   │   ├── logo.svg
+│   │   ├── phone.png
+│   │   ├── second.png
+│   │   ├── telegram_icon.svg
+│   │   ├── telegram.png
+│   │   ├── third.png
+│   │   └── viber.png
+│   └── images
+│       ├── about_image.png
+│       ├── about_rectangle .png
+│       ├── cabinet.png
+│       ├── contact_photo.jpg
+│       ├── mirror.png
+│       ├── photo_2025-01-09_19-02-21.jpg
+│       ├── placeholder.svg
+│       ├── wardrobe.png
+│       ├── WATER.png
+│       ├── waterproof.jpg
+│       ├── Дзеркала.png
+│       ├── Тумби.png
+│       └── Шафи.png
+├── README.md
+├── sanity
+│   ├── env.ts
+│   ├── lib
+│   │   ├── client.ts
+│   │   ├── image.ts
+│   │   ├── live.ts
+│   │   └── queries
+│   │       ├── bannerQueries.ts
+│   │       ├── categoryProductQuery.ts
+│   │       ├── fetchProducts.ts
+│   │       ├── footerQueries.ts
+│   │       ├── index.ts
+│   │       ├── popularProductsQuery.ts
+│   │       └── productQueries.ts
+│   ├── schemaTypes
+│   │   ├── banner.ts
+│   │   ├── index.ts
+│   │   └── product.ts
+│   └── structure.ts
+├── sanity.cli.ts
+├── sanity.config.ts
+├── studio-barco_new
+├── tailwind.config.ts
+└── tsconfig.json
+
+19 directories, 90 files

@@ -50,7 +50,7 @@ const Product: React.FC<ProductProps> = ({ product, isDetailPage = false }) => {
         </div>
       ) : (
         // Card View (default for homepage or product listing)
-        <Link href={`/product/${slug.current}`}>
+        <Link href={`/productDetails/${slug.current}`}>
           <div className="product-card">
             <Image
               src={imageUrl}
