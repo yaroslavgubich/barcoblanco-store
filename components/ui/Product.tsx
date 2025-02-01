@@ -61,9 +61,7 @@ const Product: React.FC<ProductProps> = ({ product, isDetailPage = false }) => {
             />
             <p className="product-name">{name}</p>
             <p className="product-price">${price}</p>
-            <p className="product-width">
-              Width: {width ? `${width} cm` : "N/A"}
-            </p>
+            <p className="product-width"></p>
           </div>
         </Link>
       )}
