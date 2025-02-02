@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
-import React, { FC, useState } from "react";
-import { styled } from "@mui/material/styles";
+import React, { FC, useState, MouseEvent } from "react";
+import { styled, useTheme } from "@mui/material/styles";
 import {
   AppBar,
   Toolbar,
@@ -18,12 +18,25 @@ import {
   ListItemText,
   Divider,
   useMediaQuery,
+  Menu,
+  MenuItem,
+  Collapse,
 } from "@mui/material";
+
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PersonIcon from "@mui/icons-material/Person";
-import { useTheme } from "@mui/material/styles";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+
+// Clerk imports
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignOutButton,
+} from "@clerk/nextjs";
 
 // Styled components
 const Search = styled("div")({
@@ -82,12 +95,27 @@ const BurgerMenuContainer = styled(Box)({
   flexDirection: "column",
 });
 
-// Type for Navbar props
 type NavbarProps = Record<string, never>;
 
 const Navbar: FC<NavbarProps> = () => {
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   const [selectedLanguage, setSelectedLanguage] = useState<"UA" | "EN">("UA");
+
+  // State & handlers for MUI's top-right menu (desktop)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const handleMenuOpen = (event: MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  // State & handlers for "Особистий кабінет" dropdown (mobile)
+  const [openPersonal, setOpenPersonal] = useState<boolean>(false);
+  const handlePersonalClick = () => {
+    setOpenPersonal(!openPersonal);
+  };
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isMedium = useMediaQuery("(max-width: 1150px)");
@@ -109,28 +137,75 @@ const Navbar: FC<NavbarProps> = () => {
         onClose={() => toggleDrawer(false)}
       >
         <BurgerMenuContainer>
-          <BurgerMenuHeader>
-            <BurgerMenuLogo src="icons/logo.svg" alt="Логотип" />
-          </BurgerMenuHeader>
+          <Link href="/">
+            <BurgerMenuHeader>
+              <BurgerMenuLogo src="icons/logo.svg" alt="Логотип" />
+            </BurgerMenuHeader>
+          </Link>
           <Divider />
+
           <List>
             <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <ShoppingCartIcon sx={{ color: "#008c99" }} />
-                </ListItemIcon>
-                <ListItemText primary="Кошик" />
-              </ListItemButton>
+              <Link href="/basket">
+                <ListItemButton>
+                  <ListItemIcon>
+                    <ShoppingCartIcon sx={{ color: "#008c99" }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Кошик" />
+                </ListItemButton>
+              </Link>
             </ListItem>
+
+            {/* "Особистий кабінет" with dropdown */}
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton onClick={handlePersonalClick}>
                 <ListItemIcon>
                   <PersonIcon sx={{ color: "#008c99" }} />
                 </ListItemIcon>
                 <ListItemText primary="Особистий кабінет" />
+                {openPersonal ? (
+                  <ExpandLess sx={{ color: "#008c99" }} />
+                ) : (
+                  <ExpandMore sx={{ color: "#008c99" }} />
+                )}
               </ListItemButton>
             </ListItem>
+
+            {/* Collapsible dropdown items */}
+            <Collapse in={openPersonal} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                {/* Show "Sign In" if user is signed out */}
+                <SignedOut>
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <SignInButton mode="modal">
+                      <span style={{ cursor: "pointer", color: "#ffff" }}>
+                        Увійти
+                      </span>
+                    </SignInButton>
+                  </ListItemButton>
+                </SignedOut>
+
+                {/* Show "Profile" and "Sign Out" if user is signed in */}
+                <SignedIn>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
+                    component={Link}
+                    href="/profile"
+                  >
+                    <ListItemText primary="Профіль" />
+                  </ListItemButton>
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <SignOutButton>
+                      <span style={{ cursor: "pointer", color: "#008c99" }}>
+                        Вихід
+                      </span>
+                    </SignOutButton>
+                  </ListItemButton>
+                </SignedIn>
+              </List>
+            </Collapse>
           </List>
+
           <Divider />
           <List>
             <Typography
@@ -300,6 +375,7 @@ const Navbar: FC<NavbarProps> = () => {
             >
               EN
             </Typography>
+
             <Link href="/basket">
               <IconButton sx={{ color: "#008c99" }}>
                 <Badge badgeContent={4} color="error">
@@ -307,9 +383,36 @@ const Navbar: FC<NavbarProps> = () => {
                 </Badge>
               </IconButton>
             </Link>
-            <IconButton sx={{ color: "#008c99" }}>
+
+            {/* Example of a top-right Person icon with a Menu */}
+            <IconButton sx={{ color: "#008c99" }} onClick={handleMenuOpen}>
               <PersonIcon />
             </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              transformOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+              <SignedOut>
+                <MenuItem onClick={handleMenuClose}>
+                  <SignInButton mode="modal">
+                    <span style={{ cursor: "pointer" }}>Sign In</span>
+                  </SignInButton>
+                </MenuItem>
+              </SignedOut>
+              <SignedIn>
+                <MenuItem onClick={handleMenuClose}>
+                  <Link href="/profile">
+                    <Typography>Profile</Typography>
+                  </Link>
+                </MenuItem>
+                <MenuItem onClick={handleMenuClose}>
+                  <SignOutButton />
+                </MenuItem>
+              </SignedIn>
+            </Menu>
           </Box>
         </Toolbar>
       </AppBar>
