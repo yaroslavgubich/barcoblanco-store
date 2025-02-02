@@ -300,11 +300,13 @@ const Navbar: FC<NavbarProps> = () => {
             >
               EN
             </Typography>
-            <IconButton sx={{ color: "#008c99" }}>
-              <Badge badgeContent={4} color="error">
-                <ShoppingCartIcon />
-              </Badge>
-            </IconButton>
+            <Link href="/basket">
+              <IconButton sx={{ color: "#008c99" }}>
+                <Badge badgeContent={4} color="error">
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
+            </Link>
             <IconButton sx={{ color: "#008c99" }}>
               <PersonIcon />
             </IconButton>
