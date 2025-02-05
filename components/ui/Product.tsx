@@ -2,7 +2,6 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { urlFor } from "../../sanity/lib/client";
 
 interface ProductProps {
   product: ProductType;
@@ -10,34 +9,41 @@ interface ProductProps {
 }
 
 interface ProductType {
-  image?: { asset: { _ref: string } }[]; // Image array structure
+  _id?: string;
+  image?: { asset: { url: string }; alt?: string }[] | null; // Allow null or undefined
   name: string;
-  slug: { current: string }; // Slug structure
+  slug: { current: string };
   price: number;
   description?: string;
   width?: number;
 }
 
 const Product: React.FC<ProductProps> = ({ product, isDetailPage = false }) => {
-  const { image = [], name, slug, price, description, width } = product;
+  const { image, name, slug, price, description, width } = product;
 
-  // Assign imageUrl based on whether an image exists
+  // Check if image exists and has at least one valid item
   const imageUrl =
-    image?.length > 0
-      ? urlFor(image[0]).url() // If there’s an image, use it
-      : "/images/placeholder.svg"; // Otherwise, use a placeholder image
+    image && Array.isArray(image) && image.length > 0
+      ? image[0].asset.url // ✅ Safe access
+      : "/images/placeholder.svg"; // Default placeholder
+
+  // (Optional) Get alt text if available
+  const altText =
+    image && Array.isArray(image) && image.length > 0 && image[0].alt
+      ? image[0].alt
+      : name;
 
   return (
     <div>
       {isDetailPage ? (
-        // Detailed View (for product details page)
+        // Detailed View
         <div className="product-details">
           <Image
             src={imageUrl}
-            width={400} // Larger image for detailed view
+            width={400}
             height={400}
             className="product-image"
-            alt={name}
+            alt={altText}
           />
           <h1 className="product-name">{name}</h1>
           <p className="product-price">${price}</p>
@@ -49,7 +55,7 @@ const Product: React.FC<ProductProps> = ({ product, isDetailPage = false }) => {
           </p>
         </div>
       ) : (
-        // Card View (default for homepage or product listing)
+        // Card View (for listing)
         <Link href={`/productDetails/${slug.current}`}>
           <div className="product-card">
             <Image
@@ -57,11 +63,10 @@ const Product: React.FC<ProductProps> = ({ product, isDetailPage = false }) => {
               width={250}
               height={250}
               className="product-image"
-              alt={name}
+              alt={altText}
             />
             <p className="product-name">{name}</p>
             <p className="product-price">${price}</p>
-            <p className="product-width"></p>
           </div>
         </Link>
       )}

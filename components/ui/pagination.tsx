@@ -1,6 +1,5 @@
 //app/components/ui/pagination.tsx
 import { Button } from "@/components/ui/button"
-import App from "next/app"
 
 interface PaginationProps {
   totalPages: number
