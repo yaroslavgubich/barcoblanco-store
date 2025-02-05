@@ -1,4 +1,4 @@
-import OrderForm from "@/components/OrderForm"
+import OrderForm from "@/components/ui/OrderForm";
 
 export default function OrderPage() {
   return (
@@ -6,6 +6,5 @@ export default function OrderPage() {
       <h1 className="text-3xl font-bold mb-6">Complete Your Order</h1>
       <OrderForm />
     </div>
-  )
+  );
 }
-
