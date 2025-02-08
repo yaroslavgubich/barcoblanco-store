@@ -4,9 +4,7 @@ import Image from "next/image";
 function Categories() {
   return (
     <section className="categories-section">
-      {/* <h1 className="categories-title">Категорії</h1> */}
       <div className="categories-container">
-        {/* Category Item - Mirrors */}
         <Link href="/category/mirrors">
           <div className="category-item">
             <Image
@@ -21,7 +19,6 @@ function Categories() {
           </div>
         </Link>
 
-        {/* Category Item - Wardrobe */}
         <Link href="/category/wardrobe">
           <div className="category-item">
             <Image
@@ -36,7 +33,6 @@ function Categories() {
           </div>
         </Link>
 
-        {/* Category Item - Cabinet */}
         <Link href="/category/cabinet">
           <div className="category-item">
             <Image
@@ -51,7 +47,6 @@ function Categories() {
           </div>
         </Link>
 
-        {/* Category Item - Waterproof */}
         <Link href="/category/waterproof">
           <div className="category-item">
             <Image
