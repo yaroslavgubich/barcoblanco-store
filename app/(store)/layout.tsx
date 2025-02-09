@@ -1,4 +1,4 @@
-import "../globals.css";
+import "../globals.css"; 
 import Navbar from "../../components/ui/Navbar";
 import Footer from "../../components/ui/Footer";
 import { ReactNode } from "react";
@@ -9,18 +9,14 @@ export const metadata = {
   description: "Barcoblanco online store for bathroom furniture",
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function StoreLayout({ children }: { children: ReactNode }) {
   return (
-    <ClerkProvider dynamic>
-      <html lang="en">
-        <body>
-          <div className="app-container">
-            <Navbar />
-            <main className="main-container">{children}</main>
-            <Footer />
-          </div>
-        </body>
-      </html>
+    <ClerkProvider>
+      <div className="app-container">
+        <Navbar />
+        <main className="main-container">{children}</main>
+        <Footer />
+      </div>
     </ClerkProvider>
   );
 }

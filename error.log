@@ -1,5 +1,17 @@
 ❌ Sanity check failed!
-Status code: 000
+Status code: 404
 Response:
-curl: (7) Failed to connect to localhost port 3000 after 0 ms: Connection refused
-HTTPSTATUS:000
+
+              <pre>missing required error components, refreshing...</pre>
+              <script>
+                async function check() {
+                  const res = await fetch(location.href).catch(() => ({}))
+
+                  if (res.status === 200) {
+                    location.reload()
+                  } else {
+                    setTimeout(check, 1000)
+                  }
+                }
+                check()
+              </script>
