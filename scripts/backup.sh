@@ -11,7 +11,7 @@ ERROR_LOG="$PROJECT_DIR/error.log"
 # Navigate to the project directory
 cd "$PROJECT_DIR" || { 
   echo "❌ Project directory not found! Exiting." > "$ERROR_LOG"
-  google-chrome --new-window "file://$ERROR_LOG"
+   google-chrome --new-window --start-fullscreen "file://$ERROR_LOG"
   exit 1
 }
 

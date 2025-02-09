@@ -32,10 +32,10 @@ Route (app)                               Size     First Load JS
   └ other shared chunks (total)           2.55 kB
 
 Route (pages)                             Size     First Load JS
-┌ ○ /contacts (487 ms)                    3.31 kB         200 kB
-├ ○ /delivery (486 ms)                    2.86 kB         199 kB
-├ ○ /guarantee (488 ms)                   3.02 kB         200 kB
-└ ○ /purchaseForm (486 ms)                12.3 kB         209 kB
+┌ ○ /contacts (512 ms)                    3.31 kB         200 kB
+├ ○ /delivery (515 ms)                    2.86 kB         199 kB
+├ ○ /guarantee (511 ms)                   3.02 kB         200 kB
+└ ○ /purchaseForm (513 ms)                12.3 kB         209 kB
 + First Load JS shared by all             94.1 kB
   ├ chunks/framework-4433d10af2c8bbd6.js  57.5 kB
   ├ chunks/main-e72915f595ed011c.js       34 kB
