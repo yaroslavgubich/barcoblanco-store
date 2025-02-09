@@ -179,7 +179,7 @@ const Navbar: FC<NavbarProps> = () => {
                   <ListItemButton sx={{ pl: 4 }}>
                     <SignInButton mode="modal">
                       <span style={{ cursor: "pointer", color: "#ffff" }}>
-                        Увійти
+                        Увійти/Зареєструватися
                       </span>
                     </SignInButton>
                   </ListItemButton>
@@ -219,19 +219,29 @@ const Navbar: FC<NavbarProps> = () => {
             >
               Каталог
             </Typography>
-            <ListItem disablePadding>
+            {/* <ListItem disablePadding>
               <ListItemButton>
                 <ListItemText primary="Тумби" />
               </ListItemButton>
-            </ListItem>
+            </ListItem> */}
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton component={Link} href="/category/wardrobe">
                 <ListItemText primary="Шафи" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton component={Link} href="/category/cabinet">
+                <ListItemText primary="Тумби" />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton component={Link} href="/category/mirror">
                 <ListItemText primary="Дзеркала" />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton component={Link} href="/category/waterproof">
+                <ListItemText primary="Водонепроникні" />
               </ListItemButton>
             </ListItem>
           </List>
@@ -398,7 +408,9 @@ const Navbar: FC<NavbarProps> = () => {
               <SignedOut>
                 <MenuItem onClick={handleMenuClose}>
                   <SignInButton mode="modal">
-                    <span style={{ cursor: "pointer" }}>Sign In</span>
+                    <span style={{ cursor: "pointer" }}>
+                      Увійти/Зареєструватися
+                    </span>
                   </SignInButton>
                 </MenuItem>
               </SignedOut>
