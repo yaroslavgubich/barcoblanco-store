@@ -1,4 +1,3 @@
-
 ---
 
 # **Automated Backup with Cron in WSL**
@@ -309,6 +308,110 @@ If anything breaks, restart cron:
 ```bash
 sudo service cron restart
 ```
+
+Here is a **README section** that explains **Chrome and ChromeDriver installation** in WSL/Ubuntu.
+
+---
+
+## **🛠️ Installing Chrome and ChromeDriver in WSL/Ubuntu**
+
+For the backup automation to work properly, **Google Chrome** and **ChromeDriver** must be installed in WSL or Ubuntu. The script uses Chrome to display error logs in case of a failure.
+
+### **1️⃣ Install Google Chrome**
+
+Run the following commands to **install Google Chrome** in WSL/Ubuntu:
+
+```bash
+wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+sudo apt update
+sudo apt install google-chrome-stable -y
+```
+
+After installation, verify that Chrome is installed:
+
+```bash
+google-chrome --version
+```
+
+✅ **If Chrome opens successfully, it is installed correctly.**
+
+---
+
+### **2️⃣ Install ChromeDriver**
+
+ChromeDriver is required if the script needs to control Chrome programmatically.
+
+1. **Find the latest version of ChromeDriver**:
+
+   ```bash
+   CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f1)
+   echo "Detected Chrome version: $CHROME_VERSION"
+   ```
+
+2. **Download and install ChromeDriver**:
+
+   ```bash
+   wget https://chromedriver.storage.googleapis.com/$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION)/chromedriver_linux64.zip
+   unzip chromedriver_linux64.zip
+   sudo mv chromedriver /usr/local/bin/
+   sudo chmod +x /usr/local/bin/chromedriver
+   rm chromedriver_linux64.zip
+   ```
+
+3. **Verify ChromeDriver installation**:
+   ```bash
+   chromedriver --version
+   ```
+
+✅ **If ChromeDriver runs without errors, it is installed correctly.**
+
+---
+
+### **3️⃣ Allow Chrome to Run in WSL (If Needed)**
+
+If running inside **WSL** (Windows Subsystem for Linux), Chrome may need an X server to display graphical applications. Install **VcXsrv** or **X410** on Windows and enable `DISPLAY` forwarding.
+
+1. **Check your WSL IP address**:
+
+   ```bash
+   ip addr | grep eth0
+   ```
+
+   Example output:
+
+   ```
+   inet 172.20.64.1/20 brd 172.20.79.255 scope global eth0
+   ```
+
+2. **Set up `DISPLAY` in WSL**:
+
+   ```bash
+   export DISPLAY=$(ip route | awk '/^default/ {print $3}'):0.0
+   echo 'export DISPLAY=$(ip route | awk "/^default/ {print \$3}"):0.0' >> ~/.bashrc
+   ```
+
+3. **Start the X server on Windows**:
+   - Install [VcXsrv](https://sourceforge.net/projects/vcxsrv/) or [X410](https://x410.dev/).
+   - Start **VcXsrv** with the option **"Disable Access Control"**.
+
+---
+
+### **4️⃣ Troubleshooting**
+
+- If **Chrome does not start**, try running:
+  ```bash
+  google-chrome --no-sandbox --disable-gpu --disable-software-rasterizer
+  ```
+- If **ChromeDriver gives errors**, ensure Chrome and ChromeDriver **versions match**:
+  ```bash
+  google-chrome --version
+  chromedriver --version
+  ```
+
+---
+
+✅ **Now, Chrome and ChromeDriver are fully installed and ready to use in WSL/Ubuntu!** 🚀
 
 ## 🚀 **Enjoy automatic backups inside WSL!**
 
