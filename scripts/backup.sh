@@ -29,20 +29,22 @@ fi
 # ----------------------------------
 echo "Running build..."
 if ! npm run build &> "$ERROR_LOG"; then
-  echo "Build failed. Check $ERROR_LOG"
+  echo "❌ Build failed. Check $ERROR_LOG"
   code -n "$ERROR_LOG"
   exit 1
 fi
 
+echo "✅ Build succeeded!"
+
 # ----------------------------------
 # 3. Duplicate everything to the backups branch
 # ----------------------------------
-if ! git rev-parse --verify "$BACKUP_BRANCH" >/dev/null 2>&1; then
-  echo "Backup branch does not exist. Creating it..."
-  git checkout -b "$BACKUP_BRANCH"
-else
+if git show-ref --verify --quiet refs/heads/"$BACKUP_BRANCH"; then
   echo "Switching to the backup branch..."
   git checkout "$BACKUP_BRANCH"
+else
+  echo "Backup branch does not exist. Creating it..."
+  git checkout -b "$BACKUP_BRANCH"
 fi
 
 # Reset the backup branch to be identical to the current branch
