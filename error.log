@@ -3,3 +3,5 @@ Status code: 000
 Response:
 curl: (7) Failed to connect to localhost port 3000 after 0 ms: Connection refused
 HTTPSTATUS:000
+Opening error log in VS Code...
+Command is only available in WSL or inside a Visual Studio Code terminal.

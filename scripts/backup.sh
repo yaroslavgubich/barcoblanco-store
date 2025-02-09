@@ -21,8 +21,8 @@ CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 # ----------------------------------
 echo "🚀 Running build process..."
 if ! npm run build &> "$ERROR_LOG"; then
-  echo "❌ Build failed. Opening error log in VS Code..."
-  code -n "$ERROR_LOG"
+   echo "Opening error log in VS Code..."
+  /home/yaroslav/.vscode-server/bin/33fc5a94a3f99ebe7087e8fe79fbe1d37a251016/bin/remote-cli/code -n "$ERROR_LOG"
   exit 1
 fi
 echo "✅ Build succeeded!"
@@ -64,7 +64,8 @@ if [ "$http_status" -ne 200 ] || echo "$sanity_body" | grep -qi "missing require
     echo "$sanity_body"
   } > "$ERROR_LOG"
   echo "Opening error log in VS Code..."
-  code -n "$ERROR_LOG"
+/home/yaroslav/.vscode-server/bin/33fc5a94a3f99ebe7087e8fe79fbe1d37a251016/bin/remote-cli/code -n "$ERROR_LOG"
+
   exit 1
 fi
 echo "✅ Sanity check passed!"
@@ -109,3 +110,4 @@ echo "🔙 Switching back to the working branch '$CURRENT_BRANCH'..."
 git checkout "$CURRENT_BRANCH"
 
 echo "✅ Backup completed successfully!"
+
