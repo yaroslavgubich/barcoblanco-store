@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Variables
-PROJECT_DIR="/path/to/your/project" # Replace with the path to your project
+PROJECT_DIR="/home/yaroslav/code/yaroslavgubich/barco_fresh/barco_blanco_shop" # Replace with the path to your project
 BACKUP_BRANCH="backups"
 ERROR_LOG="$PROJECT_DIR/error.log"
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
