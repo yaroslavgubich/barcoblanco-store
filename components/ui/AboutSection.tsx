@@ -31,7 +31,7 @@ function AboutSection() {
             Перегляньте наш каталог і переконайтеся самі: з нами ваш дім стане
             саме тим затишним куточком, про який ви мріяли!
           </p>
-          <a href="/catalog" className="catalog-button">
+          <a href="/products" className="catalog-button">
             ДО КАТАЛОГУ
           </a>
         </div>
