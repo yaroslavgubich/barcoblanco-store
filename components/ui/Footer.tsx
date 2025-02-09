@@ -18,7 +18,7 @@ const Footer = () => {
           <h3>Інформація</h3>
           <ul>
             <li>
-              <Link href="/">Про нас</Link>
+              <Link href="/#about">Про нас</Link>
             </li>
             <li>
               <Link href="/guarantee">Гарантія</Link>

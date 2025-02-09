@@ -84,9 +84,9 @@ const BurgerMenuHeader = styled("div")({
   fontSize: "24px",
 });
 
-
 const BurgerMenuLogo = styled(Image)({
   height: "40px",
+  width: "120px",
   marginRight: "16px",
 });
 
@@ -142,7 +142,12 @@ const Navbar: FC<NavbarProps> = () => {
         <BurgerMenuContainer>
           <Link href="/">
             <BurgerMenuHeader>
-              <BurgerMenuLogo src="/icons/logo.svg" alt="Логотип" />
+              <BurgerMenuLogo
+                src="/icons/logo.svg"
+                alt="logo"
+                width={120} // Provide explicit width
+                height={40} // Provide explicit height
+              />
             </BurgerMenuHeader>
           </Link>
           <Divider />
@@ -181,7 +186,7 @@ const Navbar: FC<NavbarProps> = () => {
                 <SignedOut>
                   <ListItemButton sx={{ pl: 4 }}>
                     <SignInButton mode="modal">
-                      <span style={{ cursor: "pointer", color: "#ffff" }}>
+                      <span style={{ cursor: "pointer" }}>
                         Увійти/Зареєструватися
                       </span>
                     </SignInButton>
@@ -238,7 +243,7 @@ const Navbar: FC<NavbarProps> = () => {
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton component={Link} href="/category/mirror">
+              <ListItemButton component={Link} href="/category/mirrors">
                 <ListItemText primary="Дзеркала" />
               </ListItemButton>
             </ListItem>
@@ -251,10 +256,15 @@ const Navbar: FC<NavbarProps> = () => {
           <Divider />
           <List>
             <ListItem disablePadding>
-              <ListItemButton component={Link} href="#about">
+              <ListItemButton
+                component={Link}
+                href="/#about"
+                onClick={() => setDrawerOpen(false)} // Close the burger menu before navigating
+              >
                 <ListItemText primary="Про нас" />
               </ListItemButton>
             </ListItem>
+
             <ListItem disablePadding>
               <ListItemButton component={Link} href="/guarantee">
                 <ListItemText primary="Гарантія" />
