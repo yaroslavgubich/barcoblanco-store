@@ -48,3 +48,10 @@ Route (pages)                             Size     First Load JS
 
 ✅ Build succeeded!
 Adding and committing changes on the current branch...
+[yar-feature e281234] Backup commit at 2025-02-09 18:21:57
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+Switching to backup branch 'backups'...
+error: Your local changes to the following files would be overwritten by checkout:
+	error.log
+Please commit your changes or stash them before you switch branches.
+Aborting
