@@ -294,7 +294,7 @@ const Navbar: FC<NavbarProps> = () => {
             padding: "0.5rem 0",
           }}
         >
-          <Link href="#about">
+          <Link href="/#about">
             <Typography
               sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}
             >
