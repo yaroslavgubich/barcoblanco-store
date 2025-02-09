@@ -32,10 +32,10 @@ Route (app)                               Size     First Load JS
   └ other shared chunks (total)           2.55 kB
 
 Route (pages)                             Size     First Load JS
-┌ ○ /contacts (508 ms)                    3.31 kB         200 kB
-├ ○ /delivery (508 ms)                    2.86 kB         199 kB
-├ ○ /guarantee (508 ms)                   3.02 kB         200 kB
-└ ○ /purchaseForm (511 ms)                12.3 kB         209 kB
+┌ ○ /contacts (455 ms)                    3.31 kB         200 kB
+├ ○ /delivery (455 ms)                    2.86 kB         199 kB
+├ ○ /guarantee (456 ms)                   3.02 kB         200 kB
+└ ○ /purchaseForm (458 ms)                12.3 kB         209 kB
 + First Load JS shared by all             94.1 kB
   ├ chunks/framework-4433d10af2c8bbd6.js  57.5 kB
   ├ chunks/main-e72915f595ed011c.js       34 kB
@@ -48,11 +48,3 @@ Route (pages)                             Size     First Load JS
 
 ✅ Build succeeded!
 Adding and committing changes on the current branch...
-[yar-feature e93bd11] Backup commit at 2025-02-09 18:15:47
- 2 files changed, 319 insertions(+), 24 deletions(-)
- rewrite scripts/backupREADME.md (86%)
-Switching to backup branch 'backups'...
-error: Your local changes to the following files would be overwritten by checkout:
-	error.log
-Please commit your changes or stash them before you switch branches.
-Aborting
