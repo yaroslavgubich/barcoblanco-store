@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# Exit on any error
-set -e
+set -e  # Exit on error
 
 # ----------------------------------
 # Variables
@@ -9,63 +8,51 @@ set -e
 PROJECT_DIR="/home/yaroslav/code/yaroslavgubich/barco_fresh/barco_blanco_shop"
 BACKUP_BRANCH="backups"
 ERROR_LOG="$PROJECT_DIR/error.log"
+
+cd "$PROJECT_DIR" || { echo "Project directory not found!"; exit 1; }
+
+# Get the current branch
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
-cd "$PROJECT_DIR" || { echo "Project directory not found! Exiting."; exit 1; }
-
 # ----------------------------------
-# 1. Ensure clean working tree
+# 1. Commit changes on the current branch
 # ----------------------------------
-# If 'git status --porcelain' has any output, there are uncommitted changes
 if [[ -n $(git status --porcelain) ]]; then
-  echo "ERROR: You have uncommitted changes in $CURRENT_BRANCH."
-  echo "Please commit or stash your changes before running this script."
-  exit 1
+  TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
+  echo "Committing changes on $CURRENT_BRANCH..."
+  git add .
+  git commit -m "Backup commit at $TIMESTAMP"
 fi
 
 # ----------------------------------
-# 2. Clear old error logs if exist
+# 2. Run the build process
 # ----------------------------------
-[ -f "$ERROR_LOG" ] && rm -f "$ERROR_LOG"
-
-# ----------------------------------
-# 3. Run npm build (capture all output in error.log)
-# ----------------------------------
-echo "Running build process..."
-# Capture success/failure in variable
-if npm run build &> "$ERROR_LOG"; then
-  echo "Build succeeded!"
-else
-  echo "Build failed. Check $ERROR_LOG for details."
+echo "Running build..."
+if ! npm run build &> "$ERROR_LOG"; then
+  echo "Build failed. Check $ERROR_LOG"
   code -n "$ERROR_LOG"
   exit 1
 fi
 
 # ----------------------------------
-# 4. Switch/create backups branch
+# 3. Duplicate everything to the backups branch
 # ----------------------------------
 if ! git rev-parse --verify "$BACKUP_BRANCH" >/dev/null 2>&1; then
-  echo "Backup branch '$BACKUP_BRANCH' does not exist. Creating it..."
+  echo "Backup branch does not exist. Creating it..."
   git checkout -b "$BACKUP_BRANCH"
 else
-  echo "Switching to existing backup branch '$BACKUP_BRANCH'..."
+  echo "Switching to the backup branch..."
   git checkout "$BACKUP_BRANCH"
 fi
 
-# ----------------------------------
-# 5. Add and commit changes
-# ----------------------------------
-TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
-git add .
-git commit -m "Backup commit at $TIMESTAMP" --quiet
-
-# (Optionally) push to remote
-# git push origin "$BACKUP_BRANCH"
+# Reset the backup branch to be identical to the current branch
+echo "Syncing backup branch with $CURRENT_BRANCH..."
+git reset --hard "$CURRENT_BRANCH"
 
 # ----------------------------------
-# 6. Switch back
+# 4. Switch back to the original branch
 # ----------------------------------
-echo "Switching back to the working branch ($CURRENT_BRANCH)..."
+echo "Switching back to $CURRENT_BRANCH..."
 git checkout "$CURRENT_BRANCH"
 
-echo "Backup commit completed successfully on branch $BACKUP_BRANCH."
+echo "✅ Backup completed successfully (offline)."
