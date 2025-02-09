@@ -1,5 +1,7 @@
 "use client";
+
 import Link from "next/link";
+import Image from "next/image";
 import React, { FC, useState, MouseEvent } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import {
@@ -82,7 +84,8 @@ const BurgerMenuHeader = styled("div")({
   fontSize: "24px",
 });
 
-const BurgerMenuLogo = styled("img")({
+
+const BurgerMenuLogo = styled(Image)({
   height: "40px",
   marginRight: "16px",
 });
@@ -139,7 +142,7 @@ const Navbar: FC<NavbarProps> = () => {
         <BurgerMenuContainer>
           <Link href="/">
             <BurgerMenuHeader>
-              <BurgerMenuLogo src="icons/logo.svg" alt="Логотип" />
+              <BurgerMenuLogo src="/icons/logo.svg" alt="Логотип" />
             </BurgerMenuHeader>
           </Link>
           <Divider />
@@ -342,7 +345,7 @@ const Navbar: FC<NavbarProps> = () => {
                 <Box
                   component="img"
                   src="icons/logo.svg"
-                  alt="Логотип"
+                  alt="Logo"
                   sx={{ height: isMobile ? 30 : 40, cursor: "pointer" }}
                 />
               </Link>
