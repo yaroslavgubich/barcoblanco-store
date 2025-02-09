@@ -3,19 +3,26 @@
 │   ├── favicon.ico
 │   ├── globals.css
 │   ├── (store)
+│   │   ├── basket
+│   │   │   └── page.tsx
+│   │   ├── category
+│   │   │   └── [category]
+│   │   │       └── page.tsx
 │   │   ├── layout.tsx
 │   │   ├── order
 │   │   │   └── page.tsx
 │   │   ├── page.tsx
-│   │   └── productDetails
-│   │       └── [slug]
-│   │           └── page.tsx
+│   │   ├── productDetails
+│   │   │   └── [slug]
+│   │   │       └── page.tsx
+│   │   └── products
+│   │       ├── page.tsx
+│   │       └── ProductsClient.tsx
 │   └── studio
 │       └── [[...tool]]
 │           ├── layout.tsx
 │           └── page.tsx
 ├── components
-│   ├── OrderForm.tsx
 │   └── ui
 │       ├── AboutSection.tsx
 │       ├── button.tsx
@@ -23,6 +30,7 @@
 │       ├── card.tsx
 │       ├── Cart.tsx
 │       ├── Categories.tsx
+│       ├── category-filter.tsx
 │       ├── Features.tsx
 │       ├── Footer.tsx
 │       ├── form.tsx
@@ -33,12 +41,18 @@
 │       ├── Layout.tsx
 │       ├── Logo.tsx
 │       ├── Navbar.tsx
+│       ├── OrderForm.tsx
+│       ├── pagination.tsx
 │       ├── PopularProducts.jsx
 │       ├── ProductDetails.tsx
+│       ├── productsPageCard.tsx
 │       ├── Product.tsx
 │       ├── sheet.tsx
-│       └── textarea.tsx
+│       ├── slider.tsx
+│       ├── textarea.tsx
+│       └── width-filter.tsx
 ├── components.json
+├── error.log
 ├── eslint.config.mjs
 ├── lib
 │   └── utils.ts
@@ -105,11 +119,11 @@
 │   └── structure.ts
 ├── sanity.cli.ts
 ├── sanity.config.ts
+├── scripts
+│   ├── backupREADME.md
+│   └── backup.sh
 ├── studio-barco_new
 ├── tailwind.config.ts
 └── tsconfig.json
 
-19 directories, 90 files
-
-FILES BEFORE BACKUP CRON JOB 18:48
-
+24 directories, 102 files

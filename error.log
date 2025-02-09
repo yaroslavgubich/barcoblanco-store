@@ -1,7 +1,8 @@
-❌ Sanity check failed!
-Status code: 000
-Response:
-curl: (7) Failed to connect to localhost port 3000 after 0 ms: Connection refused
-HTTPSTATUS:000
-Opening error log in VS Code...
-Command is only available in WSL or inside a Visual Studio Code terminal.
+
+> barco_blanco_shop@0.1.0 build
+> next build
+
+   ▲ Next.js 15.1.6
+   - Environments: .env.local
+
+   Creating an optimized production build ...
