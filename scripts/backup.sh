@@ -7,7 +7,7 @@ set -e  # Exit immediately if any command fails
 PROJECT_DIR="/home/yaroslav/code/yaroslavgubich/barco_fresh/barco_blanco_shop"
 BACKUP_BRANCH="backups"
 ERROR_LOG="$PROJECT_DIR/error.log"
-SANITY_URL="http://localhost:3000/sanity"
+SANITY_URL="http://localhost:3000/studio"
 TEMP_BODY="/tmp/sanity_body.txt"  # Temporary file for the response body
 
 # Navigate to the project directory
