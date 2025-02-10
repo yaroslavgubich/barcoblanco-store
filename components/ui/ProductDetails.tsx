@@ -10,8 +10,6 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-
-// Import your cart logic
 import { useCart } from "@/context/CartContext";
 
 interface ProductDetailsProps {
@@ -29,16 +27,16 @@ interface ProductDetailsProps {
 export default function ProductDetails({ productData }: ProductDetailsProps) {
   const { name, image, price, details, category, width, isPopular } = productData;
   
-  // 🔹 useCart() gives us the addToCart function
+  // Retrieve the addToCart function from our cart context
   const { addToCart } = useCart();
 
-  // If we don't have a product ID from Sanity, we can use name as a fallback ID
+  // Handle adding the product to the cart
   const handleAddToCart = () => {
     addToCart({
-      id: name,            // or use a real _id if available
+      id: name, // Ideally use a unique _id from Sanity if available
       name: name,
       price: price,
-      image: image?.[0]?.asset?.url ?? "/images/placeholder.svg",
+      image: image?.[0]?.asset?.url || "/images/placeholder.svg",
       quantity: 1,
     });
   };
@@ -48,9 +46,9 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
       <CardContent className="flex flex-col md:flex-row gap-6">
         {/* Image Section */}
         <div className="flex-1">
-          {image?.length > 0 && (
+          {image && image.length > 0 && (
             <Image
-              src={image[0]?.asset?.url}
+              src={image[0].asset.url}
               alt={name}
               width={0}
               height={0}
@@ -76,11 +74,9 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
           {isPopular && (
             <p className="text-green-500 font-semibold">🔥 Popular Product</p>
           )}
-
-          {/* Add to Cart Button */}
           <Button
             onClick={handleAddToCart}
-            className="w-3/5 h-12 bg-[#1996a3] hover:bg-[#147a86] text-white"
+            className="w-3/4 bg-[#1996a3] hover:bg-[#147a86] text-white"
           >
             Add to Cart
           </Button>

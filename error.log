@@ -8,16 +8,12 @@
    Creating an optimized production build ...
  ✓ Compiled successfully
    Linting and checking validity of types ...
+   Collecting page data ...
 
-Failed to compile.
-
-./app/(store)/contacts/page.tsx
-4:8  Error: 'CallButton' is defined but never used.  @typescript-eslint/no-unused-vars
-
-./app/(store)/delivery/page.tsx
-5:8  Error: 'CallButton' is defined but never used.  @typescript-eslint/no-unused-vars
-
-./app/(store)/guarantee/page.tsx
-5:8  Error: 'CallButton' is defined but never used.  @typescript-eslint/no-unused-vars
-
-info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+> Build error occurred
+[Error: ENOTEMPTY: directory not empty, rmdir '/home/yaroslav/code/yaroslavgubich/barco_fresh/barco_blanco_shop/.next/export'] {
+  errno: -39,
+  code: 'ENOTEMPTY',
+  syscall: 'rmdir',
+  path: '/home/yaroslav/code/yaroslavgubich/barco_fresh/barco_blanco_shop/.next/export'
+}

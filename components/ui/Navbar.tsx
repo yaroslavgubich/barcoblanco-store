@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import React, { FC, useState, MouseEvent } from "react";
+import React, { FC, useState, useEffect, useRef, KeyboardEvent } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import {
   AppBar,
@@ -23,6 +23,7 @@ import {
   Menu,
   MenuItem,
   Collapse,
+  Paper
 } from "@mui/material";
 
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
@@ -32,19 +33,12 @@ import PersonIcon from "@mui/icons-material/Person";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 
-// Clerk imports
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignOutButton,
-} from "@clerk/nextjs";
-
-// Import cart logic
+import { SignedIn, SignedOut, SignInButton, SignOutButton } from "@clerk/nextjs";
 import { useCart } from "@/context/CartContext";
+import { useRouter } from "next/navigation";
 
-// Styled components
-const Search = styled("div")({
+// Styled components for search
+const SearchContainer = styled("div")({
   position: "relative",
   borderRadius: "20px",
   backgroundColor: "transparent",
@@ -78,6 +72,19 @@ const StyledInputBase = styled(InputBase)({
   },
 });
 
+const SuggestionsContainer = styled(Paper)({
+  position: "absolute",
+  top: "100%",
+  left: 0,
+  right: 0,
+  zIndex: 9999,
+  maxHeight: "200px",
+  overflowY: "auto",
+  backgroundColor: "#ffffff",
+  border: "1px solid #ccc",
+  marginTop: "4px",
+});
+
 const BurgerMenuHeader = styled("div")({
   display: "flex",
   alignItems: "center",
@@ -104,27 +111,24 @@ const BurgerMenuContainer = styled(Box)({
 type NavbarProps = Record<string, never>;
 
 const Navbar: FC<NavbarProps> = () => {
+  // Drawer and menu state
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   const [selectedLanguage, setSelectedLanguage] = useState<"UA" | "EN">("UA");
-
-  // State & handlers for MUI's top-right menu (desktop)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const handleMenuOpen = (event: MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  // State & handlers for "Особистий кабінет" dropdown (mobile)
   const [openPersonal, setOpenPersonal] = useState<boolean>(false);
-  const handlePersonalClick = () => {
-    setOpenPersonal(!openPersonal);
-  };
+
+  // Search bar state
+  const [searchValue, setSearchValue] = useState("");
+  const [suggestions, setSuggestions] = useState<{ name: string; slug: string }[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isMedium = useMediaQuery("(max-width: 1150px)");
+
+  const { getTotalItems } = useCart();
 
   const toggleDrawer = (open: boolean): void => {
     setDrawerOpen(open);
@@ -134,8 +138,74 @@ const Navbar: FC<NavbarProps> = () => {
     setSelectedLanguage(language);
   };
 
-  // 🔹 Use our cart context to get the total number of items
-  const { getTotalItems } = useCart();
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handlePersonalClick = () => {
+    setOpenPersonal(!openPersonal);
+  };
+
+  // Hide suggestions if clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Fetch suggestions from API whenever searchValue changes
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (searchValue.trim().length === 0) {
+        setSuggestions([]);
+        return;
+      }
+      try {
+        const res = await fetch(`/api/search?query=${encodeURIComponent(searchValue)}`);
+        if (res.ok) {
+          const data = await res.json();
+          setSuggestions(data);
+        }
+      } catch (error) {
+        console.error("Error fetching suggestions:", error);
+      }
+    };
+
+    fetchSuggestions();
+  }, [searchValue]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+    setShowSuggestions(true);
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && suggestions.length > 0) {
+      router.push(`/productDetails/${suggestions[0].slug}`);
+      // Reset search state after navigating
+      setSearchValue("");
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  };
+
+  const handleSuggestionClick = (slug: string) => {
+    router.push(`/productDetails/${slug}`);
+    // Reset search state after clicking a suggestion
+    setSearchValue("");
+    setSuggestions([]);
+    setShowSuggestions(false);
+  };
 
   return (
     <>
@@ -144,16 +214,10 @@ const Navbar: FC<NavbarProps> = () => {
         <BurgerMenuContainer>
           <Link href="/">
             <BurgerMenuHeader>
-              <BurgerMenuLogo
-                src="/icons/logo.svg"
-                alt="logo"
-                width={120}
-                height={40}
-              />
+              <BurgerMenuLogo src="/icons/logo.svg" alt="logo" width={120} height={40} />
             </BurgerMenuHeader>
           </Link>
           <Divider />
-
           <List>
             <ListItem disablePadding>
               <Link href="/basket">
@@ -165,8 +229,6 @@ const Navbar: FC<NavbarProps> = () => {
                 </ListItemButton>
               </Link>
             </ListItem>
-
-            {/* "Особистий кабінет" with dropdown */}
             <ListItem disablePadding>
               <ListItemButton onClick={handlePersonalClick}>
                 <ListItemIcon>
@@ -180,38 +242,28 @@ const Navbar: FC<NavbarProps> = () => {
                 )}
               </ListItemButton>
             </ListItem>
-
-            {/* Collapsible dropdown items */}
             <Collapse in={openPersonal} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                {/* Show "Sign In" if user is signed out */}
                 <SignedOut>
                   <ListItemButton sx={{ pl: 4 }}>
                     <SignInButton mode="modal">
-                      <span style={{ cursor: "pointer" }}>
-                        Увійти/Зареєструватися
-                      </span>
+                      <span style={{ cursor: "pointer" }}>Увійти/Зареєструватися</span>
                     </SignInButton>
                   </ListItemButton>
                 </SignedOut>
-
-                {/* Show "Profile" and "Sign Out" if user is signed in */}
                 <SignedIn>
                   <ListItemButton sx={{ pl: 4 }} component={Link} href="/profile">
                     <ListItemText primary="Профіль" />
                   </ListItemButton>
                   <ListItemButton sx={{ pl: 4 }}>
                     <SignOutButton>
-                      <span style={{ cursor: "pointer", color: "#008c99" }}>
-                        Вихід
-                      </span>
+                      <span style={{ cursor: "pointer", color: "#008c99" }}>Вихід</span>
                     </SignOutButton>
                   </ListItemButton>
                 </SignedIn>
               </List>
             </Collapse>
           </List>
-
           <Divider />
           <List>
             <Typography
@@ -246,19 +298,13 @@ const Navbar: FC<NavbarProps> = () => {
               </ListItemButton>
             </ListItem>
           </List>
-
           <Divider />
           <List>
             <ListItem disablePadding>
-              <ListItemButton
-                component={Link}
-                href="/#about"
-                onClick={() => setDrawerOpen(false)}
-              >
+              <ListItemButton component={Link} href="/#about" onClick={() => setDrawerOpen(false)}>
                 <ListItemText primary="Про нас" />
               </ListItemButton>
             </ListItem>
-
             <ListItem disablePadding>
               <ListItemButton component={Link} href="/guarantee">
                 <ListItemText primary="Гарантія" />
@@ -277,54 +323,31 @@ const Navbar: FC<NavbarProps> = () => {
           </List>
         </BurgerMenuContainer>
       </Drawer>
-
-      {/* Top Bar for Desktop */}
       {!isMobile && (
-        <Box
-          sx={{
-            backgroundColor: "#008c99",
-            display: "flex",
-            justifyContent: "center",
-            padding: "0.5rem 0",
-          }}
-        >
+        <Box sx={{ backgroundColor: "#008c99", display: "flex", justifyContent: "center", padding: "0.5rem 0" }}>
           <Link href="/#about">
-            <Typography
-              sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}
-            >
+            <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>
               Про нас
             </Typography>
           </Link>
           <Link href="/guarantee">
-            <Typography
-              sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}
-            >
+            <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>
               Гарантія
             </Typography>
           </Link>
           <Link href="/delivery">
-            <Typography
-              sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}
-            >
+            <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>
               Доставка та оплата
             </Typography>
           </Link>
           <Link href="/contacts">
-            <Typography
-              sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}
-            >
+            <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>
               Контакти
             </Typography>
           </Link>
         </Box>
       )}
-
-      {/* Main Navigation */}
-      <AppBar
-        position="static"
-        elevation={0}
-        sx={{ backgroundColor: "transparent", marginTop: "10px" }}
-      >
+      <AppBar position="static" elevation={0} sx={{ backgroundColor: "transparent", marginTop: "10px" }}>
         <Toolbar
           sx={{
             maxWidth: "1400px",
@@ -336,38 +359,39 @@ const Navbar: FC<NavbarProps> = () => {
             padding: "0 1rem",
           }}
         >
-          {/* Logo and Menu Button */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <IconButton
-              sx={{ color: "#008c99" }}
-              onClick={() => toggleDrawer(true)}
-            >
+            <IconButton sx={{ color: "#008c99" }} onClick={() => toggleDrawer(true)}>
               <MenuOutlinedIcon fontSize="large" />
             </IconButton>
             {!isMedium && (
               <Link href="/">
-                <Box
-                  component="img"
-                  src="icons/logo.svg"
-                  alt="Logo"
-                  sx={{ height: isMobile ? 30 : 40, cursor: "pointer" }}
-                />
+                <Box component="img" src="icons/logo.svg" alt="Logo" sx={{ height: isMobile ? 30 : 40, cursor: "pointer" }} />
               </Link>
             )}
           </Box>
-
-          {/* Search Bar */}
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Пошук"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
-
-          {/* Language Switcher and Icons */}
+          <Box ref={containerRef} sx={{ position: "relative" }}>
+            <SearchContainer>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Пошук"
+                value={searchValue}
+                onChange={handleSearchChange}
+                onKeyDown={handleKeyDown}
+                onFocus={() => setShowSuggestions(true)}
+              />
+            </SearchContainer>
+            {showSuggestions && suggestions.length > 0 && (
+              <SuggestionsContainer>
+                {suggestions.map((item) => (
+                  <ListItemButton key={item.slug} onClick={() => handleSuggestionClick(item.slug)}>
+                    <ListItemText primary={item.name} />
+                  </ListItemButton>
+                ))}
+              </SuggestionsContainer>
+            )}
+          </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Typography
               sx={{
@@ -392,8 +416,6 @@ const Navbar: FC<NavbarProps> = () => {
             >
               EN
             </Typography>
-
-            {/* 🔹 Replace static "4" with dynamic total items from the cart */}
             <Link href="/basket">
               <IconButton sx={{ color: "#008c99" }}>
                 <Badge badgeContent={getTotalItems()} color="error">
@@ -401,8 +423,6 @@ const Navbar: FC<NavbarProps> = () => {
                 </Badge>
               </IconButton>
             </Link>
-
-            {/* Example of a top-right Person icon with a Menu */}
             <IconButton sx={{ color: "#008c99" }} onClick={handleMenuOpen}>
               <PersonIcon />
             </IconButton>
@@ -416,9 +436,7 @@ const Navbar: FC<NavbarProps> = () => {
               <SignedOut>
                 <MenuItem onClick={handleMenuClose}>
                   <SignInButton mode="modal">
-                    <span style={{ cursor: "pointer" }}>
-                      Увійти/Зареєструватися
-                    </span>
+                    <span style={{ cursor: "pointer" }}>Увійти/Зареєструватися</span>
                   </SignInButton>
                 </MenuItem>
               </SignedOut>
