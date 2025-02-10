@@ -9,7 +9,36 @@
  ✓ Compiled successfully
    Linting and checking validity of types ...
    Collecting page data ...
-unhandledRejection [Error [PageNotFoundError]: Cannot find module for page: /_document] {
-  type: 'PageNotFoundError',
-  code: 'ENOENT'
-}
+   Generating static pages (0/12) ...
+   Generating static pages (3/12) 
+   Generating static pages (6/12) 
+   Generating static pages (9/12) 
+ ✓ Generating static pages (12/12)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    32.2 kB         312 kB
+├ ○ /_not-found                          990 B           107 kB
+├ ƒ /api/search                          335 B           157 kB
+├ ○ /basket                              1.43 kB         113 kB
+├ ƒ /category/[category]                 2.5 kB          181 kB
+├ ○ /contacts                            2.53 kB         143 kB
+├ ○ /delivery                            1.99 kB         137 kB
+├ ○ /guarantee                           2.15 kB         137 kB
+├ ○ /order                               26.2 kB         145 kB
+├ ƒ /productDetails/[slug]               2.4 kB          172 kB
+├ ○ /products                            2.5 kB          181 kB
+├ ƒ /purchaseForm                        145 B           106 kB
+└ ○ /studio/[[...tool]]                  1.28 MB        1.43 MB
++ First Load JS shared by all            106 kB
+  ├ chunks/1517-be25dbbc185e7a10.js      50.6 kB
+  ├ chunks/4bd1b696-c487310b97514e6f.js  53 kB
+  └ other shared chunks (total)          2.48 kB
+
+
+ƒ Middleware                             68.6 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
