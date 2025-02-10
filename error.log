@@ -9,11 +9,7 @@
  ✓ Compiled successfully
    Linting and checking validity of types ...
    Collecting page data ...
-
-> Build error occurred
-[Error: ENOTEMPTY: directory not empty, rmdir '/home/yaroslav/code/yaroslavgubich/barco_fresh/barco_blanco_shop/.next/export'] {
-  errno: -39,
-  code: 'ENOTEMPTY',
-  syscall: 'rmdir',
-  path: '/home/yaroslav/code/yaroslavgubich/barco_fresh/barco_blanco_shop/.next/export'
+unhandledRejection [Error [PageNotFoundError]: Cannot find module for page: /_document] {
+  type: 'PageNotFoundError',
+  code: 'ENOENT'
 }
