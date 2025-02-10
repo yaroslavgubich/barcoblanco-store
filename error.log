@@ -8,41 +8,16 @@
    Creating an optimized production build ...
  ✓ Compiled successfully
    Linting and checking validity of types ...
-   Collecting page data ...
-   Generating static pages (0/12) ...
-   Generating static pages (3/12) 
-   Generating static pages (6/12) 
-   Generating static pages (9/12) 
- ✓ Generating static pages (12/12)
-   Finalizing page optimization ...
-   Collecting build traces ...
 
-Route (app)                               Size     First Load JS
-┌ ○ /                                     31.7 kB         314 kB
-├ ○ /_not-found                           990 B           107 kB
-├ ○ /basket                               1.3 kB          136 kB
-├ ƒ /category/[category]                  2.3 kB          181 kB
-├ ○ /order                                25.5 kB         139 kB
-├ ƒ /productDetails/[slug]                348 B           163 kB
-├ ○ /products                             2.3 kB          181 kB
-└ ○ /studio/[[...tool]]                   1.28 MB        1.43 MB
-+ First Load JS shared by all             106 kB
-  ├ chunks/1517-be25dbbc185e7a10.js       50.6 kB
-  ├ chunks/4bd1b696-c487310b97514e6f.js   53 kB
-  └ other shared chunks (total)           2.55 kB
+Failed to compile.
 
-Route (pages)                             Size     First Load JS
-┌ ○ /contacts (595 ms)                    3.31 kB         200 kB
-├ ○ /delivery (601 ms)                    2.86 kB         199 kB
-├ ○ /guarantee (594 ms)                   3.02 kB         200 kB
-└ ○ /purchaseForm (595 ms)                12.3 kB         209 kB
-+ First Load JS shared by all             94.1 kB
-  ├ chunks/framework-4433d10af2c8bbd6.js  57.5 kB
-  ├ chunks/main-e72915f595ed011c.js       34 kB
-  └ other shared chunks (total)           2.52 kB
+./app/(store)/contacts/page.tsx
+4:8  Error: 'CallButton' is defined but never used.  @typescript-eslint/no-unused-vars
 
-ƒ Middleware                              68.6 kB
+./app/(store)/delivery/page.tsx
+5:8  Error: 'CallButton' is defined but never used.  @typescript-eslint/no-unused-vars
 
-○  (Static)   prerendered as static content
-ƒ  (Dynamic)  server-rendered on demand
+./app/(store)/guarantee/page.tsx
+5:8  Error: 'CallButton' is defined but never used.  @typescript-eslint/no-unused-vars
 
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules

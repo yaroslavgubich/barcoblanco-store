@@ -40,6 +40,9 @@ import {
   SignOutButton,
 } from "@clerk/nextjs";
 
+// Import cart logic
+import { useCart } from "@/context/CartContext";
+
 // Styled components
 const Search = styled("div")({
   position: "relative",
@@ -131,22 +134,21 @@ const Navbar: FC<NavbarProps> = () => {
     setSelectedLanguage(language);
   };
 
+  // 🔹 Use our cart context to get the total number of items
+  const { getTotalItems } = useCart();
+
   return (
     <>
       {/* Drawer for Mobile Menu */}
-      <Drawer
-        anchor="left"
-        open={drawerOpen}
-        onClose={() => toggleDrawer(false)}
-      >
+      <Drawer anchor="left" open={drawerOpen} onClose={() => toggleDrawer(false)}>
         <BurgerMenuContainer>
           <Link href="/">
             <BurgerMenuHeader>
               <BurgerMenuLogo
                 src="/icons/logo.svg"
                 alt="logo"
-                width={120} // Provide explicit width
-                height={40} // Provide explicit height
+                width={120}
+                height={40}
               />
             </BurgerMenuHeader>
           </Link>
@@ -195,11 +197,7 @@ const Navbar: FC<NavbarProps> = () => {
 
                 {/* Show "Profile" and "Sign Out" if user is signed in */}
                 <SignedIn>
-                  <ListItemButton
-                    sx={{ pl: 4 }}
-                    component={Link}
-                    href="/profile"
-                  >
+                  <ListItemButton sx={{ pl: 4 }} component={Link} href="/profile">
                     <ListItemText primary="Профіль" />
                   </ListItemButton>
                   <ListItemButton sx={{ pl: 4 }}>
@@ -227,11 +225,6 @@ const Navbar: FC<NavbarProps> = () => {
             >
               Каталог
             </Typography>
-            {/* <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemText primary="Тумби" />
-              </ListItemButton>
-            </ListItem> */}
             <ListItem disablePadding>
               <ListItemButton component={Link} href="/category/wardrobe">
                 <ListItemText primary="Шафи" />
@@ -253,13 +246,14 @@ const Navbar: FC<NavbarProps> = () => {
               </ListItemButton>
             </ListItem>
           </List>
+
           <Divider />
           <List>
             <ListItem disablePadding>
               <ListItemButton
                 component={Link}
                 href="/#about"
-                onClick={() => setDrawerOpen(false)} // Close the burger menu before navigating
+                onClick={() => setDrawerOpen(false)}
               >
                 <ListItemText primary="Про нас" />
               </ListItemButton>
@@ -399,9 +393,10 @@ const Navbar: FC<NavbarProps> = () => {
               EN
             </Typography>
 
+            {/* 🔹 Replace static "4" with dynamic total items from the cart */}
             <Link href="/basket">
               <IconButton sx={{ color: "#008c99" }}>
-                <Badge badgeContent={4} color="error">
+                <Badge badgeContent={getTotalItems()} color="error">
                   <ShoppingCartIcon />
                 </Badge>
               </IconButton>
