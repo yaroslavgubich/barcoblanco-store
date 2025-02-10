@@ -106,7 +106,7 @@ const Navbar: React.FC = () => {
             >
               Контакти
             </Typography>
-            <Typography variant="body2">+380-99-22-33-453</Typography>
+            {/* <Typography variant="body2">+380-99-22-33-453</Typography> */}
             <Typography variant="body2" sx={{ marginTop: "16px" }}>
               Вт-Нед: 09:00 - 20:00
             </Typography>
