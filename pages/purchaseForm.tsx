@@ -11,6 +11,17 @@ const PurchaseForm = () => {
     address: "",
   });
 
+  const payload = {
+    to: [formData.email], // Ziel-E-Mail-Adresse
+    subject: "Neue Bestellung",       // Betreff
+    body: `
+      Neue Bestellung erhalten:
+      - Name: ${formData.name}
+      - Email: ${formData.email}
+      - Telefon: ${formData.phone}
+      - Adresse: ${formData.address}
+    `,
+  };
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
@@ -19,10 +30,36 @@ const PurchaseForm = () => {
     });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Submitted Data:", formData);
-    alert("Your order has been placed successfully!");
+
+    try {
+      const response = await fetch("http://localhost:8080/email/send-to-customer", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        console.log("Order successfully submitted:", formData);
+        alert("Your order has been placed successfully!");
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          address: "",
+        });
+      } else {
+        const errorData = await response.json();
+        console.error("Error submitting order:", errorData);
+        alert("An error occurred. Please try again.");
+      }
+    } catch (error) {
+      console.error("Request failed:", error);
+      alert("An error occurred. Please try again later.");
+    }
   };
 
   return (
