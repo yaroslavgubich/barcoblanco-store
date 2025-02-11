@@ -1,3 +1,4 @@
+// sanity/schemaTypes/banner.ts
 const banner = {
   name: "banner",
   title: "Banner",

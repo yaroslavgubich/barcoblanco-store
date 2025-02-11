@@ -1,3 +1,4 @@
+// sanity/schemaTypes/product.ts
 //sanity/schemaTypes/product.ts
 const producjschema = {
   name: "product",

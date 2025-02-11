@@ -1,3 +1,4 @@
+// sanity/lib/queries/fetchProducts.ts
 import { client } from "../client";
 import { productQuery } from "../../../sanity/lib/queries/productQueries";
 

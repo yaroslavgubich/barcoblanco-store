@@ -1,3 +1,4 @@
+// app/(store)/layout.tsx
 "use client";
 import "../globals.css";
 import Navbar from "@/components/ui/Navbar";

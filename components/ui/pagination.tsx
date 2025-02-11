@@ -1,3 +1,4 @@
+// components/ui/pagination.tsx
 //app/components/ui/pagination.tsx
 import { Button } from "@/components/ui/button"
 

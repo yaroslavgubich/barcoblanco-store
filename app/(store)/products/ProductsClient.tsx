@@ -1,3 +1,4 @@
+// app/(store)/products/ProductsClient.tsx
 "use client";
 
 import { useMemo, useState } from "react";

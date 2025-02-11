@@ -1,3 +1,4 @@
+// components/ui/AboutSection.tsx
 import Image from "next/image";
 
 function AboutSection() {

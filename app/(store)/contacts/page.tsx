@@ -1,3 +1,4 @@
+// app/(store)/contacts/page.tsx
 "use client";
 import React from "react";
 import { Box, Typography, Link } from "@mui/material";
