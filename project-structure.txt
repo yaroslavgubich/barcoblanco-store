@@ -1,71 +1,102 @@
 .
+├── .env
+├── .gitignore
+├── .sanity
+│   └── runtime
+│       ├── app.js
+│       └── index.html
+├── .vercel
+│   ├── .env.preview.local
+│   ├── README.txt
+│   ├── output
+│   │   ├── builds.json
+│   │   ├── config.json
+│   │   └── diagnostics
+│   │       ├── build-diagnostics.json
+│   │       ├── framework.json
+│   │       └── trace
+│   └── project.json
+├── .vscode
+│   └── settings.json
+├── README.md
 ├── app
-│   ├── favicon.ico
-│   ├── globals.css
 │   ├── (store)
 │   │   ├── basket
 │   │   │   └── page.tsx
 │   │   ├── category
 │   │   │   └── [category]
 │   │   │       └── page.tsx
+│   │   ├── contacts
+│   │   │   └── page.tsx
+│   │   ├── delivery
+│   │   │   └── page.tsx
+│   │   ├── guarantee
+│   │   │   └── page.tsx
 │   │   ├── layout.tsx
 │   │   ├── order
 │   │   │   └── page.tsx
 │   │   ├── page.tsx
 │   │   ├── productDetails
+│   │   │   ├── AddToCartButton.tsx
 │   │   │   └── [slug]
 │   │   │       └── page.tsx
-│   │   └── products
-│   │       ├── page.tsx
-│   │       └── ProductsClient.tsx
+│   │   ├── products
+│   │   │   ├── ProductsClient.tsx
+│   │   │   └── page.tsx
+│   │   └── purchaseForm
+│   │       └── page.tsx
+│   ├── api
+│   │   └── search
+│   │       └── route.ts
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── layout.tsx
 │   └── studio
 │       └── [[...tool]]
 │           ├── layout.tsx
 │           └── page.tsx
 ├── components
+│   ├── ClientLayout.tsx
 │   └── ui
 │       ├── AboutSection.tsx
-│       ├── button.tsx
 │       ├── CallButton.tsx
-│       ├── card.tsx
 │       ├── Cart.tsx
 │       ├── Categories.tsx
-│       ├── category-filter.tsx
 │       ├── Features.tsx
 │       ├── Footer.tsx
-│       ├── form.tsx
 │       ├── HeroBanner.tsx
-│       ├── index.js
-│       ├── input.tsx
-│       ├── label.tsx
 │       ├── Layout.tsx
 │       ├── Logo.tsx
 │       ├── Navbar.tsx
 │       ├── OrderForm.tsx
-│       ├── pagination.tsx
 │       ├── PopularProducts.jsx
-│       ├── ProductDetails.tsx
-│       ├── productsPageCard.tsx
 │       ├── Product.tsx
+│       ├── ProductDetails.tsx
+│       ├── button.tsx
+│       ├── card.tsx
+│       ├── category-filter.tsx
+│       ├── form.tsx
+│       ├── index.js
+│       ├── input.tsx
+│       ├── label.tsx
+│       ├── pagination.tsx
+│       ├── productsPageCard.tsx
 │       ├── sheet.tsx
 │       ├── slider.tsx
 │       ├── textarea.tsx
 │       └── width-filter.tsx
 ├── components.json
+├── context
+│   └── CartContext.tsx
 ├── error.log
 ├── eslint.config.mjs
 ├── lib
 │   └── utils.ts
 ├── middleware.ts
-├── next.config.ts
 ├── next-env.d.ts
-├── package.json
+├── next.config.ts
 ├── package-lock.json
-├── pages
-│   ├── contacts.tsx
-│   ├── delivery.tsx
-│   ├── guarantee.tsx
-│   └── purchaseForm.tsx
+├── package.json
 ├── postcss.config.mjs
 ├── project-structure.txt
 ├── public
@@ -74,16 +105,17 @@
 │   │   ├── facebook_icon.svg
 │   │   ├── first.png
 │   │   ├── fourth.png
-│   │   ├── instagram_icon.svg
 │   │   ├── instagram.png
+│   │   ├── instagram_icon.svg
 │   │   ├── logo.svg
 │   │   ├── phone.png
 │   │   ├── second.png
-│   │   ├── telegram_icon.svg
 │   │   ├── telegram.png
+│   │   ├── telegram_icon.svg
 │   │   ├── third.png
 │   │   └── viber.png
 │   └── images
+│       ├── WATER.png
 │       ├── about_image.png
 │       ├── about_rectangle .png
 │       ├── cabinet.png
@@ -92,12 +124,10 @@
 │       ├── photo_2025-01-09_19-02-21.jpg
 │       ├── placeholder.svg
 │       ├── wardrobe.png
-│       ├── WATER.png
 │       ├── waterproof.jpg
 │       ├── Дзеркала.png
 │       ├── Тумби.png
 │       └── Шафи.png
-├── README.md
 ├── sanity
 │   ├── env.ts
 │   ├── lib
@@ -120,10 +150,9 @@
 ├── sanity.cli.ts
 ├── sanity.config.ts
 ├── scripts
-│   ├── backupREADME.md
-│   └── backup.sh
-├── studio-barco_new
+│   ├── backup.sh
+│   └── backupREADME.md
 ├── tailwind.config.ts
 └── tsconfig.json
 
-24 directories, 102 files
+36 directories, 120 files
