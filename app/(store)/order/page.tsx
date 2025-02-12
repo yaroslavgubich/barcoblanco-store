@@ -26,6 +26,27 @@ import {
 import { useCart } from "@/context/CartContext"
 import Image from "next/image"
 
+// Typen definieren
+type CartItem = {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  image: string;
+};
+
+type OrderFormData = {
+  fullName: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  postalCode: string;
+  country: string;
+  additionalInfo?: string;
+  cart: CartItem[];
+};
+
 const formSchema = z.object({
   fullName: z
     .string()
@@ -59,18 +80,45 @@ export default function OrderForm() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsSubmitting(true)
-    // Example: send the order data + cart to your backend
-    const orderData = { ...values, cart }
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsSubmitting(true);
 
-    // For demonstration, just console.log and reset
-    console.log("Order data:", orderData)
-    setTimeout(() => {
-      setIsSubmitting(false)
-      alert("Order submitted successfully!")
-      form.reset()
-    }, 2000)
+    const orderData: OrderFormData = {
+      ...values,
+      cart: cart.map((item) => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.image,
+      })),
+    };
+
+    try {
+      const response = await fetch("http://127.0.0.1:5000/send-order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Backend error:", errorData);
+        throw new Error("Failed to submit the order.");
+      }
+
+      const result = await response.json();
+      console.log("Order response:", result);
+      alert("Order submitted successfully! A confirmation email has been sent.");
+      form.reset();
+    } catch (error) {
+      console.error("Error submitting the order:", error);
+      alert("Failed to submit the order. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   // 2️⃣ Calculate total price
