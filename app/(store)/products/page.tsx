@@ -1,3 +1,4 @@
+// app/(store)/products/page.tsx
 import { productQuery } from "@/sanity/lib/queries/productQueries";
 import { client } from "@/sanity/lib/client";
 import ProductsClient from "./ProductsClient"; // <-- We'll create this client component

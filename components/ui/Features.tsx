@@ -1,3 +1,4 @@
+// components/ui/Features.tsx
 import React from "react";
 import Image from "next/image";
 

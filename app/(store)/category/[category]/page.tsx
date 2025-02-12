@@ -1,3 +1,4 @@
+// app/(store)/category/[category]/page.tsx
 import { categoryProductQuery } from "@/sanity/lib/queries/categoryProductQuery";
 import { client } from "@/sanity/lib/client";
 import ProductsClient from "../../products/ProductsClient";

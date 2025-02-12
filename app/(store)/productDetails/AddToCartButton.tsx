@@ -1,3 +1,4 @@
+// app/(store)/productDetails/AddToCartButton.tsx
 "use client";
 import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";

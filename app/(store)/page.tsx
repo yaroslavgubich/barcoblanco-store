@@ -1,3 +1,4 @@
+// app/(store)/page.tsx
 import React from "react";
 import {
   HeroBanner,
