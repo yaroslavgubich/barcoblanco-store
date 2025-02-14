@@ -1,3 +1,53 @@
+// app/(store)/layout.tsx
+"use client";
+import "../globals.css";
+import Navbar from "@/components/ui/Navbar";
+import Footer from "@/components/ui/Footer";
+import { ReactNode } from "react";
+import { ClerkProvider } from "@clerk/nextjs";
+import { CartProvider } from "@/context/CartContext";
+
+export default function StoreLayout({ children }: { children: ReactNode }) {
+  return (
+    <ClerkProvider>
+      <CartProvider>
+        <div className="app-container">
+          <Navbar />
+          <main className="main-container">{children}</main>
+          <Footer />
+        </div>
+      </CartProvider>
+    </ClerkProvider>
+  );
+}
+// components/ClientLayout.tsx
+"use client";
+
+import { ReactNode } from "react";
+import { ClerkProvider } from "@clerk/nextjs";
+import { CartProvider } from "@/context/CartContext";
+import Navbar from "@/components/ui/Navbar";
+import Footer from "@/components/ui/Footer";
+
+/**
+ * This client component wraps the entire app with:
+ * - ClerkProvider for auth
+ * - CartProvider for cart state
+ * - Navbar & Footer on every page
+ */
+export default function ClientLayout({ children }: { children: ReactNode }) {
+  return (
+    <ClerkProvider>
+      <CartProvider>
+        <div className="app-container">
+          <Navbar />
+          <main className="main-container">{children}</main>
+          <Footer />
+        </div>
+      </CartProvider>
+    </ClerkProvider>
+  );
+}
 // components/ui/Navbar.tsx
 "use client";
 
@@ -21,13 +71,20 @@ import {
   ListItemText,
   Divider,
   useMediaQuery,
+  Menu,
+  MenuItem,
+  Collapse,
   Paper
 } from "@mui/material";
 
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import PersonIcon from "@mui/icons-material/Person";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 
+import { SignedIn, SignedOut, SignInButton, SignOutButton } from "@clerk/nextjs";
 import { useCart } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
 
@@ -105,13 +162,13 @@ const BurgerMenuContainer = styled(Box)({
 type NavbarProps = Record<string, never>;
 
 const Navbar: FC<NavbarProps> = () => {
-  // Drawer state
+  // Drawer and menu state
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
-
-  // Language switcher
   const [selectedLanguage, setSelectedLanguage] = useState<"UA" | "EN">("UA");
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [openPersonal, setOpenPersonal] = useState<boolean>(false);
 
-  // Search suggestions state
+  // Search bar state
   const [searchValue, setSearchValue] = useState("");
   const [suggestions, setSuggestions] = useState<{ name: string; slug: string }[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -130,6 +187,18 @@ const Navbar: FC<NavbarProps> = () => {
 
   const handleLanguageChange = (language: "UA" | "EN"): void => {
     setSelectedLanguage(language);
+  };
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handlePersonalClick = () => {
+    setOpenPersonal(!openPersonal);
   };
 
   // Hide suggestions if clicking outside
@@ -211,6 +280,40 @@ const Navbar: FC<NavbarProps> = () => {
                 </ListItemButton>
               </Link>
             </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton onClick={handlePersonalClick}>
+                <ListItemIcon>
+                  <PersonIcon sx={{ color: "#008c99" }} />
+                </ListItemIcon>
+                <ListItemText primary="Особистий кабінет" />
+                {openPersonal ? (
+                  <ExpandLess sx={{ color: "#008c99" }} />
+                ) : (
+                  <ExpandMore sx={{ color: "#008c99" }} />
+                )}
+              </ListItemButton>
+            </ListItem>
+            <Collapse in={openPersonal} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <SignedOut>
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <SignInButton mode="modal">
+                      <span style={{ cursor: "pointer" }}>Увійти/Зареєструватися</span>
+                    </SignInButton>
+                  </ListItemButton>
+                </SignedOut>
+                <SignedIn>
+                  <ListItemButton sx={{ pl: 4 }} component={Link} href="/profile">
+                    <ListItemText primary="Профіль" />
+                  </ListItemButton>
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <SignOutButton>
+                      <span style={{ cursor: "pointer", color: "#008c99" }}>Вихід</span>
+                    </SignOutButton>
+                  </ListItemButton>
+                </SignedIn>
+              </List>
+            </Collapse>
           </List>
           <Divider />
           <List>
@@ -371,6 +474,34 @@ const Navbar: FC<NavbarProps> = () => {
                 </Badge>
               </IconButton>
             </Link>
+            <IconButton sx={{ color: "#008c99" }} onClick={handleMenuOpen}>
+              <PersonIcon />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              transformOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+              <SignedOut>
+                <MenuItem onClick={handleMenuClose}>
+                  <SignInButton mode="modal">
+                    <span style={{ cursor: "pointer" }}>Увійти/Зареєструватися</span>
+                  </SignInButton>
+                </MenuItem>
+              </SignedOut>
+              <SignedIn>
+                <MenuItem onClick={handleMenuClose}>
+                  <Link href="/profile">
+                    <Typography>Profile</Typography>
+                  </Link>
+                </MenuItem>
+                <MenuItem onClick={handleMenuClose}>
+                  <SignOutButton />
+                </MenuItem>
+              </SignedIn>
+            </Menu>
           </Box>
         </Toolbar>
       </AppBar>
@@ -379,3 +510,16 @@ const Navbar: FC<NavbarProps> = () => {
 };
 
 export default Navbar;
+// middleware.ts
+import { clerkMiddleware } from "@clerk/nextjs/server";
+
+export default clerkMiddleware();
+
+export const config = {
+  matcher: [
+    // Skip Next.js internals and all static files, unless found in search params
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    // Always run for API routes
+    "/(api|trpc)(.*)",
+  ],
+};
