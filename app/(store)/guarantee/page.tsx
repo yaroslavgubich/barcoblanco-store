@@ -1,4 +1,7 @@
+// app/(store)/guarantee/page.tsx
 "use client";
+export const dynamic = "force-dynamic"; // Prevents static pre-rendering
+
 import React from "react";
 import { Box, Typography, Container } from "@mui/material";
 import { styled } from "@mui/material/styles";

@@ -1,3 +1,4 @@
+// components/ui/Layout.tsx
 import React from 'react'
 
 function layout() {

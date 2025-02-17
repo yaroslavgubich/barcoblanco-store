@@ -1,3 +1,4 @@
+// app/studio/[[...tool]]/layout.tsx
 import React from "react";
 
 // StudioLayout for the content management interface.

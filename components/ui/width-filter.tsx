@@ -1,3 +1,4 @@
+// components/ui/width-filter.tsx
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import React from "react";

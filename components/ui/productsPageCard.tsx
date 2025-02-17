@@ -1,1 +1,2 @@
+// components/ui/productsPageCard.tsx
 

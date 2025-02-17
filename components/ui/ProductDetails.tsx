@@ -1,3 +1,4 @@
+// components/ui/ProductDetails.tsx
 "use client";
 
 import React from "react";

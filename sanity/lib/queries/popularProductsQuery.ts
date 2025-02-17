@@ -1,3 +1,4 @@
+// sanity/lib/queries/popularProductsQuery.ts
 export const popularProductsQuery = `
   *[_type == "product" && isPopular == true] {
     _id,

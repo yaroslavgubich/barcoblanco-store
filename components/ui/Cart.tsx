@@ -1,3 +1,4 @@
+// components/ui/Cart.tsx
 import React from 'react'
 
 function Cart() {
