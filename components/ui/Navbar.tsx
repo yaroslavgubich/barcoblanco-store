@@ -36,6 +36,24 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import { SignedIn, SignedOut, SignInButton, SignOutButton } from "@clerk/nextjs";
 import { useCart } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
+import Script from "next/script";
+
+
+<Script id="custom-translate" strategy="afterInteractive">
+  {`
+    function triggerTranslate(language) {
+      const frame = document.querySelector('iframe.goog-te-menu-frame');
+      if (!frame) {
+        alert('Translation frame not loaded yet. Please try again later.');
+        return;
+      }
+      const langButton = frame.contentDocument.querySelector(\`a[lang="\${language}"]\`);
+      langButton.click();
+    }
+  `}
+</Script>
+
+
 
 // Styled components for search
 const SearchContainer = styled("div")({
@@ -134,9 +152,9 @@ const Navbar: FC<NavbarProps> = () => {
     setDrawerOpen(open);
   };
 
-  const handleLanguageChange = (language: "UA" | "EN"): void => {
+  /*const handleLanguageChange = (language: "UA" | "EN"): void => {
     setSelectedLanguage(language);
-  };
+  };*/
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -206,6 +224,20 @@ const Navbar: FC<NavbarProps> = () => {
     setSuggestions([]);
     setShowSuggestions(false);
   };
+ 
+  const handleLanguageChange = (lang: string) => {
+    if (typeof window !== "undefined" && window.triggerTranslate) {
+      if(lang === "EN"){
+        setSelectedLanguage("EN");
+      }
+      else {
+        setSelectedLanguage("UA");
+      }
+        window.triggerTranslate(lang); // Globale Funktion aufrufen
+      } else {
+        console.error("Translation function not available.");
+      }
+    };
 
   return (
     <>

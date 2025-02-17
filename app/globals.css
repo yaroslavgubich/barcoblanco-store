@@ -967,3 +967,54 @@ span.text-red {
     font-size: 16px;
   }
 }
+
+/*Виджет для перевода*/
+/* Entfernt den Google-Rahmen */
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+/* Verändert das Dropdown-Styling */
+#google_translate_element select {
+  padding: 5px;
+  font-size: 14px;
+  border-radius: 8px;
+  background-color: #f4f4f4;
+  border: 1px solid #ccc;
+  color: #333;
+}
+
+/* Widget zentrieren */
+#google_translate_element {
+  text-align: right;
+  margin: 10px 0;
+}
+
+/* Dropdown-Menü ausblenden */
+#google_translate_element .goog-te-combo {
+  display: none;
+}
+
+/* Trigger-Button stylen */
+.custom-lang-button {
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
+  padding: 8px 16px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.custom-lang-button:hover {
+  background-color: #0056b3;
+}
+
+

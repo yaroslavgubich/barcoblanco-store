@@ -33,7 +33,7 @@ def send_order():
     if not data:
         return jsonify({"error": "No data received"}), 400
 
-    # Customer E-Mail
+    # Customer-E-Mail
     customer_email = data["email"]
     customer_message = f"""
     Hello {data['fullName']},
