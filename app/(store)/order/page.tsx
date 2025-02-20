@@ -138,7 +138,7 @@ export default function OrderForm() {
                 name="fullName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Повне ім'я</FormLabel>
+                    <FormLabel>Повне ім&apos;я</FormLabel>
                     <FormControl>
                       <Input placeholder="Іван Петренко" {...field} />
                     </FormControl>
@@ -241,7 +241,7 @@ export default function OrderForm() {
                       />
                     </FormControl>
                     <FormDescription>
-                      Необов’язково: Ви можете залишити коментар щодо доставки.
+                      Необов&apos;язково: Ви можете залишити коментар щодо доставки.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
