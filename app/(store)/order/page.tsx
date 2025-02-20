@@ -1,4 +1,3 @@
-// app/(store)/order/page.tsx
 "use client";
 
 import { useState } from "react"
@@ -26,6 +25,27 @@ import {
 } from "@/components/ui/card"
 import { useCart } from "@/context/CartContext"
 import Image from "next/image"
+
+// Typen definieren
+type CartItem = {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  image: string;
+};
+
+type OrderFormData = {
+  fullName: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  postalCode: string;
+  country: string;
+  additionalInfo?: string;
+  cart: CartItem[];
+};
 
 const formSchema = z.object({
   fullName: z
@@ -60,18 +80,45 @@ export default function OrderForm() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsSubmitting(true)
-    // Example: send the order data + cart to your backend
-    const orderData = { ...values, cart }
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsSubmitting(true);
 
-    // For demonstration, just console.log and reset
-    console.log("Order data:", orderData)
-    setTimeout(() => {
-      setIsSubmitting(false)
-      alert("Order submitted successfully!")
-      form.reset()
-    }, 2000)
+    const orderData: OrderFormData = {
+      ...values,
+      cart: cart.map((item) => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.image,
+      })),
+    };
+
+    try {
+      const response = await fetch("https://v0-barcoblanco-e-commerce-website-a65y293a9.vercel.app/backend/send-order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Backend error:", errorData);
+        throw new Error("Failed to submit the order.");
+      }
+
+      const result = await response.json();
+      console.log("Order response:", result);
+      alert("Order submitted successfully! A confirmation email has been sent.");
+      form.reset();
+    } catch (error) {
+      console.error("Error submitting the order:", error);
+      alert("Failed to submit the order. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   // 2️⃣ Calculate total price
@@ -81,7 +128,7 @@ export default function OrderForm() {
     <div className="grid gap-6 lg:grid-cols-2">
       <Card>
         <CardHeader>
-          <CardTitle>Delivery Information</CardTitle>
+          <CardTitle>Інформація про доставку</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -91,9 +138,9 @@ export default function OrderForm() {
                 name="fullName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Full Name</FormLabel>
+                    <FormLabel>Повне ім'я</FormLabel>
                     <FormControl>
-                      <Input placeholder="John Doe" {...field} />
+                      <Input placeholder="Іван Петренко" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -104,11 +151,11 @@ export default function OrderForm() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Електронна пошта</FormLabel>
                     <FormControl>
                       <Input
                         type="email"
-                        placeholder="john@example.com"
+                        placeholder="ivan@example.com"
                         {...field}
                       />
                     </FormControl>
@@ -121,9 +168,9 @@ export default function OrderForm() {
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Phone</FormLabel>
+                    <FormLabel>Телефон</FormLabel>
                     <FormControl>
-                      <Input type="tel" placeholder="+1 (555) 123-4567" {...field} />
+                      <Input type="tel" placeholder="+38 (097) 123-4567" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -134,9 +181,9 @@ export default function OrderForm() {
                 name="address"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Address</FormLabel>
+                    <FormLabel>Адреса</FormLabel>
                     <FormControl>
-                      <Input placeholder="123 Main St" {...field} />
+                      <Input placeholder="вул. Шевченка, 10" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -147,9 +194,9 @@ export default function OrderForm() {
                 name="city"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>City</FormLabel>
+                    <FormLabel>Місто</FormLabel>
                     <FormControl>
-                      <Input placeholder="New York" {...field} />
+                      <Input placeholder="Київ" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -160,9 +207,9 @@ export default function OrderForm() {
                 name="postalCode"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Postal Code</FormLabel>
+                    <FormLabel>Поштовий індекс</FormLabel>
                     <FormControl>
-                      <Input placeholder="10001" {...field} />
+                      <Input placeholder="01001" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -173,9 +220,9 @@ export default function OrderForm() {
                 name="country"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Country</FormLabel>
+                    <FormLabel>Країна</FormLabel>
                     <FormControl>
-                      <Input placeholder="United States" {...field} />
+                      <Input placeholder="Україна" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -186,22 +233,22 @@ export default function OrderForm() {
                 name="additionalInfo"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Additional Information</FormLabel>
+                    <FormLabel>Додаткова інформація</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Any special instructions for delivery"
+                        placeholder="Будь ласка, зазначте особливі побажання щодо доставки"
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      Optional: Add any special instructions or notes for delivery.
+                      Необов’язково: Ви можете залишити коментар щодо доставки.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Submitting..." : "Place Order"}
+                {isSubmitting ? "Обробка..." : "Оформити замовлення"}
               </Button>
             </form>
           </Form>
@@ -211,12 +258,12 @@ export default function OrderForm() {
       {/* 3️⃣ Order Summary with Cart Items and Total */}
       <Card>
         <CardHeader>
-          <CardTitle>Order Summary</CardTitle>
+          <CardTitle>Підсумок замовлення</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {/* List Cart Items */}
           {cart.length === 0 ? (
-            <p>Your cart is empty.</p>
+            <p>Ваш кошик порожній.</p>
           ) : (
             cart.map((item) => (
               <div
@@ -243,10 +290,14 @@ export default function OrderForm() {
         </CardContent>
         <CardFooter>
           <p className="text-lg font-semibold">
-            Total: ${totalPrice.toFixed(2)}
+            Всього: ${totalPrice.toFixed(2)}
           </p>
         </CardFooter>
       </Card>
     </div>
   );
+
+
+
+
 }
