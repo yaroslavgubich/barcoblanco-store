@@ -232,7 +232,7 @@ const Navbar: FC<NavbarProps> = () => {
             </ListItem>
             <ListItem disablePadding>
               <ListItemButton component={Link} href="/category/cabinet">
-                <ListItemText primary="Тумби" />
+                <ListItemText primary="ТумбиTest" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
