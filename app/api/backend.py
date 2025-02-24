@@ -75,5 +75,9 @@ def send_order():
     return jsonify({"message": "Замовлення оброблено, електронні листи надіслано"}), 200
 
 
+@app.route("/test", methods=["GET"])
+def test():
+    return jsonify({"message": "Succsess"}), 200
+
 if __name__ == "__main__":
     app.run(debug=True)
