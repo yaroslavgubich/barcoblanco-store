@@ -26,7 +26,7 @@ def send_email(to_email, subject, body):
         server.login(SMTP_USERNAME, SMTP_PASSWORD)
         server.sendmail(SMTP_USERNAME, to_email, msg.as_string())
 
-@app.route("/backend/send-order", methods=["POST"])
+@app.route("/send-order", methods=["POST"])
 def send_order():
     data = request.json
 
