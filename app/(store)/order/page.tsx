@@ -95,7 +95,7 @@ export default function OrderForm() {
     };
 
     try {
-      const response = await fetch("https://v0-barcoblanco-e-commerce-website-pv71d964g.vercel.app/backend/send-order", {
+      const response = await fetch("https://barcoblanco-dev.vercel.app/backend/send-order", {
         //id for main branch is: emebvfa0s, dev: pv71d964g
         method: "POST",
         headers: {
