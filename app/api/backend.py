@@ -14,6 +14,15 @@ SMTP_USERNAME = "barcoblancotest@gmail.com"
 SMTP_PASSWORD = "lkym qujz nwck ploq"
 MANAGER_EMAIL = "barcoblancotest@gmail.com"
 
+# API-Key für Authentifizierung
+API_KEY = "e2801f75-b83a-464a-9b00-f570807ae7a1"  # Ändere das zu einem sicheren Wert
+
+def check_api_key():
+    """Überprüft, ob der API-Key korrekt ist"""
+    api_key = request.headers.get("X-API-KEY")
+    if not api_key or api_key != API_KEY:
+        return jsonify({"error": "Ungültiger oder fehlender API-Key"}), 403
+
 def send_email(to_email, subject, body):
     msg = MIMEMultipart()
     msg["From"] = SMTP_USERNAME
@@ -28,8 +37,11 @@ def send_email(to_email, subject, body):
 
 @app.route("/send-order", methods=["POST"])
 def send_order():
-    data = request.json
+    auth = check_api_key()
+    if auth:
+        return auth  # Falls API-Key falsch ist, wird eine Fehlermeldung zurückgegeben
 
+    data = request.json
     if not data:
         return jsonify({"error": "No data received"}), 400
 
@@ -74,10 +86,13 @@ def send_order():
 
     return jsonify({"message": "Замовлення оброблено, електронні листи надіслано"}), 200
 
-
 @app.route("/test", methods=["GET"])
 def test():
-    return jsonify({"message": "Succsess"}), 200
+    auth = check_api_key()
+    if auth:
+        return auth  # Falls API-Key falsch ist, wird eine Fehlermeldung zurückgegeben
+
+    return jsonify({"message": "Success"}), 200
 
 if __name__ == "__main__":
     app.run(debug=True)
