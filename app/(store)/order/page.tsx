@@ -96,7 +96,6 @@ export default function OrderForm() {
 
     try {
       const response = await fetch("/api/send-order", {
-        //id for main branch is: emebvfa0s, dev: pv71d964g
         method: "POST",
         headers: {
           "Content-Type": "application/json"
