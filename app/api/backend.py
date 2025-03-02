@@ -35,7 +35,7 @@ def send_email(to_email, subject, body):
         server.login(SMTP_USERNAME, SMTP_PASSWORD)
         server.sendmail(SMTP_USERNAME, to_email, msg.as_string())
 
-@app.route("/send-order", methods=["POST"])
+@app.route("/api/send-order", methods=["POST"])
 def send_order():
 
     data = request.json
@@ -83,7 +83,7 @@ def send_order():
 
     return jsonify({"message": "Замовлення оброблено, електронні листи надіслано"}), 200
 
-@app.route("/test", methods=["GET"])
+@app.route("/api/test", methods=["GET"])
 def test():
     return jsonify({"message": "Success"}), 200
 
