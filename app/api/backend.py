@@ -85,7 +85,6 @@ def send_order():
 
 @app.route("/test", methods=["GET"])
 def test():
-
     return jsonify({"message": "Success"}), 200
 
 if __name__ == "__main__":
