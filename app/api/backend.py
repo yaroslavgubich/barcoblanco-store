@@ -37,9 +37,6 @@ def send_email(to_email, subject, body):
 
 @app.route("/send-order", methods=["POST"])
 def send_order():
-    auth = check_api_key()
-    if auth:
-        return auth  # Falls API-Key falsch ist, wird eine Fehlermeldung zurückgegeben
 
     data = request.json
     if not data:
@@ -88,9 +85,6 @@ def send_order():
 
 @app.route("/test", methods=["GET"])
 def test():
-    auth = check_api_key()
-    if auth:
-        return auth  # Falls API-Key falsch ist, wird eine Fehlermeldung zurückgegeben
 
     return jsonify({"message": "Success"}), 200
 

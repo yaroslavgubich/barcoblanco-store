@@ -99,8 +99,7 @@ export default function OrderForm() {
         //id for main branch is: emebvfa0s, dev: pv71d964g
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "X-API-KEY": "e2801f75-b83a-464a-9b00-f570807ae7a1"
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(orderData),
       });
