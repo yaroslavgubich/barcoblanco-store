@@ -5,7 +5,7 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 app.use(cors({
     origin: "https://barcoblanco-dev.vercel.app"  // Ersetze durch deine Frontend-Domain
@@ -18,15 +18,15 @@ const transporter = nodemailer.createTransport({
     port: 587,
     secure: false,
     auth: {
-        user: process.env.SMTP_USERNAME,
-        pass: process.env.SMTP_PASSWORD,
+        user: "barcoblancotest@gmail.com",
+        pass: "lkymqujznwckploq" 
     },
 });
 
 // API-Key Überprüfung Middleware
 const checkApiKey = (req, res, next) => {
     const apiKey = req.headers["x-api-key"];
-    if (!apiKey || apiKey !== process.env.API_KEY) {
+    if (!apiKey || apiKey !== "e2801f75-b83a-464a-9b00-f570807ae7a1") {
         return res.status(403).json({ error: "Ungültiger oder fehlender API-Key" });
     }
     next();
@@ -36,7 +36,7 @@ const checkApiKey = (req, res, next) => {
 const sendEmail = async (toEmail, subject, body) => {
     try {
         await transporter.sendMail({
-            from: `"Barcoblanco" <${process.env.SMTP_USERNAME}>`,
+            from: `"Barcoblanco" <${"barcoblancotest@gmail.com"}>`,
             to: toEmail,
             subject: subject,
             text: body,
@@ -93,7 +93,7 @@ app.post("/api/send-order", checkApiKey, async (req, res) => {
 
             Будь ласка, перевірте та підтвердіть замовлення якомога швидше.
         `;
-        await sendEmail(process.env.MANAGER_EMAIL, "Нове замовлення отримано", managerMessage);
+        await sendEmail("barcoblancotest@gmail.com", "Нове замовлення отримано", managerMessage);
 
         res.status(200).json({ message: "Замовлення оброблено, електронні листи надіслано" });
     } catch (error) {
