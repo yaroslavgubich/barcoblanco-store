@@ -24,9 +24,13 @@
     "@sanity/vision": "^3.71.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
     "lucide-react": "^0.474.0",
     "next": "15.1.6",
     "next-sanity": "^9.8.42",
+    "nodemailer": "^6.10.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
@@ -49,5 +53,22 @@
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5"
-  }
+  },
+  "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yaroslavgubich/barcoblanco-store.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/yaroslavgubich/barcoblanco-store/issues"
+  },
+  "homepage": "https://github.com/yaroslavgubich/barcoblanco-store#readme"
 }
