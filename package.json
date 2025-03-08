@@ -70,5 +70,19 @@
   "bugs": {
     "url": "https://github.com/yaroslavgubich/barcoblanco-store/issues"
   },
-  "homepage": "https://github.com/yaroslavgubich/barcoblanco-store#readme"
+  "homepage": "https://github.com/yaroslavgubich/barcoblanco-store#readme",
+
+  "name": "barcoblanco-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",  
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemailer": "^6.9.3",
+    "dotenv": "^16.0.3",
+    "cors": "^2.8.5"
+  }
 }
