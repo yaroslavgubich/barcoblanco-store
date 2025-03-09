@@ -95,7 +95,7 @@ export default function OrderForm() {
     };
 
     try {
-      const response = await fetch("/api/send-order", {
+      const response = await fetch("https://barcoblanco-dev.vercel.app/api/send-order", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

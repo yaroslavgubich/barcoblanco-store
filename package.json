@@ -74,10 +74,10 @@
 
   "name": "barcoblanco-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "api/backend.py",
   "type": "module",  
   "scripts": {
-    "start": "node index.js"
+    "start": "python app/api/backend.py"
   },
   "dependencies": {
     "express": "^4.18.2",
