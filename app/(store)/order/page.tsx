@@ -95,7 +95,7 @@ export default function OrderForm() {
     };
 
     try {
-      const response = await fetch("/api/send-order", {
+      const response = await fetch("/api/send_email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
