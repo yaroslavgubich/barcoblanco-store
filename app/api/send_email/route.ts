@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
-import Image from "next/image";
 
 const SMTP_SERVER = "smtp.gmail.com";
 const SMTP_PORT = 587;
