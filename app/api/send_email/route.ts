@@ -103,29 +103,29 @@ export async function POST(request: Request) {
               <li><b>📍 Адреса:</b> ${data.address}, ${data.city}</li>
               <li><b>💰 Загальна сума:</b> $${totalAmount.toFixed(2)}</li>
           </ul>
-          <h3>🛍 Деталі замовлення:</h3>
-          <table border="1" cellpadding="10" cellspacing="0" width="100%">
-              <thead>
-                  <tr>
-                      <th>Зображення</th>
-                      <th>Назва</th>
-                      <th>Ціна</th>
-                      <th>Кількість</th>
-                  </tr>
-              </thead>
-              <tbody>
-              ${data.cart.map((item, index) => `
-                  <tr style="background-color: ${index % 2 === 0 ? '#ffffff' : '#f9f9f9'};">
-                      <td style="padding: 10px; border-bottom: 1px solid #ddd;">
-                          <img src="${item.image}" alt="${item.name}" width="80" style="border-radius: 8px; display: block;">
-                      </td>
-                      <td style="padding: 10px; border-bottom: 1px solid #ddd;">${item.name}</td>
-                      <td style="padding: 10px; border-bottom: 1px solid #ddd;">$${item.price.toFixed(2)}</td>
-                      <td style="padding: 10px; border-bottom: 1px solid #ddd;">${item.quantity}</td>
-                  </tr>
-              `).join('')}
-          </tbody>
-          </table>
+          <h3 style="color: #333;">🛍 Деталі замовлення:</h3>
+    <table role="presentation" style="width: 800px; border-collapse: collapse; font-size: 16px; color: #333; display: block !important; visibility: visible !important;">
+        <thead>
+            <tr style="background-color: #f8f8f8;">
+                <th style="padding: 10px; border-bottom: 2px solid #ddd; text-align: left;">Зображення</th>
+                <th style="padding: 10px; border-bottom: 2px solid #ddd; text-align: left;">Назва</th>
+                <th style="padding: 10px; border-bottom: 2px solid #ddd; text-align: left;">Ціна</th>
+                <th style="padding: 10px; border-bottom: 2px solid #ddd; text-align: left;">Кількість</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${data.cart.map((item, index) => `
+                <tr style="background-color: ${index % 2 === 0 ? '#ffffff' : '#f9f9f9'};">
+                    <td style="padding: 10px; border-bottom: 1px solid #ddd;">
+                        <img src="${item.image}" alt="${item.name}" width="80" style="border-radius: 8px; display: block;">
+                    </td>
+                    <td style="padding: 10px; border-bottom: 1px solid #ddd;">${item.name}</td>
+                    <td style="padding: 10px; border-bottom: 1px solid #ddd;">$${item.price.toFixed(2)}</td>
+                    <td style="padding: 10px; border-bottom: 1px solid #ddd;">${item.quantity}</td>
+                </tr>
+            `).join('')}
+        </tbody>
+    </table>
       `;
 
       await sendEmail(MANAGER_EMAIL, "Нове замовлення отримано", managerMessage);
