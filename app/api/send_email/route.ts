@@ -132,7 +132,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json({ message: "Замовлення оброблено, електронні листи надіслано" }, { status: 200 });
   } catch (error) {
-      return NextResponse.json({ error: "Fehler beim Senden der E-Mail", details: (error as Error).message }, { status: 500 });
+      return NextResponse.json({ error: "Error to sent email", details: (error as Error).message }, { status: 500 });
   }
 }
 
