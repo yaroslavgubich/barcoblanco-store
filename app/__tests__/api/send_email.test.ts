@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import { POST } from "../../api/send_email/route";
 
 // Haupt-Mock für `nodemailer`
