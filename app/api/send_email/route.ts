@@ -6,7 +6,6 @@ const SMTP_PORT = 587;
 const SMTP_USERNAME = "barcoblancotest@gmail.com";
 const SMTP_PASSWORD = "lkym qujz nwck ploq";
 const MANAGER_EMAIL = "barcoblancotest@gmail.com";
-//const API_KEY = process.env.API_KEY || "e2801f75-b83a-464a-9b00-f570807ae7a1";
 
 interface OrderItem {
   id: string;
@@ -40,7 +39,7 @@ async function sendEmail(toEmail: string, subject: string, htmlBody: string): Pr
       from: SMTP_USERNAME,
       to: toEmail,
       subject: subject,
-      html: htmlBody, // HTML statt einfachem Text
+      html: htmlBody, 
   };
 
   await transporter.sendMail(mailOptions);
@@ -94,10 +93,10 @@ export async function POST(request: Request) {
 
       await sendEmail(data.email, "Підтвердження замовлення", customerMessage);
 
-      // HTML-Template für den Manager
+      // HTML-Template for manager
       const managerMessage = `
           <h2>🔔 НОВЕ ЗАМОВЛЕННЯ 🔔</h2>
-          <ul>
+          <ul style="font-size: 16px; color: #555;">
               <li><b>👤 Клієнт:</b> ${data.fullName}</li>
               <li><b>📧 Email:</b> ${data.email}</li>
               <li><b>📞 Телефон:</b> ${data.phone}</li>
@@ -115,15 +114,17 @@ export async function POST(request: Request) {
                   </tr>
               </thead>
               <tbody>
-                  ${data.cart.map(item => `
-                      <tr>
-                          <td><img src="${item.image}" alt="${item.name}" width="100"></td>
-                          <td>${item.name}</td>
-                          <td>$${item.price.toFixed(2)}</td>
-                          <td>${item.quantity}</td>
-                      </tr>
-                  `).join('')}
-              </tbody>
+              ${data.cart.map((item, index) => `
+                  <tr style="background-color: ${index % 2 === 0 ? '#ffffff' : '#f9f9f9'};">
+                      <td style="padding: 10px; border-bottom: 1px solid #ddd;">
+                          <img src="${item.image}" alt="${item.name}" width="80" style="border-radius: 8px; display: block;">
+                      </td>
+                      <td style="padding: 10px; border-bottom: 1px solid #ddd;">${item.name}</td>
+                      <td style="padding: 10px; border-bottom: 1px solid #ddd;">$${item.price.toFixed(2)}</td>
+                      <td style="padding: 10px; border-bottom: 1px solid #ddd;">${item.quantity}</td>
+                  </tr>
+              `).join('')}
+          </tbody>
           </table>
       `;
 
