@@ -1,9 +1,7 @@
-// app/(store)/products/ProductsClient.tsx
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { WidthFilter } from "../../../components/ui/width-filter";
 import { Pagination } from "../../../components/ui/pagination";
 import Product from "../../../components/ui/Product";
 
@@ -12,9 +10,8 @@ interface ProductType {
   name: string;
   slug: { current: string };
   price: number;
-  details?: string;
-  category?: string;
   width?: number;
+  category?: string;
   image?: { asset: { url: string } }[];
 }
 
@@ -23,99 +20,129 @@ interface ProductsClientProps {
   selectedCategory?: string;
 }
 
+// Фиксированные фильтры ширины для каждой категории
+const categoryWidthFilters: { [key: string]: number[] } = {
+  mirrors: [40, 50, 55, 60, 65, 70, 80, 90],
+  wardrobe: [40, 45, 50, 55, 60, 65, 70, 75, 80, 90, 100],
+  cabinet: [50, 60, 70, 80],
+  waterproof: [30, 35, 40, 50, 60],
+};
+
 export default function ProductsClient({
   products,
   selectedCategory,
 }: ProductsClientProps) {
-  const [widthRange, setWidthRange] = useState<[number, number]>([0, 400]);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [selectedWidths, setSelectedWidths] = useState<number[]>([]);
 
-  const ITEMS_PER_PAGE = 9;
-
-  const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      const productWidth = product.width ?? 0;
-      return productWidth >= widthRange[0] && productWidth <= widthRange[1];
-    });
-  }, [products, widthRange]);
-
+  const ITEMS_PER_PAGE = 12;
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
+
+  const categoryProducts = selectedCategory
+    ? products.filter((p) => p.category?.toLowerCase() === selectedCategory.toLowerCase())
+    : products;
+
+  const availableWidths = selectedCategory
+    ? categoryWidthFilters[selectedCategory.toLowerCase()] || []
+    : [];
+
+  useEffect(() => {
+    setSelectedWidths([]);
+  }, [selectedCategory]);
+
+  const filteredProducts = categoryProducts.filter((product) =>
+    selectedWidths.length > 0 ? selectedWidths.includes(product.width || 0) : true
+  );
+
   const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
 
-  // Helper function to check if a category is active
+
+
   const isActive = (category: string) =>
     selectedCategory?.toLowerCase() === category.toLowerCase();
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-8">
-        {selectedCategory ? `Категорія: ${selectedCategory}` : "Продукти"}
-      </h1>
-
-      {/* 4 centered Link buttons */}
-      <div className="flex justify-center space-x-4 mb-8">
-        <Link href="/category/mirrors">
+      {/* Категории */}
+      <div className="flex justify-center flex-wrap gap-2 mb-6">
+        <Link href="/products">
           <button
-            className={`px-6 py-2 rounded transition ${
-              isActive("mirrors")
-                ? "bg-[#1996A3] text-white shadow-lg" // Active (glowing) style
-                : "bg-gray-400 text-white hover:bg-[#1996A3]"
-            }`}
-          >
-            Mirrors
-          </button>
-        </Link>
-
-        <Link href="/category/wardrobe">
-          <button
-            className={`px-6 py-2 rounded transition ${
-              isActive("wardrobe")
+            className={`px-5 py-2 rounded transition ${!selectedCategory
                 ? "bg-[#1996A3] text-white shadow-lg"
                 : "bg-gray-400 text-white hover:bg-[#1996A3]"
-            }`}
+              }`}
           >
-            Wardrobe
+            Усі товари
           </button>
         </Link>
 
-        <Link href="/category/cabinet">
-          <button
-            className={`px-6 py-2 rounded transition ${
-              isActive("cabinet")
-                ? "bg-[#1996A3] text-white shadow-lg"
-                : "bg-gray-400 text-white hover:bg-[#1996A3]"
-            }`}
-          >
-            Cabinet
-          </button>
-        </Link>
-
-        <Link href="/category/waterproof">
-          <button
-            className={`px-6 py-2 rounded transition ${
-              isActive("waterproof")
-                ? "bg-[#1996A3] text-white shadow-lg"
-                : "bg-gray-400 text-white hover:bg-[#1996A3]"
-            }`}
-          >
-            Waterproof
-          </button>
-        </Link>
+        {["mirrors", "wardrobe", "cabinet", "waterproof"].map((category) => (
+          <Link key={category} href={`/category/${category}`}>
+            <button
+              className={`px-5 py-2 rounded transition ${isActive(category)
+                  ? "bg-[#1996A3] text-white shadow-lg"
+                  : "bg-gray-400 text-white hover:bg-[#1996A3]"
+                }`}
+            >
+              {category === "mirrors" && "Дзеркала"}
+              {category === "wardrobe" && "Шафи"}
+              {category === "cabinet" && "Комоди"}
+              {category === "waterproof" && "WATER"}
+            </button>
+          </Link>
+        ))}
       </div>
 
-      <div className="space-y-6">
-        <div className="border rounded-lg p-4">
-          <h2 className="text-lg font-medium mb-4">Фільтр ширини:</h2>
-          <WidthFilter value={widthRange} onValueChange={setWidthRange} />
-        </div>
+      {/* Фильтры и Товары */}
+      <div className={`flex ${selectedCategory ? "" : "justify-center"}`}>
+        {/* Фильтр ширины */}
+        {selectedCategory && availableWidths.length > 0 && (
+          <div className="w-1/6 pr-4 mt-4">
+            <h2 className="text-center bg-[#1996A3] text-white py-2 rounded-t-lg font-semibold">
+              Ширина
+            </h2>
+            <div className="p-4 border rounded-b-lg grid grid-cols-2 gap-2">
+              {availableWidths.map((width) => (
+                <label key={width} className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="width"
+                    checked={selectedWidths[0] === width}
+                    onChange={() => setSelectedWidths([width])}
+                    className="w-4 h-4"
+                  />
+                  <span>{width} см</span>
+                </label>
+              ))}
+              <button
+                onClick={() => setSelectedWidths([])}
+                className="text-sm text-[#1996A3] underline mt-2 col-span-2 text-center"
+              >
+                Очистити
+              </button>
+            </div>
+          </div>
+        )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {paginatedProducts.map((product) => (
-            <Product key={product._id} product={product} />
-          ))}
+        {/* Товары */}
+        <div className="w-full max-w-[1400px] mx-auto px-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {paginatedProducts.length > 0 ? (
+              paginatedProducts.map((product) => (
+                <Product key={product._id} product={product} />
+              ))
+            ) : (
+              <p className="text-center col-span-4 text-gray-500">
+                Немає товарів, що відповідають вибраним фільтрам.
+              </p>
+            )}
+          </div>
         </div>
+      </div>
 
+      {/* Пагинация по центру */}
+      <div className="w-full mt-12 flex justify-center">
         <Pagination
           totalPages={Math.ceil(filteredProducts.length / ITEMS_PER_PAGE)}
           currentPage={currentPage}
@@ -125,3 +152,12 @@ export default function ProductsClient({
     </div>
   );
 }
+
+
+
+
+
+
+
+
+

@@ -10,7 +10,6 @@ import { Textarea } from "@/components/ui/textarea"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -26,7 +25,6 @@ import {
 import { useCart } from "@/context/CartContext"
 import Image from "next/image"
 
-// Typen definieren
 type CartItem = {
   id: string;
   name: string;
@@ -48,22 +46,18 @@ type OrderFormData = {
 };
 
 const formSchema = z.object({
-  fullName: z
-    .string()
-    .min(2, { message: "Full name must be at least 2 characters." }),
-  email: z.string().email({ message: "Invalid email address." }),
-  phone: z.string().min(10, { message: "Phone number must be at least 10 digits." }),
-  address: z.string().min(5, { message: "Address must be at least 5 characters." }),
-  city: z.string().min(2, { message: "City must be at least 2 characters." }),
-  postalCode: z.string().min(5, { message: "Postal code must be at least 5 characters." }),
-  country: z.string().min(2, { message: "Country must be at least 2 characters." }),
+  fullName: z.string().min(2, { message: "Введіть правильне ім'я." }),
+  email: z.string().email({ message: "Некоректна електронна пошта." }),
+  phone: z.string().min(10, { message: "Введіть правильний номер телефону." }),
+  address: z.string().min(5, { message: "Введіть правильну адресу." }),
+  city: z.string().min(2, { message: "Введіть правильне місто." }),
+  postalCode: z.string().min(5, { message: "Некоректний поштовий індекс." }),
+  country: z.string().min(2, { message: "Введіть правильну країну." }),
   additionalInfo: z.string().optional(),
 })
 
 export default function OrderForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
-
-  // 1️⃣ Access cart from CartContext
   const { cart, getCartTotalPrice } = useCart()
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -104,150 +98,83 @@ export default function OrderForm() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Backend error:", errorData);
-        throw new Error("Failed to submit the order.");
+        throw new Error("Помилка оформлення замовлення.");
       }
 
-      const result = await response.json();
-      console.log("Order response:", result);
-      alert("Order submitted successfully! A confirmation email has been sent.");
+      alert("Замовлення успішно оформлене! Вам надіслано підтвердження на пошту.");
       form.reset();
-    } catch (error) {
-      console.error("Error submitting the order:", error);
-      alert("Failed to submit the order. Please try again.");
+    } catch {
+      alert("Не вдалося оформити замовлення. Спробуйте ще раз.");
     } finally {
       setIsSubmitting(false);
     }
   }
 
-  // 2️⃣ Calculate total price
   const totalPrice = getCartTotalPrice()
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
+    <div className="grid gap-6 lg:grid-cols-2 py-16 text-lg">
       <Card>
         <CardHeader>
-          <CardTitle>Інформація про доставку</CardTitle>
+          <CardTitle className="text-[#1996A3] text-[30px] font-semibold">
+            Інформація про доставку
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="fullName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Повне ім&apos;я</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Іван Петренко" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Електронна пошта</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="ivan@example.com"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Телефон</FormLabel>
-                    <FormControl>
-                      <Input type="tel" placeholder="+38 (097) 123-4567" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="address"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Адреса</FormLabel>
-                    <FormControl>
-                      <Input placeholder="вул. Шевченка, 10" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="city"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Місто</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Київ" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="postalCode"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Поштовий індекс</FormLabel>
-                    <FormControl>
-                      <Input placeholder="01001" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="country"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Країна</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Україна" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+              {["fullName", "email", "phone", "address", "city", "postalCode", "country"].map((fieldName) => (
+                <FormField
+                  key={fieldName}
+                  control={form.control}
+                  name={fieldName as keyof z.infer<typeof formSchema>}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-base font-medium">
+                        {fieldName === "fullName" ? "Повне ім'я" :
+                          fieldName === "email" ? "Електронна пошта" :
+                          fieldName === "phone" ? "Телефон" :
+                          fieldName === "address" ? "Адреса" :
+                          fieldName === "city" ? "Місто" :
+                          fieldName === "postalCode" ? "Поштовий індекс" :
+                          "Країна"}
+                      </FormLabel>
+                      <FormControl>
+                        <Input className="text-base p-3" placeholder={
+                          fieldName === "fullName" ? "Іван Петренко" :
+                            fieldName === "email" ? "ivan@example.com" :
+                            fieldName === "phone" ? "+38 (097) 123-4567" :
+                            fieldName === "address" ? "вул. Шевченка, 10" :
+                            fieldName === "city" ? "Київ" :
+                            fieldName === "postalCode" ? "01001" :
+                            "Україна"
+                        } {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              ))}
               <FormField
                 control={form.control}
                 name="additionalInfo"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Додаткова інформація</FormLabel>
+                    <FormLabel className="text-base font-medium">
+                      Додаткова інформація
+                    </FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder="Будь ласка, зазначте особливі побажання щодо доставки"
-                        {...field}
-                      />
+                      <Textarea className="text-base p-3" placeholder="Особливі побажання щодо доставки" {...field} />
                     </FormControl>
-                    <FormDescription>
-                      Необов&apos;язково: Ви можете залишити коментар щодо доставки.
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
+              <Button
+                type="submit"
+                className="w-full bg-[#1996A3] hover:bg-[#167A8A] text-white text-lg font-semibold py-3"
+                disabled={isSubmitting}
+              >
                 {isSubmitting ? "Обробка..." : "Оформити замовлення"}
               </Button>
             </form>
@@ -255,29 +182,20 @@ export default function OrderForm() {
         </CardContent>
       </Card>
 
-      {/* 3️⃣ Order Summary with Cart Items and Total */}
       <Card>
         <CardHeader>
-          <CardTitle>Підсумок замовлення</CardTitle>
+          <CardTitle className="text-[#1996A3] text-[30px] font-semibold">
+            Підсумок замовлення
+          </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2">
-          {/* List Cart Items */}
+        <CardContent className="space-y-3">
           {cart.length === 0 ? (
             <p>Ваш кошик порожній.</p>
           ) : (
             cart.map((item) => (
-              <div
-                key={item.id}
-                className="flex items-center justify-between bg-gray-50 p-2 rounded-md"
-              >
+              <div key={item.id} className="flex items-center justify-between bg-gray-50 p-3 rounded-md text-base">
                 <div className="flex items-center gap-4">
-                  <Image
-                    src={item.image}
-                    width={40}
-                    height={40}
-                    alt={item.name}
-                    className="object-cover rounded"
-                  />
+                  <Image src={item.image} width={40} height={40} alt={item.name} className="object-cover rounded" />
                   <p className="font-semibold">{item.name}</p>
                 </div>
                 <div className="flex items-center gap-2">
@@ -289,15 +207,11 @@ export default function OrderForm() {
           )}
         </CardContent>
         <CardFooter>
-          <p className="text-lg font-semibold">
-            Всього: ${totalPrice.toFixed(2)}
-          </p>
+          <p className="text-xl font-semibold">Всього: ${totalPrice.toFixed(2)}</p>
         </CardFooter>
       </Card>
     </div>
   );
-
-
-
-
 }
+
+

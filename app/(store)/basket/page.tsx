@@ -1,4 +1,3 @@
-// app/(store)/basket/page.tsx
 "use client";
 import { useCart } from "@/context/CartContext";
 import Image from "next/image";
@@ -10,13 +9,20 @@ export default function BasketPage() {
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-6">Your Basket</h1>
-
       {cart.length === 0 ? (
-        <p className="text-gray-700">Your basket is empty.</p>
+        <div className="flex flex-col items-center justify-center text-center h-64"> 
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2">Твій кошик пустий</h2>
+          <p className="text-gray-600 mb-4">Додайте товари до кошика, щоб оформити замовлення.</p>
+          <button
+            onClick={() => router.push("/products")}
+            className="px-6 py-3 bg-[#1996a3] text-white rounded-lg hover:bg-[#147a86] transition"
+          >
+            Перейти до каталогу
+          </button>
+        </div>
       ) : (
         <>
-          <div className="space-y-4">
+          <div className="space-y-4 w-full">
             {cart.map((item) => (
               <div
                 key={item.id}
@@ -72,7 +78,7 @@ export default function BasketPage() {
           <div className="mt-8 text-right">
             <button
               onClick={() => router.push("/order")}
-              className="px-4 py-2 bg-[#1996a3] text-white rounded-lg hover:bg-[#147a86]"
+              className="px-6 py-3 bg-[#1996a3] text-white rounded-lg hover:bg-[#147a86] transition"
             >
               Продовжити замовлення
             </button>
@@ -82,3 +88,6 @@ export default function BasketPage() {
     </div>
   );
 }
+
+
+

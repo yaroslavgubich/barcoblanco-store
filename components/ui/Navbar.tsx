@@ -89,9 +89,9 @@ const BurgerMenuHeader = styled("div")({
 });
 
 const BurgerMenuLogo = styled(Image)({
-  height: "40px",
-  width: "120px",
-  marginRight: "16px",
+  height: "50px",
+  width: "200px",
+  
 });
 
 const BurgerMenuContainer = styled(Box)({
@@ -196,7 +196,7 @@ const Navbar: FC<NavbarProps> = () => {
         <BurgerMenuContainer>
           <Link href="/">
             <BurgerMenuHeader>
-              <BurgerMenuLogo src="/icons/logo.svg" alt="logo" width={120} height={40} />
+              <BurgerMenuLogo src="/icons/logo.svg" alt="logo" width={150} height={50} />
             </BurgerMenuHeader>
           </Link>
           <Divider />
@@ -232,7 +232,7 @@ const Navbar: FC<NavbarProps> = () => {
             </ListItem>
             <ListItem disablePadding>
               <ListItemButton component={Link} href="/category/cabinet">
-                <ListItemText primary="ТумбиTest" />
+                <ListItemText primary="Тумби" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
@@ -249,8 +249,13 @@ const Navbar: FC<NavbarProps> = () => {
           <Divider />
           <List>
             <ListItem disablePadding>
-              <ListItemButton component={Link} href="/#about" onClick={() => setDrawerOpen(false)}>
-                <ListItemText primary="Про нас" />
+              <ListItemButton component={Link} href="/" onClick={() => setDrawerOpen(false)}>
+                <ListItemText primary="Головна" />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton component={Link} href="/products" onClick={() => setDrawerOpen(false)}>
+                <ListItemText primary="Каталог" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
@@ -273,9 +278,14 @@ const Navbar: FC<NavbarProps> = () => {
       </Drawer>
       {!isMobile && (
         <Box sx={{ backgroundColor: "#008c99", display: "flex", justifyContent: "center", padding: "0.5rem 0" }}>
-          <Link href="/#about">
+          <Link href="/">
             <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>
-              Про нас
+              Головна
+            </Typography>
+          </Link>
+          <Link href="/products">
+            <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>
+              Каталог
             </Typography>
           </Link>
           <Link href="/guarantee">

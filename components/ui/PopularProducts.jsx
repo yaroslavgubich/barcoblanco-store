@@ -1,114 +1,72 @@
-"use client"; // Force this component to run on the client side
+"use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import { Product } from "../ui";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Pagination, Autoplay } from "swiper/modules";
 
 const PopularProducts = ({ productsData }) => {
   const swiperRef = useRef(null);
-  const timeoutRef = useRef(null);
-  // Store the default timing function so we can revert back after manual transition.
-  const defaultTimingFunctionRef = useRef("ease-out");
   const limitedProducts = productsData?.slice(0, 6);
 
-  // Define speeds:
-  const autoplaySpeed = 1000; // 2000ms for autoplay transitions
-  const manualSpeed = 500; // 500ms for manual (arrow click) transitions
-
-  useEffect(() => {
-    // Ensure the Swiper instance and its navigation elements exist.
-    if (!swiperRef.current || !swiperRef.current.navigation) return;
-
-    const { nextEl, prevEl } = swiperRef.current.navigation;
-    if (nextEl && prevEl) {
-      // Capture the default timing function from the wrapper element.
-      if (swiperRef.current.wrapperEl) {
-        // If no inline style is set, default to "ease-out".
-        defaultTimingFunctionRef.current =
-          swiperRef.current.wrapperEl.style.transitionTimingFunction ||
-          "ease-out";
-      }
-
-      const handleNavClick = () => {
-        if (!swiperRef.current) return;
-
-        // Clear any previous timeout in case of rapid clicks.
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current);
-        }
-
-        // Set the manual speed for this transition.
-        swiperRef.current.params.speed = manualSpeed;
-
-        // Apply a custom easing function for a smoother first frame.
-        if (swiperRef.current.wrapperEl) {
-          swiperRef.current.wrapperEl.style.transitionTimingFunction =
-            "ease-in-out";
-        }
-
-        // Reset the speed and easing after the manual transition plus a small buffer.
-        timeoutRef.current = setTimeout(() => {
-          if (swiperRef.current) {
-            swiperRef.current.params.speed = autoplaySpeed;
-            if (swiperRef.current.wrapperEl) {
-              swiperRef.current.wrapperEl.style.transitionTimingFunction =
-                defaultTimingFunctionRef.current;
-            }
-          }
-        }, manualSpeed + 100); // 100ms buffer
-      };
-
-      // Add capturing-phase event listeners so our handler runs before Swiper’s default handler.
-      nextEl.addEventListener("click", handleNavClick, true);
-      prevEl.addEventListener("click", handleNavClick, true);
-
-      // Clean up event listeners and pending timeouts on unmount.
-      return () => {
-        nextEl.removeEventListener("click", handleNavClick, true);
-        prevEl.removeEventListener("click", handleNavClick, true);
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current);
-        }
-      };
-    }
-  }, [swiperRef.current]);
-
   return (
-    <div className="popular-products-wrapper">
-      <h1 className="popular-products-title">Popular Products</h1>
-      <Swiper
-        modules={[Navigation, Pagination, Autoplay]}
-        onSwiper={(swiper) => {
-          swiperRef.current = swiper;
-        }}
-        spaceBetween={12}
-        slidesPerView={5}
-        navigation // Built-in navigation arrows are enabled.
-        pagination={{ clickable: true }}
-        loop={true}
-        grabCursor={true}
-        autoplay={{
-          delay: 5000, // 5 seconds delay between autoplay transitions
-          disableOnInteraction: false,
-        }}
-        speed={autoplaySpeed} // Default speed for autoplay transitions
-        breakpoints={{
-          768: { slidesPerView: 5 },
-          1024: { slidesPerView: 5 },
-        }}
-      >
-        {limitedProducts.map((product) => (
-          <SwiperSlide key={product._id}>
-            <Product product={product} />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+    <div className="container max-w-[1400px] mx-auto px-4 mb-12">
+      <div className="popular-products-wrapper flex flex-col">
+        <h3 className="text-left text-[28px] md:text-[36px] text-[#008c99] mb-5 font-bold">
+          ПОПУЛЯРНІ ПРОДУКТИ
+        </h3>
+
+        <div className="relative">
+          <Swiper
+            modules={[Pagination, Autoplay]}
+            spaceBetween={24}
+            slidesPerView={1.2}
+            pagination={{
+              el: ".custom-pagination",
+              clickable: true,
+            }}
+            loop={true}
+            grabCursor={true}
+            autoplay={{
+              delay: 1500,
+              disableOnInteraction: false,
+            }}
+            speed={1000}
+            breakpoints={{
+              480: { slidesPerView: 1.5 },
+              640: { slidesPerView: 2 },
+              768: { slidesPerView: 2.5 },
+              1024: { slidesPerView: 3 },
+              1280: { slidesPerView: 4 },
+            }}
+            className="w-full pb-16"
+          >
+
+            {limitedProducts.map((product) => (
+              <SwiperSlide key={product._id}>
+                <div className="px-3 h-full">
+                  <div className="bg-white h-full">
+                    <Product product={product} />
+                  </div>
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+
+          <div className="custom-pagination mt-8 flex justify-center"></div>
+        </div>
+      </div>
     </div>
   );
 };
 
 export default PopularProducts;
+
+
+
+
+
+
+

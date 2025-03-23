@@ -6,9 +6,9 @@ import { styled } from "@mui/material/styles";
 import "@/app/globals.css";
 
 const DeliverySection = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(2),
+  padding: theme.spacing(1),
   borderRadius: "8px",
-  marginTop: theme.spacing(3),
+  marginTop: theme.spacing(1),
   fontFamily: "Roboto, sans-serif",
   textAlign: "center",
 }));

@@ -1,4 +1,3 @@
-// app/(store)/guarantee/page.tsx
 "use client";
 export const dynamic = "force-dynamic"; // Prevents static pre-rendering
 
@@ -17,7 +16,7 @@ const GuaranteeSection = styled(Box)(({ theme }) => ({
 
 const Guarantee = () => {
   return (
-    <Container maxWidth="md" sx={{ marginBottom: "70px" }}>
+    <Container maxWidth="md" sx={{ marginBottom: "40px" }}>
       <GuaranteeSection>
         <Typography
           variant="h4"
@@ -71,3 +70,4 @@ const Guarantee = () => {
 };
 
 export default Guarantee;
+

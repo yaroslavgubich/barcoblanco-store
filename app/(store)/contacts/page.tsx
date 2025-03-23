@@ -10,12 +10,12 @@ const Contacts = () => {
     <Box
       sx={{
         maxWidth: "1400px",
-        margin: "50px auto",
+        margin: "30px auto",
         padding: "2rem",
         display: "flex",
         gap: "2rem",
         flexDirection: { xs: "column", md: "row" },
-        alignItems: { xs: "center", md: "flex-start" },
+        alignItems: { xs: "center", md: "stretch" },
       }}
     >
       {/* Left Section - Image */}
@@ -23,10 +23,9 @@ const Contacts = () => {
         sx={{
           flex: 1,
           width: "100%",
-          textAlign: "center",
-          marginBottom: { xs: "2rem", md: "0" },
-          display: { xs: "none", md: "block" },
-          height: "455px",
+          minWidth: 0,
+          display: { xs: "block", md: "block" },
+          height: { xs: "300px", md: "455px" },
           position: "relative",
         }}
       >
@@ -43,9 +42,11 @@ const Contacts = () => {
       <Box
         sx={{
           flex: 1,
+          minWidth: 0,
+          width: "100%",
           marginLeft: { md: "115px", xs: "0" },
           textAlign: { xs: "center", md: "left" },
-          maxWidth: { xs: "90%", md: "50%" },
+          maxWidth: { xs: "100%", md: "50%" },
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
@@ -58,6 +59,7 @@ const Contacts = () => {
         >
           ГРАФІК РОБОТИ CALL-CENTER
         </Typography>
+
         <Box
           sx={{
             display: "flex",
@@ -70,7 +72,7 @@ const Contacts = () => {
               variant="body1"
               sx={{ fontSize: "24px", marginBottom: "10px" }}
             >
-              Вт-Вс:
+              Вт-Нед:
             </Typography>
             <Typography variant="body1" sx={{ fontSize: "24px" }}>
               Вихідний:
@@ -96,20 +98,41 @@ const Contacts = () => {
           </Box>
         </Box>
 
-        {/* Call Icon with Number */}
+        {/* Контактная информация */}
         <Box
           sx={{
             display: "flex",
-            justifyContent: { xs: "center", md: "space-between" },
-            alignItems: "center",
+            justifyContent: { xs: "center", md: "flex-start" },
+            alignItems: { xs: "center", md: "flex-start" },
             marginTop: "50px",
-            gap: "50px",
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <Image src="/icons/phone.png" alt="Phone" width={30} height={30} />
-            <Typography variant="body1" sx={{ fontSize: "24px" }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "10px",
+              alignItems: { xs: "center", md: "flex-start" },
+            }}
+          >
+            {/* Телефон */}
+            <Typography
+              variant="body1"
+              sx={{ fontSize: "24px" }}
+              component="a"
+              href="tel:+380666924322"
+            >
               +380-66-69-24-322
+            </Typography>
+
+            {/* Почта */}
+            <Typography
+              variant="body1"
+              sx={{ fontSize: "24px" }}
+              component="a"
+              href="mailto:avsdom@ukr.net"
+            >
+              avsdom@ukr.net
             </Typography>
           </Box>
         </Box>
@@ -155,7 +178,7 @@ const Contacts = () => {
               height={50}
             />
           </Link>
-          <Link href="tel:+380992233453">
+          <Link href="https://www.viber.com/ua/">
             <Image src="/icons/viber.png" alt="Viber" width={50} height={50} />
           </Link>
         </Box>
@@ -165,3 +188,4 @@ const Contacts = () => {
 };
 
 export default Contacts;
+

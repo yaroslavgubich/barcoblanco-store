@@ -35,6 +35,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
     }
   }, []);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedCart = localStorage.getItem("cart");
+      if (storedCart) {
+        try {
+          setCart(JSON.parse(storedCart));
+        } catch (error) {
+          console.error("Error parsing cart from localStorage:", error);
+        }
+      }
+    }
+  }, []);
+  
 
   // 2️⃣ Save cart to localStorage whenever it changes
   useEffect(() => {

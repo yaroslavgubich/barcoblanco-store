@@ -30,7 +30,7 @@ export default async function Page({ params }: PageProps) {
   const product = await getProduct(slug);
 
   if (!product) {
-    return <div>Product not found</div>;
+    return <div>Продукт не знайдено</div>;
   }
 
   // Render the styled ProductDetails component with the fetched product data.
