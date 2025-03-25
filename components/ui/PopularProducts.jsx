@@ -35,12 +35,14 @@ const PopularProducts = ({ productsData }) => {
             }}
             speed={1000}
             breakpoints={{
-              480: { slidesPerView: 1.5 },
-              640: { slidesPerView: 2 },
-              768: { slidesPerView: 2.5 },
+              480: { slidesPerView: 1 },
+              640: { slidesPerView: 1 },
+              768: { slidesPerView: 2 },
+              900: { slidesPerView: 2 },
               1024: { slidesPerView: 3 },
               1280: { slidesPerView: 4 },
             }}
+            
             className="w-full pb-16"
           >
 

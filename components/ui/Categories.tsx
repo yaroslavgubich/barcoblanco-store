@@ -1,4 +1,3 @@
-// components/ui/Categories.tsx
 import Link from "next/link";
 import Image from "next/image";
 
@@ -11,8 +10,8 @@ function Categories() {
             <Image
               src="/images/mirror.png"
               alt="Дзеркала"
-              width={200}
-              height={200}
+              fill
+              style={{ objectFit: "cover" }}
             />
             <div className="category-overlay">
               <h4>Дзеркала</h4>
@@ -25,8 +24,8 @@ function Categories() {
             <Image
               src="/images/wardrobe.png"
               alt="Шафи"
-              width={200}
-              height={200}
+              fill
+              style={{ objectFit: "cover" }}
             />
             <div className="category-overlay">
               <h4>Шафи</h4>
@@ -39,8 +38,8 @@ function Categories() {
             <Image
               src="/images/cabinet.png"
               alt="Тумби"
-              width={200}
-              height={200}
+              fill
+              style={{ objectFit: "cover" }}
             />
             <div className="category-overlay">
               <h4>Тумби</h4>
@@ -53,8 +52,8 @@ function Categories() {
             <Image
               src="/images/waterproof.jpg"
               alt="Водонепроникні"
-              width={200}
-              height={200}
+              fill
+              style={{ objectFit: "cover" }}
             />
             <div className="category-overlay">
               <h4>Водонепроникні</h4>
@@ -67,3 +66,5 @@ function Categories() {
 }
 
 export default Categories;
+
+

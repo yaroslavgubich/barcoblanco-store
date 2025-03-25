@@ -50,7 +50,7 @@ const Guarantee = () => {
           sx={{
             fontWeight: "bold",
             fontFamily: "Roboto, sans-serif",
-            fontSize: "18px",
+            fontSize: "20px",
             color: "#008c99",
             "&:hover": {
               color: "#005f69",
@@ -74,7 +74,7 @@ const Guarantee = () => {
             fontWeight: "bold",
             color: "#008c99",
             fontFamily: "Roboto, sans-serif",
-            fontSize: "18px",
+            fontSize: "20px",
             "&:hover": {
               color: "#005f69",
             },

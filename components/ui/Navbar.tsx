@@ -17,7 +17,6 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
   Divider,
   useMediaQuery,
@@ -31,7 +30,8 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useCart } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
 
-const SearchContainer = styled(Box)(({ theme }) => ({
+// Стили
+const SearchContainer = styled(Box)({
   position: "relative",
   borderRadius: "20px",
   backgroundColor: "transparent",
@@ -39,7 +39,7 @@ const SearchContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   padding: "4px 8px",
-}));
+});
 
 const SearchIconWrapper = styled("div")({
   color: "#008c99",
@@ -75,23 +75,28 @@ const SuggestionsContainer = styled(Paper)({
   marginTop: "4px",
 });
 
+const HoverLink = styled(Typography)({
+  cursor: "pointer",
+  color: "#fff",
+  margin: "0 1rem",
+  transition: "transform 0.2s ease-in-out",
+  "&:hover": {
+    transform: "scale(1.1)",
+  },
+});
+
 const Navbar: FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState<"UA" | "EN">("UA");
   const [searchValue, setSearchValue] = useState("");
   const [suggestions, setSuggestions] = useState<{ name: string; slug: string }[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { getTotalItems } = useCart();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const { getTotalItems } = useCart();
-
-  const toggleDrawer = (open: boolean) => setDrawerOpen(open);
-  const handleLanguageChange = (lang: "UA" | "EN") => setSelectedLanguage(lang);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -106,10 +111,7 @@ const Navbar: FC = () => {
 
   useEffect(() => {
     const fetchSuggestions = async () => {
-      if (!searchValue.trim()) {
-        setSuggestions([]);
-        return;
-      }
+      if (!searchValue.trim()) return setSuggestions([]);
       try {
         const res = await fetch(`/api/search?query=${encodeURIComponent(searchValue)}`);
         if (res.ok) {
@@ -141,44 +143,21 @@ const Navbar: FC = () => {
 
   return (
     <>
-      {/* Верхняя строка для десктопа */}
       {!isMobile && (
         <Box sx={{ backgroundColor: "#008c99", display: "flex", justifyContent: "center", padding: "0.5rem 0" }}>
-          <Link href="/">
-            <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>Головна</Typography>
-          </Link>
-          <Link href="/products">
-            <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>Каталог</Typography>
-          </Link>
-          <Link href="/guarantee">
-            <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>Гарантія</Typography>
-          </Link>
-          <Link href="/delivery">
-            <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>Доставка та оплата</Typography>
-          </Link>
-          <Link href="/contacts">
-            <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>Контакти</Typography>
-          </Link>
+          <Link href="/" passHref><HoverLink>Головна</HoverLink></Link>
+          <Link href="/products" passHref><HoverLink>Каталог</HoverLink></Link>
+          <Link href="/guarantee" passHref><HoverLink>Гарантія</HoverLink></Link>
+          <Link href="/delivery" passHref><HoverLink>Доставка та оплата</HoverLink></Link>
+          <Link href="/contacts" passHref><HoverLink>Контакти</HoverLink></Link>
         </Box>
       )}
 
-      <AppBar position="static" elevation={0} sx={{ backgroundColor: "transparent", marginTop: "10px" }}>
-        <Toolbar
-          sx={{
-            maxWidth: "1400px",
-            width: "100%",
-            margin: "0 auto",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "0 1rem",
-            gap: "12px",
-            flexWrap: "nowrap",
-          }}
-        >
-          {/* Left: Logo & Burger */}
+      <AppBar position="static" elevation={0} sx={{ backgroundColor: "transparent", mt: "10px" }}>
+        <Toolbar sx={{ maxWidth: "1400px", width: "100%", mx: "auto", display: "flex", justifyContent: "space-between", alignItems: "center", px: 2, gap: 2 }}>
+          {/* Бургер + Лого */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <IconButton sx={{ color: "#008c99" }} onClick={() => toggleDrawer(true)}>
+            <IconButton sx={{ color: "#008c99" }} onClick={() => setDrawerOpen(true)}>
               <MenuOutlinedIcon fontSize="large" />
             </IconButton>
             <Link href="/">
@@ -186,13 +165,11 @@ const Navbar: FC = () => {
             </Link>
           </Box>
 
-          {/* Center: Search */}
+          {/* Поиск */}
           {!isMobile ? (
             <Box ref={containerRef} sx={{ position: "relative", flex: 1 }}>
               <SearchContainer>
-                <SearchIconWrapper>
-                  <SearchIcon />
-                </SearchIconWrapper>
+                <SearchIconWrapper><SearchIcon /></SearchIconWrapper>
                 <StyledInputBase
                   placeholder="Пошук"
                   value={searchValue}
@@ -215,76 +192,16 @@ const Navbar: FC = () => {
               )}
             </Box>
           ) : (
-            <Box sx={{ position: "relative" }}>
-              <IconButton onClick={() => setIsSearchOpen(!isSearchOpen)}>
-                <SearchIcon sx={{ color: "#008c99" }} />
-              </IconButton>
-              {isSearchOpen && (
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: "40px",
-                    right: 0,
-                    width: "100vw",
-                    backgroundColor: "#fff",
-                    padding: "8px 16px",
-                    boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-                    zIndex: 999,
-                  }}
-                  ref={containerRef}
-                >
-                  <SearchContainer sx={{ width: "100%" }}>
-                    <SearchIconWrapper>
-                      <SearchIcon />
-                    </SearchIconWrapper>
-                    <StyledInputBase
-                      placeholder="Пошук"
-                      value={searchValue}
-                      onChange={(e) => {
-                        setSearchValue(e.target.value);
-                        setShowSuggestions(true);
-                      }}
-                      onKeyDown={handleKeyDown}
-                      onFocus={() => setShowSuggestions(true)}
-                    />
-                  </SearchContainer>
-                  {showSuggestions && suggestions.length > 0 && (
-                    <SuggestionsContainer>
-                      {suggestions.map((item) => (
-                        <ListItemButton key={item.slug} onClick={() => handleSuggestionClick(item.slug)}>
-                          <ListItemText primary={item.name} />
-                        </ListItemButton>
-                      ))}
-                    </SuggestionsContainer>
-                  )}
-                </Box>
-              )}
-            </Box>
+            <IconButton onClick={() => setIsSearchOpen(!isSearchOpen)}>
+              <SearchIcon sx={{ color: "#008c99" }} />
+            </IconButton>
           )}
 
-          {/* Right: Language & Cart */}
+          {/* Язык + Корзина */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Typography
-              sx={{
-                color: selectedLanguage === "UA" ? "#008c99" : "#ccc",
-                cursor: "pointer",
-                fontWeight: selectedLanguage === "UA" ? "bold" : "normal",
-              }}
-              onClick={() => handleLanguageChange("UA")}
-            >
-              UA
-            </Typography>
-            <Typography sx={{ color: "#008c99", cursor: "default" }}>|</Typography>
-            <Typography
-              sx={{
-                color: selectedLanguage === "EN" ? "#008c99" : "#ccc",
-                cursor: "pointer",
-                fontWeight: selectedLanguage === "EN" ? "bold" : "normal",
-              }}
-              onClick={() => handleLanguageChange("EN")}
-            >
-              EN
-            </Typography>
+            <Typography sx={{ cursor: "pointer", color: "#008c99" }}>UA</Typography>
+            <Typography sx={{ color: "#008c99" }}>|</Typography>
+            <Typography sx={{ cursor: "pointer", color: "#ccc" }}>EN</Typography>
             <Link href="/basket">
               <IconButton sx={{ color: "#008c99" }}>
                 <Badge badgeContent={getTotalItems()} color="error">
@@ -300,3 +217,4 @@ const Navbar: FC = () => {
 };
 
 export default Navbar;
+

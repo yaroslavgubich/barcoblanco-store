@@ -9,22 +9,25 @@ const Contacts = () => {
   return (
     <Box
       sx={{
-        maxWidth: "1300px",
-        margin: "20px auto",
+        maxWidth: "1350px",
+        margin: { xs: "20px auto", md: "20px auto" },
+        px: { xs: "20px", md: "40px" },
         display: "flex",
-        gap: "3rem",
+        gap: { xs: "2rem", md: "3rem" },
         flexDirection: { xs: "column", md: "row" },
         alignItems: { xs: "center", md: "stretch" },
       }}
     >
-      {/* Left Section - Image */}
+      {/* Left Section - Image (hidden on small screens) */}
       <Box
         sx={{
           flex: 1,
           position: "relative",
-          minHeight: { xs: "300px", md: "auto" },
+          minHeight: "auto",
           borderRadius: "8px",
           overflow: "hidden",
+          width: "100%",
+          display: { xs: "none", md: "block" },
         }}
       >
         <Image
@@ -39,16 +42,23 @@ const Contacts = () => {
       <Box
         sx={{
           flex: 1,
+          position: "relative",
           marginLeft: { md: "30px", xs: "0" },
           textAlign: { xs: "center", md: "left" },
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
+          width: "100%",
         }}
       >
         <Typography
           variant="h4"
-          sx={{ color: "#008c99", fontWeight: "bold", marginBottom: "50px" }}
+          sx={{
+            color: "#008c99",
+            fontWeight: "bold",
+            mb: { xs: "20px", md: "50px" },
+            alignSelf: { xs: "center", md: "flex-start" },
+          }}
         >
           ГРАФІК РОБОТИ CALL-CENTER
         </Typography>
@@ -58,31 +68,32 @@ const Contacts = () => {
             display: "flex",
             justifyContent: { xs: "center", md: "flex-start" },
             gap: "20px",
+            mb: { xs: "20px", md: "0" },
           }}
         >
           <Box>
-            <Typography variant="body1" sx={{ fontSize: "24px", mb: "10px" }}>
+            <Typography variant="body1" sx={{ fontSize: { xs: "20px", md: "24px" }, mb: "10px" }}>
               Вт-Нед:
             </Typography>
-            <Typography variant="body1" sx={{ fontSize: "24px" }}>
+            <Typography variant="body1" sx={{ fontSize: { xs: "20px", md: "24px" } }}>
               Вихідний:
             </Typography>
           </Box>
           <Box>
             <Typography
               variant="body1"
-              sx={{ fontSize: "24px", mb: "10px", color: "#008c99" }}
+              sx={{ fontSize: { xs: "20px", md: "24px" }, mb: "10px", color: "#008c99" }}
             >
               09:00 - 20:00
             </Typography>
-            <Typography variant="body1" sx={{ fontSize: "24px", color: "#008c99" }}>
+            <Typography variant="body1" sx={{ fontSize: { xs: "20px", md: "24px" }, color: "#008c99" }}>
               Понеділок
             </Typography>
           </Box>
         </Box>
 
         {/* Контактная информация */}
-        <Box sx={{ mt: "50px" }}>
+        <Box sx={{ my: { xs: "20px", md: "50px" } }}>
           <Box
             sx={{
               display: "flex",
@@ -91,22 +102,30 @@ const Contacts = () => {
               alignItems: { xs: "center", md: "flex-start" },
             }}
           >
-            {/* Телефон */}
             <Typography
               variant="body1"
-              sx={{ fontSize: "24px" }}
               component="a"
               href="tel:+380666924322"
+              sx={{
+                fontSize: { xs: "20px", md: "24px" },
+                color: "#1996A3",
+                transition: "transform 0.2s",
+                "&:hover": { transform: "scale(1.1)" },
+              }}
             >
               +380-66-69-24-322
             </Typography>
 
-            {/* Почта */}
             <Typography
               variant="body1"
-              sx={{ fontSize: "24px" }}
               component="a"
               href="mailto:avsdom@ukr.net"
+              sx={{
+                fontSize: { xs: "20px", md: "24px" },
+                color: "#1996A3",
+                transition: "transform 0.2s",
+                "&:hover": { transform: "scale(1.1)" },
+              }}
             >
               avsdom@ukr.net
             </Typography>
@@ -114,7 +133,16 @@ const Contacts = () => {
         </Box>
 
         {/* Divider */}
-        <Box sx={{ height: "2px", bgcolor: "#008c99", my: "50px" }} />
+        <Box
+          sx={{
+            height: "2px",
+            bgcolor: "#008c99",
+            my: { xs: "20px", md: "50px" },
+            width: "100%",
+            maxWidth: { xs: "90%", md: "400px" },
+            alignSelf: { xs: "center", md: "flex-start" },
+          }}
+        />
 
         <Typography variant="body1" sx={{ fontSize: "16px", mb: "1rem" }}>
           Слідкуйте за нами в соціальних мережах
@@ -126,6 +154,8 @@ const Contacts = () => {
             display: "flex",
             gap: "40px",
             justifyContent: { xs: "center", md: "flex-start" },
+            "& a": { transition: "transform 0.2s" },
+            "& a:hover": { transform: "scale(1.1)" },
           }}
         >
           <Link href="https://www.instagram.com" target="_blank">
@@ -144,5 +174,4 @@ const Contacts = () => {
 };
 
 export default Contacts;
-
 
