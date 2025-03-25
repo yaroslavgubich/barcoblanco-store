@@ -2,9 +2,8 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import React, { FC, useState, useEffect, useRef, KeyboardEvent } from "react";
-import { styled, useTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import {
   AppBar,
   Toolbar,
@@ -30,8 +29,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useCart } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
 
-// Стили
-const SearchContainer = styled(Box)({
+const SearchContainer = styled(Box)(() => ({
   position: "relative",
   borderRadius: "20px",
   backgroundColor: "transparent",
@@ -39,7 +37,8 @@ const SearchContainer = styled(Box)({
   display: "flex",
   alignItems: "center",
   padding: "4px 8px",
-});
+}));
+
 
 const SearchIconWrapper = styled("div")({
   color: "#008c99",
@@ -85,24 +84,36 @@ const HoverLink = styled(Typography)({
   },
 });
 
+const BurgerMenuHeader = styled("div")({
+  display: "flex",
+  alignItems: "center",
+  padding: "16px",
+  backgroundColor: "#f5f5f5",
+  borderBottom: "1px solid #ddd",
+});
+
+const BurgerMenuContainer = styled(Box)({
+  width: 250,
+  backgroundColor: "#f5f5f5",
+  height: "100%",
+  display: "flex",
+  flexDirection: "column",
+});
+
 const Navbar: FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [suggestions, setSuggestions] = useState<{ name: string; slug: string }[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { getTotalItems } = useCart();
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery("(max-width: 600px)");
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setShowSuggestions(false);
-        setIsSearchOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -153,9 +164,52 @@ const Navbar: FC = () => {
         </Box>
       )}
 
+      <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+        <BurgerMenuContainer>
+          <Link href="/">
+            <BurgerMenuHeader>
+              <Box component="img" src="/icons/logo.svg" alt="logo" sx={{ width: 150, height: 50 }} />
+            </BurgerMenuHeader>
+          </Link>
+          <Divider />
+          <List>
+            <ListItem disablePadding>
+              <ListItemButton component={Link} href="/products" onClick={() => setDrawerOpen(false)}>
+                <ListItemText primary="Каталог" primaryTypographyProps={{ fontWeight: "bold", fontSize: 20, color: "#008c99" }} />
+              </ListItemButton>
+            </ListItem>
+            {[{ text: "Шафи", href: "/category/wardrobe" },
+              { text: "Тумби", href: "/category/cabinet" },
+              { text: "Дзеркала", href: "/category/mirrors" },
+              { text: "Водонепроникні", href: "/category/waterproof" }
+            ].map((item) => (
+              <ListItem key={item.href} disablePadding>
+                <ListItemButton component={Link} href={item.href} onClick={() => setDrawerOpen(false)}>
+                  <ListItemText primary={item.text} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+          <Divider />
+          <List>
+            {[{ text: "Головна", href: "/" },
+              { text: "Каталог", href: "/products" },
+              { text: "Гарантія", href: "/guarantee" },
+              { text: "Доставка та оплата", href: "/delivery" },
+              { text: "Контакти", href: "/contacts" }
+            ].map((item) => (
+              <ListItem key={item.href} disablePadding>
+                <ListItemButton component={Link} href={item.href} onClick={() => setDrawerOpen(false)}>
+                  <ListItemText primary={item.text} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </BurgerMenuContainer>
+      </Drawer>
+
       <AppBar position="static" elevation={0} sx={{ backgroundColor: "transparent", mt: "10px" }}>
         <Toolbar sx={{ maxWidth: "1400px", width: "100%", mx: "auto", display: "flex", justifyContent: "space-between", alignItems: "center", px: 2, gap: 2 }}>
-          {/* Бургер + Лого */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <IconButton sx={{ color: "#008c99" }} onClick={() => setDrawerOpen(true)}>
               <MenuOutlinedIcon fontSize="large" />
@@ -165,8 +219,7 @@ const Navbar: FC = () => {
             </Link>
           </Box>
 
-          {/* Поиск */}
-          {!isMobile ? (
+          {!isMobile && (
             <Box ref={containerRef} sx={{ position: "relative", flex: 1 }}>
               <SearchContainer>
                 <SearchIconWrapper><SearchIcon /></SearchIconWrapper>
@@ -191,13 +244,8 @@ const Navbar: FC = () => {
                 </SuggestionsContainer>
               )}
             </Box>
-          ) : (
-            <IconButton onClick={() => setIsSearchOpen(!isSearchOpen)}>
-              <SearchIcon sx={{ color: "#008c99" }} />
-            </IconButton>
           )}
 
-          {/* Язык + Корзина */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Typography sx={{ cursor: "pointer", color: "#008c99" }}>UA</Typography>
             <Typography sx={{ color: "#008c99" }}>|</Typography>
@@ -217,4 +265,3 @@ const Navbar: FC = () => {
 };
 
 export default Navbar;
-
