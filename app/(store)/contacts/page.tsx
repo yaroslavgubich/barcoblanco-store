@@ -9,11 +9,10 @@ const Contacts = () => {
   return (
     <Box
       sx={{
-        maxWidth: "1400px",
-        margin: "30px auto",
-        padding: "2rem",
+        maxWidth: "1300px",
+        margin: "20px auto",
         display: "flex",
-        gap: "2rem",
+        gap: "3rem",
         flexDirection: { xs: "column", md: "row" },
         alignItems: { xs: "center", md: "stretch" },
       }}
@@ -22,19 +21,17 @@ const Contacts = () => {
       <Box
         sx={{
           flex: 1,
-          width: "100%",
-          minWidth: 0,
-          display: { xs: "block", md: "block" },
-          height: { xs: "300px", md: "455px" },
           position: "relative",
+          minHeight: { xs: "300px", md: "auto" },
+          borderRadius: "8px",
+          overflow: "hidden",
         }}
       >
         <Image
           src="/images/contact_photo.jpg"
           alt="Bathroom"
-          layout="fill"
-          objectFit="cover"
-          style={{ borderRadius: "8px" }}
+          fill
+          style={{ objectFit: "cover" }}
         />
       </Box>
 
@@ -42,15 +39,11 @@ const Contacts = () => {
       <Box
         sx={{
           flex: 1,
-          minWidth: 0,
-          width: "100%",
-          marginLeft: { md: "115px", xs: "0" },
+          marginLeft: { md: "30px", xs: "0" },
           textAlign: { xs: "center", md: "left" },
-          maxWidth: { xs: "100%", md: "50%" },
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          height: "100%",
         }}
       >
         <Typography
@@ -64,14 +57,11 @@ const Contacts = () => {
           sx={{
             display: "flex",
             justifyContent: { xs: "center", md: "flex-start" },
-            gap: "40px",
+            gap: "20px",
           }}
         >
           <Box>
-            <Typography
-              variant="body1"
-              sx={{ fontSize: "24px", marginBottom: "10px" }}
-            >
+            <Typography variant="body1" sx={{ fontSize: "24px", mb: "10px" }}>
               Вт-Нед:
             </Typography>
             <Typography variant="body1" sx={{ fontSize: "24px" }}>
@@ -81,32 +71,18 @@ const Contacts = () => {
           <Box>
             <Typography
               variant="body1"
-              sx={{
-                fontSize: "24px",
-                marginBottom: "10px",
-                color: "#008c99",
-              }}
+              sx={{ fontSize: "24px", mb: "10px", color: "#008c99" }}
             >
               09:00 - 20:00
             </Typography>
-            <Typography
-              variant="body1"
-              sx={{ fontSize: "24px", color: "#008c99" }}
-            >
+            <Typography variant="body1" sx={{ fontSize: "24px", color: "#008c99" }}>
               Понеділок
             </Typography>
           </Box>
         </Box>
 
         {/* Контактная информация */}
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: { xs: "center", md: "flex-start" },
-            alignItems: { xs: "center", md: "flex-start" },
-            marginTop: "50px",
-          }}
-        >
+        <Box sx={{ mt: "50px" }}>
           <Box
             sx={{
               display: "flex",
@@ -138,19 +114,9 @@ const Contacts = () => {
         </Box>
 
         {/* Divider */}
-        <Box
-          sx={{
-            height: "2px",
-            width: "100%",
-            backgroundColor: "#008c99",
-            margin: "50px 0",
-          }}
-        ></Box>
+        <Box sx={{ height: "2px", bgcolor: "#008c99", my: "50px" }} />
 
-        <Typography
-          variant="body1"
-          sx={{ fontSize: "16px", marginBottom: "1rem" }}
-        >
+        <Typography variant="body1" sx={{ fontSize: "16px", mb: "1rem" }}>
           Слідкуйте за нами в соціальних мережах
         </Typography>
 
@@ -163,20 +129,10 @@ const Contacts = () => {
           }}
         >
           <Link href="https://www.instagram.com" target="_blank">
-            <Image
-              src="/icons/instagram.png"
-              alt="Instagram"
-              width={50}
-              height={50}
-            />
+            <Image src="/icons/instagram.png" alt="Instagram" width={50} height={50} />
           </Link>
           <Link href="https://t.me" target="_blank">
-            <Image
-              src="/icons/telegram.png"
-              alt="Telegram"
-              width={50}
-              height={50}
-            />
+            <Image src="/icons/telegram.png" alt="Telegram" width={50} height={50} />
           </Link>
           <Link href="https://www.viber.com/ua/">
             <Image src="/icons/viber.png" alt="Viber" width={50} height={50} />
@@ -188,4 +144,5 @@ const Contacts = () => {
 };
 
 export default Contacts;
+
 

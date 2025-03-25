@@ -104,7 +104,7 @@ export default function OrderForm() {
       alert("Замовлення успішно оформлене! Вам надіслано підтвердження на пошту.");
       form.reset();
     } catch {
-      alert("Не вдалося оформити замовлення. Спробуйте ще раз.");
+      alert ("Не вдалося оформити замовлення. Спробуйте ще раз.");
     } finally {
       setIsSubmitting(false);
     }
@@ -113,7 +113,7 @@ export default function OrderForm() {
   const totalPrice = getCartTotalPrice()
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2 py-16 text-lg">
+    <div className="grid gap-6 lg:grid-cols-2 py-16 text-lg max-w-7xl mx-auto">
       <Card>
         <CardHeader>
           <CardTitle className="text-[#1996A3] text-[30px] font-semibold">

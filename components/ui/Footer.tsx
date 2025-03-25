@@ -61,11 +61,11 @@ const Footer = () => {
             aria-label="Viber"
           >
             <Image
-              src="/icons/viber.svg"
-              alt="Facebook"
-              width={30}
+              src="/icons/viber-footer.png"
+              alt="Viber"
+              width={35}
               height={30}
-              className="social-icon"
+              className="social-icon viber"
             />
           </a>
           <a

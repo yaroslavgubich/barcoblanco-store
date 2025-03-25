@@ -31,19 +31,15 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useCart } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
 
-// Styled components for search
-const SearchContainer = styled("div")({
+const SearchContainer = styled(Box)(({ theme }) => ({
   position: "relative",
   borderRadius: "20px",
   backgroundColor: "transparent",
-  marginLeft: 0,
-  marginRight: "16px",
-  width: "535px",
   border: "1px solid #008c99",
   display: "flex",
   alignItems: "center",
   padding: "4px 8px",
-});
+}));
 
 const SearchIconWrapper = styled("div")({
   color: "#008c99",
@@ -79,76 +75,38 @@ const SuggestionsContainer = styled(Paper)({
   marginTop: "4px",
 });
 
-const BurgerMenuHeader = styled("div")({
-  display: "flex",
-  alignItems: "center",
-  padding: "16px",
-  backgroundColor: "#f5f5f5",
-  borderBottom: "1px solid #ddd",
-  fontSize: "24px",
-});
-
-const BurgerMenuLogo = styled(Image)({
-  height: "50px",
-  width: "200px",
-  
-});
-
-const BurgerMenuContainer = styled(Box)({
-  width: 250,
-  backgroundColor: "#f5f5f5",
-  height: "100%",
-  display: "flex",
-  flexDirection: "column",
-});
-
-type NavbarProps = Record<string, never>;
-
-const Navbar: FC<NavbarProps> = () => {
-  // Drawer state
-  const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
-
-  // Language switcher
+const Navbar: FC = () => {
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<"UA" | "EN">("UA");
-
-  // Search suggestions state
   const [searchValue, setSearchValue] = useState("");
   const [suggestions, setSuggestions] = useState<{ name: string; slug: string }[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const isMedium = useMediaQuery("(max-width: 1150px)");
 
   const { getTotalItems } = useCart();
 
-  const toggleDrawer = (open: boolean): void => {
-    setDrawerOpen(open);
-  };
+  const toggleDrawer = (open: boolean) => setDrawerOpen(open);
+  const handleLanguageChange = (lang: "UA" | "EN") => setSelectedLanguage(lang);
 
-  const handleLanguageChange = (language: "UA" | "EN"): void => {
-    setSelectedLanguage(language);
-  };
-
-  // Hide suggestions if clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setShowSuggestions(false);
+        setIsSearchOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Fetch suggestions from API whenever searchValue changes
   useEffect(() => {
     const fetchSuggestions = async () => {
-      if (searchValue.trim().length === 0) {
+      if (!searchValue.trim()) {
         setSuggestions([]);
         return;
       }
@@ -159,22 +117,15 @@ const Navbar: FC<NavbarProps> = () => {
           setSuggestions(data);
         }
       } catch (error) {
-        console.error("Error fetching suggestions:", error);
+        console.error("Search error:", error);
       }
     };
-
     fetchSuggestions();
   }, [searchValue]);
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value);
-    setShowSuggestions(true);
-  };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && suggestions.length > 0) {
       router.push(`/productDetails/${suggestions[0].slug}`);
-      // Reset search state after navigating
       setSearchValue("");
       setSuggestions([]);
       setShowSuggestions(false);
@@ -183,7 +134,6 @@ const Navbar: FC<NavbarProps> = () => {
 
   const handleSuggestionClick = (slug: string) => {
     router.push(`/productDetails/${slug}`);
-    // Reset search state after clicking a suggestion
     setSearchValue("");
     setSuggestions([]);
     setShowSuggestions(false);
@@ -191,120 +141,27 @@ const Navbar: FC<NavbarProps> = () => {
 
   return (
     <>
-      {/* Drawer for Mobile Menu */}
-      <Drawer anchor="left" open={drawerOpen} onClose={() => toggleDrawer(false)}>
-        <BurgerMenuContainer>
-          <Link href="/">
-            <BurgerMenuHeader>
-              <BurgerMenuLogo src="/icons/logo.svg" alt="logo" width={150} height={50} />
-            </BurgerMenuHeader>
-          </Link>
-          <Divider />
-          <List>
-            <ListItem disablePadding>
-              <Link href="/basket">
-                <ListItemButton>
-                  <ListItemIcon>
-                    <ShoppingCartIcon sx={{ color: "#008c99" }} />
-                  </ListItemIcon>
-                  <ListItemText primary="Кошик" />
-                </ListItemButton>
-              </Link>
-            </ListItem>
-          </List>
-          <Divider />
-          <List>
-            <Typography
-              variant="body1"
-              sx={{
-                padding: "16px 16px 8px",
-                fontWeight: "bold",
-                color: "#008c99",
-                fontSize: "24px",
-              }}
-            >
-              Каталог
-            </Typography>
-            <ListItem disablePadding>
-              <ListItemButton component={Link} href="/category/wardrobe">
-                <ListItemText primary="Шафи" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton component={Link} href="/category/cabinet">
-                <ListItemText primary="Тумби" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton component={Link} href="/category/mirrors">
-                <ListItemText primary="Дзеркала" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton component={Link} href="/category/waterproof">
-                <ListItemText primary="Водонепроникні" />
-              </ListItemButton>
-            </ListItem>
-          </List>
-          <Divider />
-          <List>
-            <ListItem disablePadding>
-              <ListItemButton component={Link} href="/" onClick={() => setDrawerOpen(false)}>
-                <ListItemText primary="Головна" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton component={Link} href="/products" onClick={() => setDrawerOpen(false)}>
-                <ListItemText primary="Каталог" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton component={Link} href="/guarantee">
-                <ListItemText primary="Гарантія" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton component={Link} href="/delivery">
-                <ListItemText primary="Доставка та оплата" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton component={Link} href="/contacts">
-                <ListItemText primary="Контакти" />
-              </ListItemButton>
-            </ListItem>
-          </List>
-        </BurgerMenuContainer>
-      </Drawer>
+      {/* Верхняя строка для десктопа */}
       {!isMobile && (
         <Box sx={{ backgroundColor: "#008c99", display: "flex", justifyContent: "center", padding: "0.5rem 0" }}>
           <Link href="/">
-            <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>
-              Головна
-            </Typography>
+            <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>Головна</Typography>
           </Link>
           <Link href="/products">
-            <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>
-              Каталог
-            </Typography>
+            <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>Каталог</Typography>
           </Link>
           <Link href="/guarantee">
-            <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>
-              Гарантія
-            </Typography>
+            <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>Гарантія</Typography>
           </Link>
           <Link href="/delivery">
-            <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>
-              Доставка та оплата
-            </Typography>
+            <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>Доставка та оплата</Typography>
           </Link>
           <Link href="/contacts">
-            <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>
-              Контакти
-            </Typography>
+            <Typography sx={{ cursor: "pointer", color: "#fff", margin: "0 1rem" }}>Контакти</Typography>
           </Link>
         </Box>
       )}
+
       <AppBar position="static" elevation={0} sx={{ backgroundColor: "transparent", marginTop: "10px" }}>
         <Toolbar
           sx={{
@@ -315,41 +172,97 @@ const Navbar: FC<NavbarProps> = () => {
             justifyContent: "space-between",
             alignItems: "center",
             padding: "0 1rem",
+            gap: "12px",
+            flexWrap: "nowrap",
           }}
         >
+          {/* Left: Logo & Burger */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <IconButton sx={{ color: "#008c99" }} onClick={() => toggleDrawer(true)}>
               <MenuOutlinedIcon fontSize="large" />
             </IconButton>
-            {!isMedium && (
-              <Link href="/">
-                <Box component="img" src="icons/logo.svg" alt="Logo" sx={{ height: isMobile ? 30 : 40, cursor: "pointer" }} />
-              </Link>
-            )}
+            <Link href="/">
+              <Box component="img" src="/icons/logo.svg" alt="Logo" sx={{ height: 40, cursor: "pointer" }} />
+            </Link>
           </Box>
-          <Box ref={containerRef} sx={{ position: "relative" }}>
-            <SearchContainer>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Пошук"
-                value={searchValue}
-                onChange={handleSearchChange}
-                onKeyDown={handleKeyDown}
-                onFocus={() => setShowSuggestions(true)}
-              />
-            </SearchContainer>
-            {showSuggestions && suggestions.length > 0 && (
-              <SuggestionsContainer>
-                {suggestions.map((item) => (
-                  <ListItemButton key={item.slug} onClick={() => handleSuggestionClick(item.slug)}>
-                    <ListItemText primary={item.name} />
-                  </ListItemButton>
-                ))}
-              </SuggestionsContainer>
-            )}
-          </Box>
+
+          {/* Center: Search */}
+          {!isMobile ? (
+            <Box ref={containerRef} sx={{ position: "relative", flex: 1 }}>
+              <SearchContainer>
+                <SearchIconWrapper>
+                  <SearchIcon />
+                </SearchIconWrapper>
+                <StyledInputBase
+                  placeholder="Пошук"
+                  value={searchValue}
+                  onChange={(e) => {
+                    setSearchValue(e.target.value);
+                    setShowSuggestions(true);
+                  }}
+                  onKeyDown={handleKeyDown}
+                  onFocus={() => setShowSuggestions(true)}
+                />
+              </SearchContainer>
+              {showSuggestions && suggestions.length > 0 && (
+                <SuggestionsContainer>
+                  {suggestions.map((item) => (
+                    <ListItemButton key={item.slug} onClick={() => handleSuggestionClick(item.slug)}>
+                      <ListItemText primary={item.name} />
+                    </ListItemButton>
+                  ))}
+                </SuggestionsContainer>
+              )}
+            </Box>
+          ) : (
+            <Box sx={{ position: "relative" }}>
+              <IconButton onClick={() => setIsSearchOpen(!isSearchOpen)}>
+                <SearchIcon sx={{ color: "#008c99" }} />
+              </IconButton>
+              {isSearchOpen && (
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: "40px",
+                    right: 0,
+                    width: "100vw",
+                    backgroundColor: "#fff",
+                    padding: "8px 16px",
+                    boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+                    zIndex: 999,
+                  }}
+                  ref={containerRef}
+                >
+                  <SearchContainer sx={{ width: "100%" }}>
+                    <SearchIconWrapper>
+                      <SearchIcon />
+                    </SearchIconWrapper>
+                    <StyledInputBase
+                      placeholder="Пошук"
+                      value={searchValue}
+                      onChange={(e) => {
+                        setSearchValue(e.target.value);
+                        setShowSuggestions(true);
+                      }}
+                      onKeyDown={handleKeyDown}
+                      onFocus={() => setShowSuggestions(true)}
+                    />
+                  </SearchContainer>
+                  {showSuggestions && suggestions.length > 0 && (
+                    <SuggestionsContainer>
+                      {suggestions.map((item) => (
+                        <ListItemButton key={item.slug} onClick={() => handleSuggestionClick(item.slug)}>
+                          <ListItemText primary={item.name} />
+                        </ListItemButton>
+                      ))}
+                    </SuggestionsContainer>
+                  )}
+                </Box>
+              )}
+            </Box>
+          )}
+
+          {/* Right: Language & Cart */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Typography
               sx={{
@@ -361,9 +274,7 @@ const Navbar: FC<NavbarProps> = () => {
             >
               UA
             </Typography>
-            <Typography sx={{ color: "#008c99", cursor: "default" }}>
-              |
-            </Typography>
+            <Typography sx={{ color: "#008c99", cursor: "default" }}>|</Typography>
             <Typography
               sx={{
                 color: selectedLanguage === "EN" ? "#008c99" : "#ccc",

@@ -1,6 +1,6 @@
 // context/CartContext.tsx
 "use client";
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { createContext, useContext, useState, ReactNode,  useEffect } from "react";
 
 export interface CartItem {
   id: string;
@@ -16,6 +16,7 @@ interface CartContextType {
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   getTotalItems: () => number;
+  clearCart: () => void; 
   getCartTotalPrice: () => number;
 }
 
@@ -81,6 +82,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
   };
 
+  const clearCart = () => {
+    setCart([]);
+  };
+  
+
   const getTotalItems = () => {
     return cart.reduce((total, item) => total + item.quantity, 0);
   };
@@ -97,6 +103,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         addToCart,
         removeFromCart,
         updateQuantity,
+        clearCart,
         getTotalItems,
         getCartTotalPrice,
       }}
