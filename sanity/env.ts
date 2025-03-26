@@ -1,6 +1,6 @@
 // sanity/env.ts
 export const apiVersion =
-  process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2025-01-26'
+  process.env.NEXT_PUBLIC_SANITY_API_VERSION || "1"
 
 export const dataset = assertValue(
   process.env.NEXT_PUBLIC_SANITY_DATASET,

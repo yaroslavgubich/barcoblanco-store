@@ -1,4 +1,3 @@
-// components/ui/Product.tsx
 "use client";
 import React from "react";
 import Link from "next/link";
@@ -6,73 +5,49 @@ import Image from "next/image";
 
 interface ProductProps {
   product: ProductType;
-  isDetailPage?: boolean;
 }
 
 interface ProductType {
   _id?: string;
-  image?: { asset: { url: string }; alt?: string }[] | null; // Allow null or undefined
+  image?: { asset: { url: string }; alt?: string }[] | null;
   name: string;
   slug: { current: string };
   price: number;
-  description?: string;
-  width?: number;
 }
 
-const Product: React.FC<ProductProps> = ({ product, isDetailPage = false }) => {
-  const { image, name, slug, price, description, width } = product;
+const Product: React.FC<ProductProps> = ({ product }) => {
+  const { image, name, slug, price } = product;
 
-  // Check if image exists and has at least one valid item
   const imageUrl =
     image && Array.isArray(image) && image.length > 0
-      ? image[0].asset.url // ✅ Safe access
-      : "/images/placeholder.svg"; // Default placeholder
-
-  // (Optional) Get alt text if available
-  const altText =
-    image && Array.isArray(image) && image.length > 0 && image[0].alt
-      ? image[0].alt
-      : name;
+      ? image[0].asset.url
+      : "/images/placeholder.svg";
 
   return (
-    <div>
-      {isDetailPage ? (
-        // Detailed View
-        <div className="product-details">
+    <Link href={`/productDetails/${slug.current}`} className="block">
+      <div className="group flex flex-col items-center text-center p-4  rounded-lg  transition-transform cursor-pointer">
+        <div className="w-[300px] h-[300px] overflow-hidden rounded-md ">
           <Image
             src={imageUrl}
-            width={400}
-            height={400}
-            className="product-image"
-            alt={altText}
+            width={300}
+            height={300}
+            className="w-full h-full object-cover transition-transform duration-300 transform group-hover:scale-110"
+            alt={name}
           />
-          <h1 className="product-name">{name}</h1>
-          <p className="product-price">${price}</p>
-          <p className="product-description">
-            {description || "No description available."}
-          </p>
-          <p className="product-width">
-            Width: {width ? `${width} cm` : "N/A"}
-          </p>
         </div>
-      ) : (
-        // Card View (for listing)
-        <Link href={`/productDetails/${slug.current}`}>
-          <div className="product-card">
-            <Image
-              src={imageUrl}
-              width={250}
-              height={250}
-              className="product-image"
-              alt={altText}
-            />
-            <p className="product-name">{name}</p>
-            <p className="product-price">${price}</p>
-          </div>
-        </Link>
-      )}
-    </div>
+        <p className="mt-3 text-gray-800 text-lg font-medium">{name}</p>
+        <p className="text-[#1996A3] font-bold text-xl">{price} грн</p>
+      </div>
+    </Link>
   );
 };
 
 export default Product;
+
+
+
+
+
+
+
+

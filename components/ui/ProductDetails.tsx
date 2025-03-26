@@ -1,22 +1,18 @@
-// components/ui/ProductDetails.tsx
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
+import Lightbox from "yet-another-react-lightbox";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
 
 interface ProductDetailsProps {
   productData: {
     name: string;
-    image: { asset: { url: string } }[];
+    image: { asset: { url: string }; alt?: string }[] | null;
     price: number;
     details: string;
     category: string;
@@ -26,63 +22,112 @@ interface ProductDetailsProps {
 }
 
 export default function ProductDetails({ productData }: ProductDetailsProps) {
-  const { name, image, price, details, category, width, isPopular } = productData;
-  
-  // Retrieve the addToCart function from our cart context
+  const { name, image, price, details, width, isPopular } = productData;
+
+  const images =
+    Array.isArray(image) && image.length > 0
+      ? image
+      : [{ asset: { url: "/images/placeholder.svg" }, alt: "placeholder" }];
+
+  const [activeImage, setActiveImage] = useState<string>(images[0].asset.url);
+  const [openLightbox, setOpenLightbox] = useState(false);
+
+  const lightboxSlides = images.map((img) => ({
+    src: img.asset.url,
+    alt: img.alt || "",
+  }));
+
   const { addToCart } = useCart();
 
-  // Handle adding the product to the cart
   const handleAddToCart = () => {
     addToCart({
-      id: name, // Ideally use a unique _id from Sanity if available
-      name: name,
-      price: price,
-      image: image?.[0]?.asset?.url || "/images/placeholder.svg",
+      id: name,
+      name,
+      price,
+      image: activeImage,
       quantity: 1,
     });
   };
 
   return (
-    <Card className="max-w-8xl mx-auto bg-white shadow-lg rounded-lg p-6">
-      <CardContent className="flex flex-col md:flex-row gap-6">
-        {/* Image Section */}
-        <div className="flex-1">
-          {image && image.length > 0 && (
-            <Image
-              src={image[0].asset.url}
-              alt={name}
-              width={0}
-              height={0}
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="w-full h-auto rounded-lg object-contain"
-            />
-          )}
-          <CardDescription className="text-gray-600">
-            {category}
-          </CardDescription>
+    <div className="max-w-7xl mx-auto bg-white p-4 sm:p-6 md:p-8 flex flex-col md:flex-row gap-12">
+      {/* Блок изображений */}
+      <div className="flex-1 max-w-full md:max-w-[500px] flex flex-col md:flex-row items-center md:items-start gap-4">
+        {/* Главное изображение */}
+        <div
+          onClick={() => setOpenLightbox(true)}
+          className="w-full max-w-[300px] sm:max-w-[350px] md:max-w-[400px] aspect-[3/4] overflow-hidden rounded-lg shadow-md cursor-zoom-in"
+        >
+          <Image
+            src={activeImage}
+            alt={name}
+            width={400}
+            height={600}
+            className="w-full h-full object-cover"
+          />
         </div>
 
-        {/* Product Details Section */}
-        <div className="flex-1 p-6 space-y-4">
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold">{name}</CardTitle>
-          </CardHeader>
-          <p className="text-xl font-semibold text-gray-900">
-            Price: ${price}
-          </p>
-          <p className="text-gray-700">{details}</p>
-          {width && <p className="text-gray-500">Width: {width} cm</p>}
-          {isPopular && (
-            <p className="text-green-500 font-semibold">🔥 Popular Product</p>
-          )}
+        {/* Миниатюры */}
+        {images.length > 1 && (
+          <div className="flex flex-col gap-3 md:mt-0 mt-4">
+            {images.slice(0, 4).map((img, index) => (
+              <button
+                key={index}
+                onClick={() => setActiveImage(img.asset.url)}
+                className={`rounded-md border transition overflow-hidden ${activeImage === img.asset.url
+                    ? "border-[#1996A3] border-2"
+                    : "border-gray-300"
+                  } 
+        w-[70px] h-[50px] sm:w-[90px] sm:h-[65px] md:w-[110px] md:h-[80px]`}
+              >
+                <Image
+                  src={img.asset.url}
+                  alt={img.alt || `thumbnail-${index}`}
+                  width={110}
+                  height={80}
+                  className="w-full h-full object-cover"
+                />
+              </button>
+            ))}
+          </div>
+        )}
+
+      </div>
+
+      {/* Блок информации */}
+      <div className="flex-1 space-y-4 text-center md:text-left">
+        <h1 className="text-3xl sm:text-4xl font-bold text-[#1996A3]">{name}</h1>
+
+        {/* Ціна — сразу под названием */}
+        <p className="text-xl sm:text-2xl font-semibold text-gray-900  mb-6">{price} грн</p>
+
+        {/* Всё остальное ниже */}
+        <div className="space-y-4 mt-6">
+          <p className="text-gray-700 text-base sm:text-lg">{details}</p>
+          {width && <p className="text-gray-500">Ширина: {width} см</p>}
+          {isPopular && <p className="text-[#1996A3] font-semibold">🔥 Популярний продукт</p>}
+        </div>
+
+        {/* Кнопка */}
+        <div className="flex justify-center md:justify-start">
           <Button
             onClick={handleAddToCart}
-            className="w-3/4 bg-[#1996a3] hover:bg-[#147a86] text-white"
+            className="w-full max-w-xs bg-[#1996a3] hover:bg-[#147a86] text-white py-3 text-lg"
           >
-            Add to Cart
+            Додати в кошик
           </Button>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+
+
+      {/* Lightbox */}
+      <Lightbox
+        open={openLightbox}
+        close={() => setOpenLightbox(false)}
+        slides={lightboxSlides}
+        plugins={[Thumbnails]}
+        styles={{ container: { backgroundColor: "transparent" } }}
+      />
+    </div>
   );
 }

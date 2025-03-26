@@ -17,7 +17,7 @@ const Home = async () => {
 
   return (
     <>
-     <h1>Welcome to Our Store!</h1>
+    
       <HeroBanner heroBanner={bannerData?.[0]} />
       <Categories />
       <PopularProducts productsData={productsData} />

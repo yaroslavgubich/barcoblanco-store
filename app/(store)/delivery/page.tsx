@@ -6,9 +6,9 @@ import { styled } from "@mui/material/styles";
 import "@/app/globals.css";
 
 const DeliverySection = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(2),
+  padding: theme.spacing(1),
   borderRadius: "8px",
-  marginTop: theme.spacing(3),
+  marginTop: theme.spacing(1),
   fontFamily: "Roboto, sans-serif",
   textAlign: "center",
 }));
@@ -92,10 +92,20 @@ const Delivery = () => {
             fontWeight: "bold",
             fontFamily: "Roboto, sans-serif",
             fontSize: "18px",
+            color: "#008c99",
+            "&:hover": {
+              color: "#005f69",
+            },
           }}
         >
-          +380-66-69-24-322
+          <a
+            href="tel:+380666924322"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            +380-66-69-24-322
+          </a>
         </Typography>
+
         <Typography
           variant="body1"
           paragraph
@@ -111,10 +121,19 @@ const Delivery = () => {
             color: "#008c99",
             fontFamily: "Roboto, sans-serif",
             fontSize: "18px",
+            "&:hover": {
+              color: "#005f69",
+            },
           }}
         >
-          barcoblanco@ukr.net
+          <a
+            href="mailto:barcoblanco@ukr.net"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            barcoblanco@ukr.net
+          </a>
         </Typography>
+
       </DeliverySection>
     </Container>
   );

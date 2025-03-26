@@ -1,4 +1,3 @@
-// app/(store)/layout.tsx
 "use client";
 import "../globals.css";
 import Navbar from "@/components/ui/Navbar";
@@ -11,9 +10,11 @@ export default function StoreLayout({ children }: { children: ReactNode }) {
     <CartProvider>
       <div className="app-container">
         <Navbar />
-        <main className="main-container">{children}</main>
+        <main className="main-content">{children}</main> {/* ✅ Должен быть этот класс */}
         <Footer />
       </div>
     </CartProvider>
   );
 }
+
+

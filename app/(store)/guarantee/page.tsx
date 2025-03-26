@@ -1,4 +1,3 @@
-// app/(store)/guarantee/page.tsx
 "use client";
 export const dynamic = "force-dynamic"; // Prevents static pre-rendering
 
@@ -8,16 +7,16 @@ import { styled } from "@mui/material/styles";
 import "@/app/globals.css";
 
 const GuaranteeSection = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(3),
+  padding: theme.spacing(1),
   borderRadius: "8px",
-  marginTop: theme.spacing(4),
+  marginTop: theme.spacing(1),
   textAlign: "center",
   fontFamily: "Roboto, sans-serif",
 }));
 
 const Guarantee = () => {
   return (
-    <Container maxWidth="md" sx={{ marginBottom: "70px" }}>
+    <Container maxWidth="md" sx={{ marginBottom: "20px" }}>
       <GuaranteeSection>
         <Typography
           variant="h4"
@@ -48,9 +47,22 @@ const Guarantee = () => {
         <Typography
           variant="body1"
           paragraph
-          sx={{ fontWeight: "bold", fontSize: "18px" }}
+          sx={{
+            fontWeight: "bold",
+            fontFamily: "Roboto, sans-serif",
+            fontSize: "20px",
+            color: "#008c99",
+            "&:hover": {
+              color: "#005f69",
+            },
+          }}
         >
-          +380-66-69-24-322
+          <a
+            href="tel:+380666924322"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            +380-66-69-24-322
+          </a>
         </Typography>
         <Typography variant="body1" paragraph sx={{ fontSize: "18px" }}>
           або надішліть лист на електронну адресу:
@@ -58,9 +70,22 @@ const Guarantee = () => {
         <Typography
           variant="body1"
           paragraph
-          sx={{ fontWeight: "bold", color: "#008c99", fontSize: "18px" }}
+          sx={{
+            fontWeight: "bold",
+            color: "#008c99",
+            fontFamily: "Roboto, sans-serif",
+            fontSize: "20px",
+            "&:hover": {
+              color: "#005f69",
+            },
+          }}
         >
-          barcoblanco@ukr.net
+          <a
+            href="mailto:barcoblanco@ukr.net"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            barcoblanco@ukr.net
+          </a>
         </Typography>
         <Typography variant="body1" paragraph sx={{ fontSize: "18px" }}>
           Дякуємо, що обрали нашу продукцію!
@@ -71,3 +96,4 @@ const Guarantee = () => {
 };
 
 export default Guarantee;
+
