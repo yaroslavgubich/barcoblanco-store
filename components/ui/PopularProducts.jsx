@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef } from "react"; 
 import { Product } from "../ui";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -14,9 +14,10 @@ const PopularProducts = ({ productsData }) => {
   return (
     <div className="container max-w-[1400px] mx-auto px-4 mb-12">
       <div className="popular-products-wrapper flex flex-col">
-        <h3 className="text-left text-[28px] md:text-[36px] text-[#008c99] mb-5 font-bold">
+        <h3 className="text-center xl:text-left text-[28px] md:text-[36px] text-[#008c99] mb-5 font-bold">
           ПОПУЛЯРНІ ПРОДУКТИ
         </h3>
+
 
         <div className="relative">
           <Swiper
@@ -36,13 +37,13 @@ const PopularProducts = ({ productsData }) => {
             speed={1000}
             breakpoints={{
               480: { slidesPerView: 1 },
-              640: { slidesPerView: 1 },
+              640: { slidesPerView: 2 },
               768: { slidesPerView: 2 },
               900: { slidesPerView: 2 },
               1024: { slidesPerView: 3 },
               1280: { slidesPerView: 4 },
             }}
-            
+
             className="w-full pb-16"
           >
 
