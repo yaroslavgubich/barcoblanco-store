@@ -1,62 +1,29 @@
-// sanity/schemaTypes/banner.ts
+//sanity/schemaTypes/banner.ts
 const banner = {
   name: "banner",
   title: "Banner",
   type: "document",
+  __experimental_actions: ["update", "publish"], // disables create/delete
   fields: [
     {
-      name: "image",
-      title: "Image",
-      type: "image",
-      options: {
-        hojspot: true,
-      },
-    },
-    {
-      name: "buttonText",
-      title: "ButtonText",
-      type: "string",
-    },
-    {
-      name: "product",
-      title: "Product",
-      type: "string",
-    },
-    {
-      name: "desc",
-      title: "Desc",
-      type: "string",
-    },
-    {
-      name: "smallText",
-      title: "SmallText",
-      type: "string",
-    },
-    {
-      name: "midText",
-      title: "MidText",
-      type: "string",
-    },
-    {
-      name: "largeText1",
-      title: "LargeText1",
-      type: "string",
-    },
-    {
-      name: "largeText2",
-      title: "LargeText2",
-      type: "string",
-    },
-    {
-      name: "discount",
-      title: "Discount",
-      type: "string",
-    },
-    {
-      name: "saleTime",
-      title: "SaleTime",
-      type: "string",
+      name: "images",
+      title: "Banner Images",
+      type: "array",
+      of: [
+        {
+          type: "image",
+          options: { hotspot: true },
+          fields: [{ name: "alt", title: "Alternative text", type: "string" }],
+          preview: { select: { title: "alt", media: "asset" } },
+        },
+      ],
     },
   ],
+  preview: {
+    prepare() {
+      return { title: "Banner Images" };
+    },
+  },
 };
+
 export default banner;

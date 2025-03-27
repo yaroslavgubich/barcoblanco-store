@@ -944,3 +944,17 @@ html, body {
 
 
 
+.banner-carousel {
+  width: 100%;
+  height: auto;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #000; /* or your preferred color */
+}
+
+/* If you use pagination dots: */
+.swiper-pagination-bullet-active {
+  background: #000;
+}
