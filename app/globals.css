@@ -91,7 +91,8 @@ body,
     sans-serif;
   scroll-behavior: smooth;
 }
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -203,7 +204,6 @@ span.text-red {
 }
 
 .popular-products-title {
- 
   margin-bottom: 20px;
   font-size: 2.5rem;
   font-weight: bold;
@@ -249,32 +249,6 @@ span.text-red {
   margin-bottom: 30px;
   background: #95f6ff;
   box-sizing: border-box;
-}
-
-.hero-banner-container-left {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 1rem;
-}
-
-.hero-banner-title {
-  font-size: 3rem;
-  font-weight: bold;
-  color: #333;
-  margin: 0;
-}
-
-.hero-banner-subtitle {
-  font-size: 1.5rem;
-  color: #555;
-  margin: 0;
-}
-
-.hero-banner-container-lower {
-  margin-top: 1rem;
 }
 
 .order-button {
@@ -383,7 +357,6 @@ span.text-red {
   position: relative;
 }
 
-
 /* feature section */
 
 .features-section {
@@ -408,13 +381,13 @@ span.text-red {
 .feature-card {
   flex: 1 1 calc(25% - 1rem);
   padding: 1rem;
-  text-align: center; 
+  text-align: center;
 }
 
 .feature-icon {
   margin-bottom: 1rem;
-    display: block;
-  margin: 0 auto; 
+  display: block;
+  margin: 0 auto;
 }
 
 .feature-title {
@@ -499,7 +472,6 @@ span.text-red {
   border-radius: 12px;
 }
 
-
 .catalog-button {
   text-align: center;
 
@@ -558,7 +530,8 @@ span.text-red {
 }
 
 /* Глобальные стили страницы */
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -629,7 +602,6 @@ html, body {
 }
 .footer-section p {
   margin-bottom: 0.5rem;
-
 }
 .contact-info {
   display: flex;
@@ -647,13 +619,11 @@ html, body {
 
 .social-icon {
   transition: transform 0.2s;
-  
 }
 
 .social-icon:hover {
   transform: scale(1.1);
 }
-
 
 /* Адаптив для десктопа */
 @media (min-width: 768px) {
@@ -667,8 +637,6 @@ html, body {
     align-items: flex-start;
   }
 }
-
-
 
 .cart-heading .heading {
   margin-left: 10px;
@@ -766,7 +734,6 @@ html, body {
   margin: 0 auto;
 }
 
-
 /* Контейнер для слайдера */
 .popular-products-container {
   display: flex;
@@ -803,7 +770,6 @@ html, body {
     transform: translateX(-50%);
   }
 }
-
 
 /* Стиль для отдельного продукта */
 .product {
@@ -909,7 +875,8 @@ html, body {
   }
 }
 @keyframes bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   30% {
@@ -934,27 +901,52 @@ html, body {
 .yarl__button[aria-label="Previous"],
 .yarl__button[aria-label="Next"],
 .yarl__button[aria-label="Close"] {
-  color: #1996A3 !important;
+  color: #1996a3 !important;
   font-size: 36px !important;
   box-shadow: none !important; /* убираем тень по умолчанию */
   background: transparent !important;
   transition: all 0.2s ease-in-out;
 }
 
+/* === CUSTOM BANNER STYLES === */
 
-
-
-.banner-carousel {
+.banner-container {
+  position: relative;
   width: 100%;
-  height: auto;
+  height: 600px;
 }
 
-.swiper-button-next,
-.swiper-button-prev {
-  color: #000; /* or your preferred color */
+.banner-swiper,
+.banner-slide {
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
 
-/* If you use pagination dots: */
-.swiper-pagination-bullet-active {
-  background: #000;
+.banner-image {
+  object-fit: cover;
+}
+
+.banner-button-wrapper {
+  position: absolute;
+  bottom: 24px;
+  left: 5%;
+  z-index: 20;
+}
+
+/* Customized button style */
+.banner-button {
+  background-color: #1996a3;
+  color: white;
+  padding: 1.1rem 1.5rem;
+  font-size: 1.8rem;
+  border: none;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.banner-button:hover {
+  box-shadow: 0 4px 16px rgba(1, 1, 1, 0.25);
 }
