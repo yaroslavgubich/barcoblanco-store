@@ -31,6 +31,7 @@ import { useCart } from "@/context/CartContext"
 import Image from "next/image"
 import { Warehouse } from "lucide-react";
 
+
 type CartItem = {
   id: string;
   name: string;
@@ -58,12 +59,14 @@ type Warehouse = {
   Description: string
 };
 
+const apiKey = process.env.NOVA_POSHTA_API_KEY;
+
 const cities = [
-  "Київ", "Одеса", "Львів", "Харків", "Дніпро", "Запоріжжя", "Вінниця", "Полтава", "Чернігів", 
-  "Черкаси", "Суми", "Херсон", "Миколаїв", "Рівне", "Тернопіль", "Кропивницький", 
-  "Івано-Франківськ", "Ужгород", "Луцьк", "Житомир", "Донецьк", "Луганськ", 
-  "Сімферополь", "Кам'янське", "Кременчук", "Біла Церква", "Краматорськ", 
-  "Мелітополь", "Сєвєродонецьк", "Нікополь", "Слов'янськ", "Бердянськ", 
+  "Київ", "Одеса", "Львів", "Харків", "Дніпро", "Запоріжжя", "Вінниця", "Полтава", "Чернігів",
+  "Черкаси", "Суми", "Херсон", "Миколаїв", "Рівне", "Тернопіль", "Кропивницький",
+  "Івано-Франківськ", "Ужгород", "Луцьк", "Житомир", "Донецьк", "Луганськ",
+  "Сімферополь", "Кам'янське", "Кременчук", "Біла Церква", "Краматорськ",
+  "Мелітополь", "Сєвєродонецьк", "Нікополь", "Слов'янськ", "Бердянськ",
   "Павлоград", "Умань", "Червоноград", "Мукачево", "Хмельницький"
 ];
 
@@ -71,18 +74,24 @@ const sortedCities = cities.sort((a, b) => {
   return a.localeCompare(b);
 }).map(city => ({ value: city, label: city }));
 
-const formSchema = z.object({
-  firstName: z.string().min(2, { message: "Введіть правильне ім'я." }),
-  lastName: z.string().min(2, { message: "Введіть правильне прізвище." }),
-  email: z.string().email({ message: "Некоректна електронна пошта." }),
-  phone: z.string().min(10, { message: "Введіть правильний номер телефону." }),
-  address: z.string().min(5, { message: "Введіть правильну адресу." }),
-  addressCourier: z.string().optional(),
-  city: z.string().min(2, { message: "Виберіть або введіть місто." }).nullable(),
-  warehouse: z.string().min(2, { message: "Введіть правильне відділення."}),
-  additionalInfo: z.string().optional(),
-  selectedToggle: z.string().optional(),
-})
+const formSchema = z
+  .object({
+    firstName: z.string().min(2, { message: "Введіть правильне ім'я." }),
+    lastName: z.string().min(2, { message: "Введіть правильне прізвище." }),
+    email: z.string().email({ message: "Некоректна електронна пошта." }),
+    phone: z.string().min(10, { message: "Введіть правильний номер телефону." }),
+    address: z.string().min(5, { message: "Введіть правильну адресу." }),
+    addressCourier: z.string().optional(),
+    city: z.string().min(2, { message: "Виберіть або введіть місто." }).nullable(),
+    warehouse: z.string().optional(),
+    additionalInfo: z.string().optional(),
+    selectedToggle: z.string().optional(),
+  })
+  .refine((data) => data.addressCourier || data.warehouse, {
+    message: "Оберіть або введіть адресу доставки або відділення.",
+    path: ["warehouse"], // Der Fehler erscheint bei diesem Feld
+  });
+
 
 export default function OrderForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -115,7 +124,7 @@ export default function OrderForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          apiKey: "0aae549f208bb4c1d48a4c079b5b5cc5",
+          apiKey: apiKey,
           modelName: "Address",
           calledMethod: "getWarehouses",
           methodProperties: {
@@ -139,7 +148,8 @@ export default function OrderForm() {
     const orderData: OrderFormData = {
       ...values,
       city: selectedCity ?? "",
-      selectedToggle: selectedToggle ?? "",
+      warehouse: "",
+      selectedToggle: selectedToggle,
       cart: cart?.map((item) => ({
         id: item.id,
         name: item.name,
@@ -148,7 +158,7 @@ export default function OrderForm() {
         image: item.image
       })) || [],
     };
-    
+
     try {
       const response = await fetch("/api/send_email", {
         method: "POST",
@@ -260,7 +270,12 @@ export default function OrderForm() {
                       </AccordionTrigger>
                       <AccordionContent>
                         <div className="space-y-4 p-4 rounded-lg overflow-visible">
-                          <ToggleGroup type="single" value={selectedToggle} onValueChange={setSelectedToggle}>
+                          <ToggleGroup type="single" value={selectedToggle} onValueChange={(value) => {
+                            setSelectedToggle(value);
+                            setSelectedCity(""); 
+                            form.setValue("city", ""); // Löscht den Wert im Formular
+                            form.setValue("warehouse", ""); // Löscht das Warehouse-Feld
+                          }}>
                             <ToggleGroupItem value="Відділення">🏢 Відділення</ToggleGroupItem>
                             <ToggleGroupItem value="Поштомат">📦 Поштомат</ToggleGroupItem>
                             <ToggleGroupItem value="courier">🚚 Кур&apos;єром</ToggleGroupItem>
@@ -287,7 +302,7 @@ export default function OrderForm() {
                                   }}
                                   menuPortalTarget={document.body}
                                   onChange={(city) => {
-                                    if(city){
+                                    if (city) {
                                       setSelectedCity(city.value);
                                       form.setValue("city", city.value); // Fügt den Wert in das Formular ein!
                                       fetchWarehouses(city.value);
