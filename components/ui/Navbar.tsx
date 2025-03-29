@@ -39,7 +39,6 @@ const SearchContainer = styled(Box)(() => ({
   padding: "4px 8px",
 }));
 
-
 const SearchIconWrapper = styled("div")({
   color: "#008c99",
   marginRight: "8px",
@@ -205,11 +204,19 @@ const Navbar: FC = () => {
               </ListItem>
             ))}
           </List>
+          <Divider />
+          <List>
+            <ListItem disablePadding>
+              <ListItemButton component={Link} href="/basket" onClick={() => setDrawerOpen(false)}>
+                <ListItemText primary="Кошик" primaryTypographyProps={{ fontWeight: "bold", fontSize: 20, color: "#008c99" }} />
+              </ListItemButton>
+            </ListItem>
+          </List>
         </BurgerMenuContainer>
       </Drawer>
 
       <AppBar position="static" elevation={0} sx={{ backgroundColor: "transparent", mt: "10px" }}>
-        <Toolbar sx={{ maxWidth: "1400px", width: "100%", mx: "auto", display: "flex", justifyContent: "space-between", alignItems: "center", px: 2, gap: 2 }}>
+        <Toolbar sx={{ maxWidth: "1400px", width: "100%", mx: "auto", display: "flex", justifyContent: "space-between", alignItems: "center", px: 2, gap: 2, flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <IconButton sx={{ color: "#008c99" }} onClick={() => setDrawerOpen(true)}>
               <MenuOutlinedIcon fontSize="large" />
@@ -219,32 +226,31 @@ const Navbar: FC = () => {
             </Link>
           </Box>
 
-          {!isMobile && (
-            <Box ref={containerRef} sx={{ position: "relative", flex: 1 }}>
-              <SearchContainer>
-                <SearchIconWrapper><SearchIcon /></SearchIconWrapper>
-                <StyledInputBase
-                  placeholder="Пошук"
-                  value={searchValue}
-                  onChange={(e) => {
-                    setSearchValue(e.target.value);
-                    setShowSuggestions(true);
-                  }}
-                  onKeyDown={handleKeyDown}
-                  onFocus={() => setShowSuggestions(true)}
-                />
-              </SearchContainer>
-              {showSuggestions && suggestions.length > 0 && (
-                <SuggestionsContainer>
-                  {suggestions.map((item) => (
-                    <ListItemButton key={item.slug} onClick={() => handleSuggestionClick(item.slug)}>
-                      <ListItemText primary={item.name} />
-                    </ListItemButton>
-                  ))}
-                </SuggestionsContainer>
-              )}
-            </Box>
-          )}
+          {/* Поиск всегда отображается */}
+          <Box ref={containerRef} sx={{ position: "relative", flex: 1, my: isMobile ? 1 : 0 }}>
+            <SearchContainer>
+              <SearchIconWrapper><SearchIcon /></SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Пошук"
+                value={searchValue}
+                onChange={(e) => {
+                  setSearchValue(e.target.value);
+                  setShowSuggestions(true);
+                }}
+                onKeyDown={handleKeyDown}
+                onFocus={() => setShowSuggestions(true)}
+              />
+            </SearchContainer>
+            {showSuggestions && suggestions.length > 0 && (
+              <SuggestionsContainer>
+                {suggestions.map((item) => (
+                  <ListItemButton key={item.slug} onClick={() => handleSuggestionClick(item.slug)}>
+                    <ListItemText primary={item.name} />
+                  </ListItemButton>
+                ))}
+              </SuggestionsContainer>
+            )}
+          </Box>
 
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Typography sx={{ cursor: "pointer", color: "#008c99" }}>UA</Typography>
@@ -252,7 +258,15 @@ const Navbar: FC = () => {
             <Typography sx={{ cursor: "pointer", color: "#ccc" }}>EN</Typography>
             <Link href="/basket">
               <IconButton sx={{ color: "#008c99" }}>
-                <Badge badgeContent={getTotalItems()} color="error">
+                <Badge
+                  badgeContent={getTotalItems()}
+                  sx={{
+                    "& .MuiBadge-badge": {
+                      backgroundColor: "#008c99",
+                      color: "#fff"
+                    }
+                  }}
+                >
                   <ShoppingCartIcon />
                 </Badge>
               </IconButton>
