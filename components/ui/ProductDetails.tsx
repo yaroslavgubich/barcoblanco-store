@@ -18,11 +18,12 @@ interface ProductDetailsProps {
     category: string;
     width?: number;
     isPopular?: boolean;
+    color?: string;
   };
 }
 
 export default function ProductDetails({ productData }: ProductDetailsProps) {
-  const { name, image, price, details, width, isPopular } = productData;
+  const { name, image, price, details, width, isPopular, color } = productData;
 
   const images =
     Array.isArray(image) && image.length > 0
@@ -78,7 +79,7 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
                     ? "border-[#1996A3] border-2"
                     : "border-gray-300"
                   } 
-        w-[70px] h-[50px] sm:w-[90px] sm:h-[65px] md:w-[110px] md:h-[80px]`}
+                  w-[70px] h-[50px] sm:w-[90px] sm:h-[65px] md:w-[110px] md:h-[80px]`}
               >
                 <Image
                   src={img.asset.url}
@@ -91,20 +92,28 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
             ))}
           </div>
         )}
-
       </div>
 
       {/* Блок информации */}
       <div className="flex-1 space-y-4 text-center md:text-left">
         <h1 className="text-3xl sm:text-4xl font-bold text-[#1996A3]">{name}</h1>
 
-        {/* Ціна — сразу под названием */}
-        <p className="text-xl sm:text-2xl font-semibold text-gray-900  mb-6">{price} грн</p>
+        {/* Ціна */}
+        <p className="text-xl sm:text-2xl font-semibold text-gray-900 mb-6">{price} грн</p>
 
-        {/* Всё остальное ниже */}
+        {/* Описание, ширина, цвет, популярность */}
         <div className="space-y-4 mt-6">
           <p className="text-gray-700 text-base sm:text-lg">{details}</p>
           {width && <p className="text-gray-500">Ширина: {width} см</p>}
+          {color && (
+            <div className="flex items-center gap-2 text-gray-500">
+              <span>Колір: {color}</span>
+              <span
+                className="inline-block w-4 h-4 rounded-full border border-gray-300"
+                style={{ backgroundColor: color.toLowerCase() }}
+              />
+            </div>
+          )}
           {isPopular && <p className="text-[#1996A3] font-semibold">🔥 Популярний продукт</p>}
         </div>
 
@@ -119,7 +128,6 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
         </div>
       </div>
 
-
       {/* Lightbox */}
       <Lightbox
         open={openLightbox}
@@ -131,3 +139,5 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
     </div>
   );
 }
+
+
