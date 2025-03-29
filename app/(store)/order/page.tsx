@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Select from "react-select";
 import * as z from "zod"
-import logo from "/Users/daniilschurygin/barcoblanco/barcoblanco-store-1/app/nova_poshta_2014_logo.svg(1).png";
+import logo from "/public/icons/nova_poshta_2014_logo.svg(1).png";
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
