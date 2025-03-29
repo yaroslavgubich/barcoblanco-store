@@ -62,13 +62,10 @@ type Warehouse = {
 const apiKey = process.env.NOVA_POSHTA_API_KEY;
 
 const cities = [
-  "Київ", "Одеса", "Львів", "Харків", "Дніпро", "Запоріжжя", "Вінниця",
-  "Івано-Франківськ", "Луцьк", "Слов'янськ"
-];
+  "Київ", "Харків", "Одеса", "Львів", "Дніпро", "Слов'янськ", "Запоріжжя", "Вінниця",
+  "Івано-Франківськ", "Луцьк"
+].map(city => ({ value: city, label: city }));
 
-const sortedCities = cities.sort((a, b) => {
-  return a.localeCompare(b);
-}).map(city => ({ value: city, label: city }));
 
 const formSchema = z
   .object({
@@ -281,7 +278,7 @@ export default function OrderForm() {
                               <FormLabel>Місто</FormLabel>
                               <FormControl>
                                 <CreatableSelect
-                                  options={sortedCities}
+                                  options={cities}
                                   value={selectedCity ? { value: selectedCity, label: selectedCity } : null}
                                   styles={{
                                     // Stile für das Dropdown-Menü
