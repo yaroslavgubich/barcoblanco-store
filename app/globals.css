@@ -357,6 +357,7 @@ span.text-red {
   position: relative;
 }
 
+
 /* feature section */
 
 .features-section {
@@ -557,15 +558,10 @@ body {
 /* Контент растягивается, чтобы футер не поднимался вверх */
 .main-content {
   flex: 1;
-  padding: 20px; /* ✅ Добавляем отступ, чтобы контент не сливался */
+   /* ✅ Добавляем отступ, чтобы контент не сливался */
 }
 
-/* Футер */
-.footer {
-  background-color: #008c99;
-  padding: 2rem;
-  text-align: center;
-}
+
 
 .footer-content {
   display: flex;
@@ -637,6 +633,7 @@ body {
     align-items: flex-start;
   }
 }
+
 
 .cart-heading .heading {
   margin-left: 10px;
