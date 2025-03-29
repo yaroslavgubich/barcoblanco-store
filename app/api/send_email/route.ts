@@ -16,12 +16,17 @@ interface OrderItem {
 }
 
 interface OrderData {
-    fullName: string;
+    firstName: string;
+    lastName: string;
     email: string;
     phone: string;
     address: string;
     city: string;
+    addressCourier?: string;
+    additionalInfo?: string;
+    selectedToggle: "",
     cart: OrderItem[];
+    warehouse: string;
 }
 
 async function sendEmail(toEmail: string, subject: string, htmlBody: string): Promise<void> {
@@ -55,15 +60,20 @@ export async function POST(request: Request) {
       const totalAmount = data.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
       const customerMessage = `
-    <h2 style="color: #333;">Привіт ${data.fullName},</h2>
+    <h2 style="color: #333;">Привіт ${data.firstName},</h2>
     <p style="font-size: 16px; color: #555;">Дякуємо за ваше замовлення! Ось його деталі:</p>
     <ul style="font-size: 16px; color: #555;">
-        <li><b>👤 Клієнт:</b> ${data.fullName}</li>
-        <li><b>📍 Адреса:</b> ${data.address}</li>
-        <li><b>🏙 Місто:</b> ${data.city}</li>
-        <li><b>💰 Загальна сума:</b> $${totalAmount.toFixed(2)}</li>
+        <li><b>Клієнт:</b> ${data.lastName} ${data.firstName}</li>
+        <li><b>Адреса:</b> ${data.address}</li>
+        <li><b>Місто:</b> ${data.city}</li>
+        <li><b>Вид доставки:</b> ${data.selectedToggle 
+            ? (data.selectedToggle === 'courier' ? "Кур'єром" : data.selectedToggle) 
+            : "Не вказано"}  
+        </li>
+        <li><b>Відділення:</b> ${data.warehouse}</li>
+        <li><b>Загальна сума:</b> $${totalAmount.toFixed(2)}</li>
     </ul>
-    <h3 style="color: #333;">🛍 Деталі замовлення:</h3>
+    <h3 style="color: #333;">Деталі замовлення:</h3>
     <table role="presentation" style="width: 800px; border-collapse: collapse; font-size: 16px; color: #333; display: block !important; visibility: visible !important;">
         <thead>
             <tr style="background-color: #f8f8f8;">
@@ -95,15 +105,20 @@ export async function POST(request: Request) {
 
       // HTML-Template for manager
       const managerMessage = `
-          <h2>🔔 НОВЕ ЗАМОВЛЕННЯ 🔔</h2>
+          <h2> НОВЕ ЗАМОВЛЕННЯ </h2>
           <ul style="font-size: 16px; color: #555;">
-              <li><b>👤 Клієнт:</b> ${data.fullName}</li>
-              <li><b>📧 Email:</b> ${data.email}</li>
-              <li><b>📞 Телефон:</b> ${data.phone}</li>
-              <li><b>📍 Адреса:</b> ${data.address}, ${data.city}</li>
-              <li><b>💰 Загальна сума:</b> $${totalAmount.toFixed(2)}</li>
+              <li><b>Клієнт:</b> ${data.lastName} ${data.firstName}</li>
+              <li><b>Email:</b> ${data.email}</li>
+              <li><b>Телефон:</b> ${data.phone}</li>
+              <li><b>Адреса:</b> ${data.address}, ${data.city}</li>
+              <li><b>Вид доставки:</b> ${data.selectedToggle 
+                ? (data.selectedToggle === 'courier' ? "Кур'єром" : data.selectedToggle) 
+                : "Не вказано"}  
+            </li>
+                <li><b>Відділення:</b> ${data.warehouse}</li>
+              <li><b>Загальна сума:</b> $${totalAmount.toFixed(2)}</li>
           </ul>
-          <h3 style="color: #333;">🛍 Деталі замовлення:</h3>
+          <h3 style="color: #333;">Деталі замовлення:</h3>
     <table role="presentation" style="width: 800px; border-collapse: collapse; font-size: 16px; color: #333; display: block !important; visibility: visible !important;">
         <thead>
             <tr style="background-color: #f8f8f8;">

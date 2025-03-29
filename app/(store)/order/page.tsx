@@ -3,10 +3,15 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import Select from "react-select";
 import * as z from "zod"
+import logo from "/public/icons/nova_poshta_2014_logo.svg(1).png";
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import CreatableSelect from "react-select/creatable";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   Form,
   FormControl,
@@ -24,6 +29,8 @@ import {
 } from "@/components/ui/card"
 import { useCart } from "@/context/CartContext"
 import Image from "next/image"
+import { Warehouse } from "lucide-react";
+
 
 type CartItem = {
   id: string;
@@ -34,58 +41,122 @@ type CartItem = {
 };
 
 type OrderFormData = {
-  fullName: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
   address: string;
   city: string;
-  postalCode: string;
-  country: string;
   additionalInfo?: string;
+  addressCourier?: string;
   cart: CartItem[];
+  warehouse: string;
+  selectedToggle: string;
 };
 
-const formSchema = z.object({
-  fullName: z.string().min(2, { message: "Введіть правильне ім'я." }),
-  email: z.string().email({ message: "Некоректна електронна пошта." }),
-  phone: z.string().min(10, { message: "Введіть правильний номер телефону." }),
-  address: z.string().min(5, { message: "Введіть правильну адресу." }),
-  city: z.string().min(2, { message: "Введіть правильне місто." }),
-  postalCode: z.string().min(5, { message: "Некоректний поштовий індекс." }),
-  country: z.string().min(2, { message: "Введіть правильну країну." }),
-  additionalInfo: z.string().optional(),
-})
+type Warehouse = {
+  Number: string,
+  Description: string
+};
+
+const apiKey = process.env.NOVA_POSHTA_API_KEY;
+
+const cities = [
+  "Київ", "Одеса", "Львів", "Харків", "Дніпро", "Запоріжжя", "Вінниця", "Полтава", "Чернігів",
+  "Черкаси", "Суми", "Херсон", "Миколаїв", "Рівне", "Тернопіль", "Кропивницький",
+  "Івано-Франківськ", "Ужгород", "Луцьк", "Житомир", "Донецьк", "Луганськ",
+  "Сімферополь", "Кам'янське", "Кременчук", "Біла Церква", "Краматорськ",
+  "Мелітополь", "Сєвєродонецьк", "Нікополь", "Слов'янськ", "Бердянськ",
+  "Павлоград", "Умань", "Червоноград", "Мукачево", "Хмельницький"
+];
+
+const sortedCities = cities.sort((a, b) => {
+  return a.localeCompare(b);
+}).map(city => ({ value: city, label: city }));
+
+const formSchema = z
+  .object({
+    firstName: z.string().min(2, { message: "Введіть правильне ім'я." }),
+    lastName: z.string().min(2, { message: "Введіть правильне прізвище." }),
+    email: z.string().email({ message: "Некоректна електронна пошта." }),
+    phone: z.string().min(10, { message: "Введіть правильний номер телефону." }),
+    address: z.string().min(5, { message: "Введіть правильну адресу." }),
+    addressCourier: z.string().optional(),
+    city: z.string().min(2, { message: "Виберіть або введіть місто." }).nullable(),
+    warehouse: z.string().optional(),
+    additionalInfo: z.string().optional(),
+    selectedToggle: z.string().optional(),
+  })
+  .refine((data) => data.addressCourier || data.warehouse, {
+    message: "Оберіть або введіть адресу доставки або відділення.",
+    path: ["warehouse"], // Der Fehler erscheint bei diesem Feld
+  });
+
 
 export default function OrderForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const { cart, getCartTotalPrice } = useCart()
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedToggle, setSelectedToggle] = useState("Відділення");
+  const { cart, getCartTotalPrice } = useCart();
+  const [selectedCity, setSelectedCity] = useState<string>();
+  const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
+  const [loadingWarehouses, setLoadingWarehouses] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName: "",
+      firstName: "",
+      lastName: "",
       email: "",
       phone: "",
       address: "",
-      city: "",
-      postalCode: "",
-      country: "",
+      addressCourier: "",
+      city: selectedCity || "",
+      warehouse: "",
       additionalInfo: "",
+      selectedToggle: "",
     },
   })
+
+  async function fetchWarehouses(city: string) {
+    setLoadingWarehouses(true);
+    try {
+      const response = await fetch("https://api.novaposhta.ua/v2.0/json/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          apiKey: apiKey,
+          modelName: "Address",
+          calledMethod: "getWarehouses",
+          methodProperties: {
+            CityName: city
+          },
+        }),
+      });
+
+      const data = await response.json();
+      setWarehouses(data.data || []);
+    } catch {
+      setWarehouses([]);
+    } finally {
+      setLoadingWarehouses(false);
+    }
+  }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
 
     const orderData: OrderFormData = {
       ...values,
-      cart: cart.map((item) => ({
+      city: selectedCity ?? "",
+      warehouse: "",
+      selectedToggle: selectedToggle,
+      cart: cart?.map((item) => ({
         id: item.id,
         name: item.name,
         price: item.price,
         quantity: item.quantity,
-        image: item.image,
-      })),
+        image: item.image
+      })) || [],
     };
 
     try {
@@ -104,7 +175,7 @@ export default function OrderForm() {
       alert("Замовлення успішно оформлене! Вам надіслано підтвердження на пошту.");
       form.reset();
     } catch {
-      alert ("Не вдалося оформити замовлення. Спробуйте ще раз.");
+      alert("Не вдалося оформити замовлення. Спробуйте ще раз.");
     } finally {
       setIsSubmitting(false);
     }
@@ -113,72 +184,219 @@ export default function OrderForm() {
   const totalPrice = getCartTotalPrice()
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2 py-16 text-lg max-w-7xl mx-auto">
+    <div className="grid gap-4 lg:grid-cols-2 py-16 text-lg max-w-7xl mx-auto">
       <Card>
         <CardHeader>
-          <CardTitle className="text-[#1996A3] text-[30px] font-semibold">
+          <CardTitle className="text-[#1996A3] text-[30px]">
             Інформація про доставку
           </CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-              {["fullName", "email", "phone", "address", "city", "postalCode", "country"].map((fieldName) => (
-                <FormField
-                  key={fieldName}
-                  control={form.control}
-                  name={fieldName as keyof z.infer<typeof formSchema>}
-                  render={({ field }) => (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-[#1996A3] text-[20px] font-semibold">
+                    Контактні дані
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+
+                  <FormField name="lastName" control={form.control} render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-base font-medium">
-                        {fieldName === "fullName" ? "Повне ім'я" :
-                          fieldName === "email" ? "Електронна пошта" :
-                          fieldName === "phone" ? "Телефон" :
-                          fieldName === "address" ? "Адреса" :
-                          fieldName === "city" ? "Місто" :
-                          fieldName === "postalCode" ? "Поштовий індекс" :
-                          "Країна"}
-                      </FormLabel>
+                      <FormLabel>Прізвище</FormLabel>
                       <FormControl>
-                        <Input className="text-base p-3" placeholder={
-                          fieldName === "fullName" ? "Іван Петренко" :
-                            fieldName === "email" ? "ivan@example.com" :
-                            fieldName === "phone" ? "+38 (097) 123-4567" :
-                            fieldName === "address" ? "вул. Шевченка, 10" :
-                            fieldName === "city" ? "Київ" :
-                            fieldName === "postalCode" ? "01001" :
-                            "Україна"
-                        } {...field} />
+                        <Input placeholder="Петренко" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
-                  )}
-                />
-              ))}
-              <FormField
-                control={form.control}
-                name="additionalInfo"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-base font-medium">
-                      Додаткова інформація
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea className="text-base p-3" placeholder="Особливі побажання щодо доставки" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button
-                type="submit"
-                className="w-full bg-[#1996A3] hover:bg-[#167A8A] text-white text-lg font-semibold py-3"
-                disabled={isSubmitting}
-              >
+                  )} />
+
+                  <FormField name="firstName" control={form.control} render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Ім&apos;я</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Іван" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+
+                  <FormField name="email" control={form.control} render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Електронна пошта</FormLabel>
+                      <FormControl>
+                        <Input placeholder="ivan@example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+
+                  <FormField name="phone" control={form.control} render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Телефон</FormLabel>
+                      <FormControl>
+                        <Input placeholder="+38 (097) 123-4567" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                  <FormField name="address" control={form.control} render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Адреса</FormLabel>
+                      <FormControl>
+                        <Input placeholder="вул. Шевченка, 10" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-[#1996A3] text-[20px] font-semibold">
+                    Доставка
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Accordion type="single" collapsible>
+                    <AccordionItem value="nova-poshta" className="border-b-0">
+                      <AccordionTrigger>
+                        <div className="flex items-center gap-2">
+                          <Image src={logo} alt="Nova Poshta" className="w-5 h-9" />
+                          Нова Пошта
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <div className="space-y-4 p-4 rounded-lg overflow-visible">
+                          <ToggleGroup type="single" value={selectedToggle} onValueChange={(value) => {
+                            setSelectedToggle(value);
+                            setSelectedCity(""); 
+                            form.setValue("city", ""); // Löscht den Wert im Formular
+                            form.setValue("warehouse", ""); // Löscht das Warehouse-Feld
+                          }}>
+                            <ToggleGroupItem value="Відділення">🏢 Відділення</ToggleGroupItem>
+                            <ToggleGroupItem value="Поштомат">📦 Поштомат</ToggleGroupItem>
+                            <ToggleGroupItem value="courier">🚚 Кур&apos;єром</ToggleGroupItem>
+                          </ToggleGroup>
+                          <FormField name="city" render={() => (
+                            <FormItem>
+                              <FormLabel>Місто</FormLabel>
+                              <FormControl>
+                                <CreatableSelect
+                                  options={sortedCities}
+                                  value={selectedCity ? { value: selectedCity, label: selectedCity } : null}
+                                  styles={{
+                                    // Stile für das Dropdown-Menü
+                                    menu: (provided) => ({
+                                      ...provided,
+                                      zIndex: 9999, // Stelle sicher, dass das Menü über anderen Elementen liegt
+                                      position: 'absolute', // Stelle sicher, dass das Menü korrekt positioniert wird
+                                      top: '100%', // Positioniere das Menü direkt unter dem Input
+                                    }),
+                                    menuPortal: (base) => ({
+                                      ...base,
+                                      zIndex: 9999, // Damit das Dropdown-Menü über anderen Komponenten erscheint
+                                    }),
+                                  }}
+                                  menuPortalTarget={document.body}
+                                  onChange={(city) => {
+                                    if (city) {
+                                      setSelectedCity(city.value);
+                                      form.setValue("city", city.value); // Fügt den Wert in das Formular ein!
+                                      fetchWarehouses(city.value);
+                                    }
+                                  }}
+                                  onCreateOption={(inputValue) => {
+                                    setSelectedCity(inputValue);
+                                    form.setValue("city", inputValue); // Jetzt wird der Wert übernommen
+                                    fetchWarehouses(inputValue);
+                                  }}
+                                  formatCreateLabel={(inputValue) => `Обрати "${inputValue}"`}
+                                  placeholder="Оберіть місто"
+                                  isClearable
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )} />
+                          {selectedToggle !== "courier" && (
+                            <FormField name="warehouse" render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Відділення</FormLabel>
+                                <FormControl>
+                                  <Select
+                                    {...field}
+                                    onChange={(selectedOption) => field.onChange(selectedOption?.value)}
+                                    value={warehouses.find(w => w.Description === field.value) ? { value: field.value, label: field.value } : null}
+                                    options={warehouses.filter(w => w.Description.includes(selectedToggle)).map(w => ({ value: w.Description, label: w.Description }))}
+                                    placeholder={loadingWarehouses ? "Завантаження..." : "Оберіть відділення"}
+                                    isDisabled={!selectedCity || loadingWarehouses || selectedToggle === "courier"}
+                                    noOptionsMessage={() => "Немає доступних відділень"}
+                                    styles={{
+                                      menu: (provided) => ({
+                                        ...provided,
+                                        zIndex: 9999,
+                                        position: "absolute",
+                                      }),
+                                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                                    }}
+                                    menuPortalTarget={document.body}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )} />
+                          )}
+                          {selectedToggle == "courier" && (
+                            <FormField name="addressCourier" control={form.control} render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Адреса доставки</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="вул. Шевченка, 10" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )} />
+                          )}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-[#1996A3] text-[20px] font-semibold">
+                    Оплата
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+
+                </CardContent>
+              </Card>
+
+
+              <FormField name="additionalInfo" control={form.control} render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Додаткова інформація</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Особливі побажання щодо доставки" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+
+              <Button type="submit" className="w-full bg-[#1996A3] hover:bg-[#167A8A] text-white text-lg font-semibold py-3" disabled={isSubmitting}>
                 {isSubmitting ? "Обробка..." : "Оформити замовлення"}
               </Button>
+
             </form>
           </Form>
+
         </CardContent>
       </Card>
 
@@ -213,5 +431,3 @@ export default function OrderForm() {
     </div>
   );
 }
-
-
