@@ -357,7 +357,6 @@ span.text-red {
   position: relative;
 }
 
-
 /* feature section */
 
 .features-section {
@@ -558,10 +557,8 @@ body {
 /* Контент растягивается, чтобы футер не поднимался вверх */
 .main-content {
   flex: 1;
-   /* ✅ Добавляем отступ, чтобы контент не сливался */
+  /* ✅ Добавляем отступ, чтобы контент не сливался */
 }
-
-
 
 .footer-content {
   display: flex;
@@ -633,7 +630,6 @@ body {
     align-items: flex-start;
   }
 }
-
 
 .cart-heading .heading {
   margin-left: 10px;
@@ -946,4 +942,8 @@ body {
 
 .banner-button:hover {
   box-shadow: 0 4px 16px rgba(1, 1, 1, 0.25);
+}
+
+.swiper-pagination-bullet-active {
+  background-color: var(--cta-color) !important; /* Active dot color */
 }
