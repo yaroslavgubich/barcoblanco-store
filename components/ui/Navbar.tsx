@@ -1,9 +1,8 @@
-// components/ui/Navbar.tsx
 "use client";
 
 import Link from "next/link";
 import React, { FC, useState, useEffect, useRef, KeyboardEvent } from "react";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import {
   AppBar,
   Toolbar,
@@ -19,7 +18,7 @@ import {
   ListItemText,
   Divider,
   useMediaQuery,
-  Paper
+  Paper,
 } from "@mui/material";
 
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
@@ -29,14 +28,24 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useCart } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
 
-const SearchContainer = styled(Box)(() => ({
+const SearchContainer = styled(Box)(({ theme }) => ({
   position: "relative",
   borderRadius: "20px",
   backgroundColor: "transparent",
   border: "1px solid #008c99",
   display: "flex",
   alignItems: "center",
+  // default padding
   padding: "4px 8px",
+  // margin around the search container
+  margin: "0 30px",
+
+  // Narrower for small screens
+  [theme.breakpoints.down("sm")]: {
+    height: "35px",
+    margin: "0 10px",
+    padding: "0px 6px", // less padding on smaller screens
+  },
 }));
 
 const SearchIconWrapper = styled("div")({
@@ -47,7 +56,7 @@ const SearchIconWrapper = styled("div")({
   justifyContent: "center",
 });
 
-const StyledInputBase = styled(InputBase)({
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "#008c99",
   flexGrow: 1,
   border: "none",
@@ -57,8 +66,13 @@ const StyledInputBase = styled(InputBase)({
   "& .MuiInputBase-input": {
     padding: "8px",
     width: "100%",
+    // Make text smaller on very small screens if needed
+    [theme.breakpoints.down(468)]: {
+      padding: "4px", // even less vertical padding
+      fontSize: "14px",
+    },
   },
-});
+}));
 
 const SuggestionsContainer = styled(Paper)({
   position: "absolute",
@@ -102,16 +116,26 @@ const BurgerMenuContainer = styled(Box)({
 const Navbar: FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [suggestions, setSuggestions] = useState<{ name: string; slug: string }[]>([]);
+  const [suggestions, setSuggestions] = useState<
+    { name: string; slug: string }[]
+  >([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { getTotalItems } = useCart();
+
+  const theme = useTheme();
   const isMobile = useMediaQuery("(max-width: 600px)");
+  // A second check for 468px screens
+  const isVeryNarrow = useMediaQuery("(max-width: 468px)");
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setShowSuggestions(false);
       }
     };
@@ -123,7 +147,9 @@ const Navbar: FC = () => {
     const fetchSuggestions = async () => {
       if (!searchValue.trim()) return setSuggestions([]);
       try {
-        const res = await fetch(`/api/search?query=${encodeURIComponent(searchValue)}`);
+        const res = await fetch(
+          `/api/search?query=${encodeURIComponent(searchValue)}`
+        );
         if (res.ok) {
           const data = await res.json();
           setSuggestions(data);
@@ -153,6 +179,7 @@ const Navbar: FC = () => {
 
   return (
     <>
+      {/* Desktop Menu (hidden on mobile) */}
       {!isMobile && (
         <Box
           sx={{
@@ -180,6 +207,7 @@ const Navbar: FC = () => {
         </Box>
       )}
 
+      {/* Mobile Drawer */}
       <Drawer
         anchor="left"
         open={drawerOpen}
@@ -273,6 +301,7 @@ const Navbar: FC = () => {
         </BurgerMenuContainer>
       </Drawer>
 
+      {/* Main Navbar */}
       <AppBar
         position="static"
         elevation={0}
@@ -280,45 +309,79 @@ const Navbar: FC = () => {
       >
         <Toolbar
           sx={{
+            marginTop: "-10px",
+            minHeight: 60, // Ensures vertical space for centering
             maxWidth: "1400px",
             width: "100%",
             mx: "auto",
             display: "flex",
             justifyContent: "space-between",
-            alignItems: "center",
-            px: 2,
-            gap: 2,
-            flexWrap: isMobile ? "wrap" : "nowrap",
+            alignItems: "center", // Vertically center items
+            flexWrap: "nowrap",
+            gap: {
+              xs: 1, // smaller gap on mobile
+              sm: 2, // normal gap on small screens
+              md: 4, // bigger gap on medium and up
+            },
+            px: {
+              xs: 1,
+              sm: 2,
+            },
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          {/* Left Section: Menu Icon + Logo */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: {
+                xs: 1,
+                sm: 2,
+              },
+            }}
+          >
             <IconButton
               sx={{ color: "#008c99" }}
               onClick={() => setDrawerOpen(true)}
             >
-              <MenuOutlinedIcon fontSize="large" />
+              <MenuOutlinedIcon
+                sx={{
+                  fontSize: {
+                    xs: "1.8rem",
+                    sm: "2rem",
+                  },
+                }}
+              />
             </IconButton>
             <Link href="/">
               <Box
                 component="img"
                 src="/icons/logo.svg"
                 alt="Logo"
-                sx={{ height: 40, cursor: "pointer" }}
+                sx={{
+                  height: 40,
+                  cursor: "pointer",
+                }}
               />
             </Link>
           </Box>
 
-          {/* Поиск всегда отображается */}
-          <Box
-            ref={containerRef}
-            sx={{ position: "relative", flex: 1, my: isMobile ? 1 : 0 }}
-          >
+          {/* Search Bar */}
+          <Box ref={containerRef} sx={{ position: "relative", flex: 1 }}>
             <SearchContainer>
               <SearchIconWrapper>
-                <SearchIcon />
+                <SearchIcon
+                  sx={{
+                    fontSize: {
+                      xs: "1.3rem",
+                      sm: "1.rem",
+                    },
+                  }}
+                />
               </SearchIconWrapper>
+
               <StyledInputBase
-                placeholder="Пошук"
+                placeholder={isVeryNarrow ? "" : "Пошук"}
                 value={searchValue}
                 onChange={(e) => {
                   setSearchValue(e.target.value);
@@ -342,19 +405,53 @@ const Navbar: FC = () => {
             )}
           </Box>
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          {/* Right Section: Shopping Cart */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: {
+                xs: 1,
+                sm: 2,
+              },
+            }}
+          >
             <Link href="/basket">
               <IconButton sx={{ color: "#008c99" }}>
                 <Badge
                   badgeContent={getTotalItems()}
                   sx={{
+                    mr: 2,
                     "& .MuiBadge-badge": {
                       backgroundColor: "#008c99",
                       color: "#fff",
+                      fontSize: {
+                        xs: "0.8rem",
+                        sm: "0.9rem",
+                      },
+                      minWidth: {
+                        xs: 16,
+                        sm: 20,
+                      },
+                      height: {
+                        xs: 16,
+                        sm: 20,
+                      },
                     },
                   }}
                 >
-                  <ShoppingCartIcon sx={{ width: 32, height: 32 }} />
+                  <ShoppingCartIcon
+                    sx={{
+                      width: {
+                        xs: 24,
+                        sm: 28,
+                      },
+                      height: {
+                        xs: 24,
+                        sm: 28,
+                      },
+                    }}
+                  />
                 </Badge>
               </IconButton>
             </Link>
