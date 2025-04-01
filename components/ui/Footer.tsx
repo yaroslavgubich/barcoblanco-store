@@ -30,13 +30,13 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Соціальні мережі */}
-        <div className="mt-8 flex justify-center gap-6">
+        {/* Footer social icons */}
+        <div className="mt-8 flex justify-center gap-8">
           <a href="https://telegram.org" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
-            <Image src="/icons/telegram_icon.svg" alt="Telegram" width={30} height={30} className="hover:scale-110 transition-transform" />
+            <Image src="/icons/telegram_icon.svg" alt="Telegram" width={35} height={30} className="hover:scale-110 transition-transform" />
           </a>
           <a href="https://viber.com" target="_blank" rel="noopener noreferrer" aria-label="Viber">
-            <Image src="/icons/viber-footer.png" alt="Viber" width={35} height={30} className="hover:scale-110 transition-transform" />
+            <Image src="/icons/viber-footer.svg" alt="Viber" width={34} height={30} className="hover:scale-110 transition-transform" />
           </a>
           <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
             <Image src="/icons/instagram_icon.svg" alt="Instagram" width={30} height={30} className="hover:scale-110 transition-transform" />
