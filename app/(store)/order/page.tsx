@@ -93,6 +93,7 @@ export default function OrderForm() {
   const [selectedCity, setSelectedCity] = useState<string>();
   const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
   const [loadingWarehouses, setLoadingWarehouses] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -165,7 +166,8 @@ export default function OrderForm() {
         throw new Error("Помилка оформлення замовлення.");
       }
 
-      alert("Замовлення успішно оформлене! Вам надіслано підтвердження на пошту.");
+      
+      setOpen(true);
       form.reset();
     } catch {
       alert("Не вдалося оформити замовлення. Спробуйте ще раз.");
@@ -258,7 +260,7 @@ export default function OrderForm() {
                 </CardHeader>
                 <CardContent>
                   <Accordion type="single" collapsible>
-                    <AccordionItem value="nova-poshta" className="border-b-0">
+                    <AccordionItem value="nova-poshta" className="border-b-0 p-5 py-3 rounded-lg">
                       <AccordionTrigger>
                         <div className="flex items-center gap-2">
                           <Image src={logo} alt="Nova Poshta" className="w-5 h-9" />
@@ -467,6 +469,17 @@ export default function OrderForm() {
           </Card>
         </div>
       </form>
+      {open && (
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-6">
+        <div className="bg-white p-6 rounded-lg shadow-lg space-y-3 grid">
+          <h1 className="text-lg font-semibold text-center">Замовлення успішно оформлене!</h1>
+          <p className="text-gray-600 text-[14px] pb-3 text-center"> Вам надіслано підтвердження на пошту.</p>
+          <Button className="flex bg-[#1996A3] p-3" onClick={() => setOpen(false)}>Закрити</Button>
+        </div>
+      </div>
+    )}
     </Form>
+    
+     
   );
 }
