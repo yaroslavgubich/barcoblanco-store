@@ -19,7 +19,7 @@ import {
   ListItemText,
   Divider,
   useMediaQuery,
-  Paper
+  Paper,
 } from "@mui/material";
 
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
@@ -102,7 +102,9 @@ const BurgerMenuContainer = styled(Box)({
 const Navbar: FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [suggestions, setSuggestions] = useState<{ name: string; slug: string }[]>([]);
+  const [suggestions, setSuggestions] = useState<
+    { name: string; slug: string }[]
+  >([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -111,7 +113,10 @@ const Navbar: FC = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setShowSuggestions(false);
       }
     };
@@ -123,7 +128,9 @@ const Navbar: FC = () => {
     const fetchSuggestions = async () => {
       if (!searchValue.trim()) return setSuggestions([]);
       try {
-        const res = await fetch(`/api/search?query=${encodeURIComponent(searchValue)}`);
+        const res = await fetch(
+          `/api/search?query=${encodeURIComponent(searchValue)}`
+        );
         if (res.ok) {
           const data = await res.json();
           setSuggestions(data);
@@ -154,36 +161,78 @@ const Navbar: FC = () => {
   return (
     <>
       {!isMobile && (
-        <Box sx={{ backgroundColor: "#008c99", display: "flex", justifyContent: "center", padding: "0.5rem 0" }}>
-          <Link href="/" passHref><HoverLink>Головна</HoverLink></Link>
-          <Link href="/products" passHref><HoverLink>Каталог</HoverLink></Link>
-          <Link href="/guarantee" passHref><HoverLink>Гарантія</HoverLink></Link>
-          <Link href="/delivery" passHref><HoverLink>Доставка та оплата</HoverLink></Link>
-          <Link href="/contacts" passHref><HoverLink>Контакти</HoverLink></Link>
+        <Box
+          sx={{
+            backgroundColor: "#008c99",
+            display: "flex",
+            justifyContent: "center",
+            padding: "0.5rem 0",
+          }}
+        >
+          <Link href="/" passHref>
+            <HoverLink>Головна</HoverLink>
+          </Link>
+          <Link href="/products" passHref>
+            <HoverLink>Каталог</HoverLink>
+          </Link>
+          <Link href="/guarantee" passHref>
+            <HoverLink>Гарантія</HoverLink>
+          </Link>
+          <Link href="/delivery" passHref>
+            <HoverLink>Доставка та оплата</HoverLink>
+          </Link>
+          <Link href="/contacts" passHref>
+            <HoverLink>Контакти</HoverLink>
+          </Link>
         </Box>
       )}
 
-      <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+      <Drawer
+        anchor="left"
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      >
         <BurgerMenuContainer>
           <Link href="/">
             <BurgerMenuHeader>
-              <Box component="img" src="/icons/logo.svg" alt="logo" sx={{ width: 150, height: 50 }} />
+              <Box
+                component="img"
+                src="/icons/logo.svg"
+                alt="logo"
+                sx={{ width: 150, height: 50 }}
+              />
             </BurgerMenuHeader>
           </Link>
           <Divider />
           <List>
             <ListItem disablePadding>
-              <ListItemButton component={Link} href="/products" onClick={() => setDrawerOpen(false)}>
-                <ListItemText primary="Каталог" primaryTypographyProps={{ fontWeight: "bold", fontSize: 20, color: "#008c99" }} />
+              <ListItemButton
+                component={Link}
+                href="/products"
+                onClick={() => setDrawerOpen(false)}
+              >
+                <ListItemText
+                  primary="Каталог"
+                  primaryTypographyProps={{
+                    fontWeight: "bold",
+                    fontSize: 20,
+                    color: "#008c99",
+                  }}
+                />
               </ListItemButton>
             </ListItem>
-            {[{ text: "Шафи", href: "/category/wardrobe" },
+            {[
+              { text: "Шафи", href: "/category/wardrobe" },
               { text: "Тумби", href: "/category/cabinet" },
               { text: "Дзеркала", href: "/category/mirrors" },
-              { text: "Водонепроникні", href: "/category/waterproof" }
+              { text: "Водонепроникні", href: "/category/waterproof" },
             ].map((item) => (
               <ListItem key={item.href} disablePadding>
-                <ListItemButton component={Link} href={item.href} onClick={() => setDrawerOpen(false)}>
+                <ListItemButton
+                  component={Link}
+                  href={item.href}
+                  onClick={() => setDrawerOpen(false)}
+                >
                   <ListItemText primary={item.text} />
                 </ListItemButton>
               </ListItem>
@@ -191,14 +240,19 @@ const Navbar: FC = () => {
           </List>
           <Divider />
           <List>
-            {[{ text: "Головна", href: "/" },
+            {[
+              { text: "Головна", href: "/" },
               { text: "Каталог", href: "/products" },
               { text: "Гарантія", href: "/guarantee" },
               { text: "Доставка та оплата", href: "/delivery" },
-              { text: "Контакти", href: "/contacts" }
+              { text: "Контакти", href: "/contacts" },
             ].map((item) => (
               <ListItem key={item.href} disablePadding>
-                <ListItemButton component={Link} href={item.href} onClick={() => setDrawerOpen(false)}>
+                <ListItemButton
+                  component={Link}
+                  href={item.href}
+                  onClick={() => setDrawerOpen(false)}
+                >
                   <ListItemText primary={item.text} />
                 </ListItemButton>
               </ListItem>
@@ -207,29 +261,74 @@ const Navbar: FC = () => {
           <Divider />
           <List>
             <ListItem disablePadding>
-              <ListItemButton component={Link} href="/basket" onClick={() => setDrawerOpen(false)}>
-                <ListItemText primary="Кошик" primaryTypographyProps={{ fontWeight: "bold", fontSize: 20, color: "#008c99" }} />
+              <ListItemButton
+                component={Link}
+                href="/basket"
+                onClick={() => setDrawerOpen(false)}
+              >
+                <ListItemText
+                  primary="Кошик"
+                  primaryTypographyProps={{
+                    fontWeight: "bold",
+                    fontSize: 20,
+                    color: "#008c99",
+                  }}
+                />
               </ListItemButton>
             </ListItem>
           </List>
         </BurgerMenuContainer>
       </Drawer>
 
-      <AppBar position="static" elevation={0} sx={{ backgroundColor: "transparent", mt: "10px" }}>
-        <Toolbar sx={{ maxWidth: "1400px", width: "100%", mx: "auto", display: "flex", justifyContent: "space-between", alignItems: "center", px: 2, gap: 2, flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
+      <AppBar
+        position="static"
+        elevation={0}
+        sx={{ backgroundColor: "transparent", mt: "10px" }}
+      >
+        <Toolbar
+          sx={{
+            maxWidth: "1400px",
+            width: "100%",
+            mx: "auto",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            px: 2,
+            gap: 2,
+            flexWrap: isMobile ? "wrap" : "nowrap",
+          }}
+        >
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <IconButton sx={{ color: "#008c99" }} onClick={() => setDrawerOpen(true)}>
+            <IconButton
+              sx={{ color: "#008c99" }}
+              onClick={() => setDrawerOpen(true)}
+            >
               <MenuOutlinedIcon fontSize="large" />
             </IconButton>
             <Link href="/">
-              <Box component="img" src="/icons/logo.svg" alt="Logo" sx={{ height: 40, cursor: "pointer" }} />
+              <Box
+                component="img"
+                src="/icons/logo.svg"
+                alt="Logo"
+                sx={{ height: 40, cursor: "pointer" }}
+              />
             </Link>
           </Box>
 
           {/* Поиск всегда отображается */}
-          <Box ref={containerRef} sx={{ position: "relative", flex: 1, my: isMobile ? 1 : 0 }}>
+          <Box
+            ref={containerRef}
+            sx={{
+              position: "relative",
+              flex: 1,
+              my: isMobile ? 1 : 0,
+              mx: isMobile ? 2 : 10,
+            }}
+          >
             <SearchContainer>
-              <SearchIconWrapper><SearchIcon /></SearchIconWrapper>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
               <StyledInputBase
                 placeholder="Пошук"
                 value={searchValue}
@@ -244,7 +343,10 @@ const Navbar: FC = () => {
             {showSuggestions && suggestions.length > 0 && (
               <SuggestionsContainer>
                 {suggestions.map((item) => (
-                  <ListItemButton key={item.slug} onClick={() => handleSuggestionClick(item.slug)}>
+                  <ListItemButton
+                    key={item.slug}
+                    onClick={() => handleSuggestionClick(item.slug)}
+                  >
                     <ListItemText primary={item.name} />
                   </ListItemButton>
                 ))}
@@ -253,9 +355,6 @@ const Navbar: FC = () => {
           </Box>
 
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Typography sx={{ cursor: "pointer", color: "#008c99" }}>UA</Typography>
-            <Typography sx={{ color: "#008c99" }}>|</Typography>
-            <Typography sx={{ cursor: "pointer", color: "#ccc" }}>EN</Typography>
             <Link href="/basket">
               <IconButton sx={{ color: "#008c99" }}>
                 <Badge
@@ -263,8 +362,8 @@ const Navbar: FC = () => {
                   sx={{
                     "& .MuiBadge-badge": {
                       backgroundColor: "#008c99",
-                      color: "#fff"
-                    }
+                      color: "#fff",
+                    },
                   }}
                 >
                   <ShoppingCartIcon />
