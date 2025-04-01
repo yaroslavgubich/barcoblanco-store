@@ -911,13 +911,19 @@ body {
 
 .banner-swiper,
 .banner-slide {
-  width: 100%;
+  width: 95%;
+  max-width: 2100px; /* Prevents stretching on large desktops */
   height: 100%;
   position: relative;
+  margin: 0 auto; /* Centers the container */
+  
 }
+
 
 .banner-image {
   object-fit: cover;
+  object-position: center;
+  height: auto;
 }
 
 .banner-button-wrapper {
