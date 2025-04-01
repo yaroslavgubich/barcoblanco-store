@@ -177,23 +177,18 @@ export default function OrderForm() {
   const totalPrice = getCartTotalPrice()
 
   return (
-    <div className="grid gap-4 lg:grid-cols-2 py-16 text-lg max-w-7xl mx-auto">
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-[#1996A3] text-[30px]">
-            Інформація про доставку
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-              <Card>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        <div className="grid gap-0 lg:grid-cols-2 py-12 text-lg max-w-7xl mx-auto mt-0 p-1">
+          <Card className="border-none shadow-none outline-none ring-0 p-0 gap-0">
+            <CardContent>
+              <Card className="shadow-md p-4 m-2">
                 <CardHeader>
-                  <CardTitle className="text-[#1996A3] text-[20px] font-semibold">
+                  <CardTitle className="text-[#1996A3] text-[25px] font-semibold">
                     Контактні дані
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="space-y-3">
 
                   <FormField name="lastName" control={form.control} render={({ field }) => (
                     <FormItem>
@@ -243,12 +238,21 @@ export default function OrderForm() {
                       <FormMessage />
                     </FormItem>
                   )} />
+                  <FormField name="additionalInfo" control={form.control} render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Додаткова інформація</FormLabel>
+                      <FormControl>
+                        <Textarea placeholder="Особливі побажання щодо доставки" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="shadow-md p-4 m-2">
                 <CardHeader>
-                  <CardTitle className="text-[#1996A3] text-[20px] font-semibold">
+                  <CardTitle className="text-[#1996A3] text-[25px] font-semibold">
                     Доставка
                   </CardTitle>
                 </CardHeader>
@@ -265,7 +269,7 @@ export default function OrderForm() {
                         <div className="space-y-4 p-4 rounded-lg overflow-visible">
                           <ToggleGroup type="single" value={selectedToggle} onValueChange={(value) => {
                             setSelectedToggle(value);
-                            setSelectedCity(""); 
+                            setSelectedCity("");
                             form.setValue("city", ""); // Löscht den Wert im Formular
                             form.setValue("warehouse", ""); // Löscht das Warehouse-Feld
                           }}>
@@ -361,9 +365,9 @@ export default function OrderForm() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="shadow-md p-4 m-2">
                 <CardHeader>
-                  <CardTitle className="text-[#1996A3] text-[20px] font-semibold">
+                  <CardTitle className="text-[#1996A3] text-[25px] font-semibold">
                     Оплата
                   </CardTitle>
                 </CardHeader>
@@ -371,56 +375,98 @@ export default function OrderForm() {
 
                 </CardContent>
               </Card>
+            </CardContent>
+          </Card>
 
+          <Card className="border-none shadow-none outline-none ring-0 p-0 gap-0">
+            <CardContent className="space-y-5">
+              <Card className="shadow-md p-4 m-2">
+              <CardHeader> 
+                <CardTitle className="text-[#1996A3] text-[25px] font-semibold">
+                  Підсумок замовлення
+                </CardTitle>
+                </CardHeader> 
 
-              <FormField name="additionalInfo" control={form.control} render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Додаткова інформація</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Особливі побажання щодо доставки" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
+                <CardContent>
+                  <div className=" p-4 rounded-lg space-y-3 text-[13px]">
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-gray-600">Прізвище:</span>
+                      <span>{form.watch("lastName") || "Не вказано"}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-gray-600">Ім&apos;я:</span>
+                      <span>{form.watch("firstName") || "Не вказано"}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-gray-600">Електронна пошта:</span>
+                      <span>{form.watch("email") || "Не вказано"}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-gray-600">Телефон:</span>
+                      <span>{form.watch("phone") || "Не вказано"}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-gray-600">Адреса:</span>
+                      <span>{form.watch("address") || "Не вказано"}</span>
+                    </div>
+                    {form.watch("city") && (
+                      <div className="flex justify-between border-b pb-2">
+                        <span className="font-semibold text-gray-600">Місто:</span>
+                        <span>{form.watch("city")}</span>
+                      </div>
+                    )}
+                    {form.watch("warehouse") && (
+                      <div className="flex justify-between border-b pb-2">
+                        <span className="font-semibold text-gray-600">Відділення:</span>
+                        <span className="truncate max-w-[300px] overflow-hidden">{form.watch("warehouse")}</span>
+                      </div>
+                    )}
+                    {form.watch("addressCourier") && (
+                      <div className="flex justify-between border-b pb-2">
+                        <span className="font-semibold text-gray-600">Адреса доставки:</span>
+                        <span>{form.watch("addressCourier")}</span>
+                      </div>
+                    )}
+                    {form.watch("additionalInfo") && (
+                      <div className="flex justify-between border-b pb-2">
+                        <span className="font-semibold text-gray-600">Додаткова інформація:</span>
+                        <span>{form.watch("additionalInfo")}</span>
+                      </div>
+                    )}
+                  </div>
+                  <CardTitle className="text-[#1996A3] text-[20px] font-semibold py-4">
+                  <p>Товари в замовленні</p>
+                </CardTitle>
+                  {cart.length === 0 ? (
+                    <p>Ваш кошик порожній.</p>
+                  ) : (
+                    cart.map((item) => (
+                      <div key={item.id} className="flex items-center justify-between p-3 text-base mt-3 border-b">
+                        <div className="flex items-center gap-3">
+                          <Image src={item.image} width={40} height={40} alt={item.name} className="object-cover rounded" />
+                          <p className="font-semibold text-[14px]">{item.name}</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <p>x{item.quantity}</p>
+                          <p>{(item.price * item.quantity).toFixed(2)} грн.</p>
+                        </div>
+                      </div>
+                    ))
+                  )}
 
-              <Button type="submit" className="w-full bg-[#1996A3] hover:bg-[#167A8A] text-white text-lg font-semibold py-3" disabled={isSubmitting}>
-                {isSubmitting ? "Обробка..." : "Оформити замовлення"}
-              </Button>
+                </CardContent>
+                <CardFooter>
+                  <p className="text-xl font-semibold p-2">Всього: {totalPrice.toFixed(2)} грн.</p>
+                </CardFooter>
+                <Button type="submit" className="w-full bg-[#1996A3] hover:bg-[#167A8A] text-white text-lg font-semibold py-3" disabled={isSubmitting}>
+                  {isSubmitting ? "Обробка..." : "Оформити замовлення"}
+                </Button>
+              </Card>
+            </CardContent>
 
-            </form>
-          </Form>
-
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-[#1996A3] text-[30px] font-semibold">
-            Підсумок замовлення
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {cart.length === 0 ? (
-            <p>Ваш кошик порожній.</p>
-          ) : (
-            cart.map((item) => (
-              <div key={item.id} className="flex items-center justify-between bg-gray-50 p-3 rounded-md text-base">
-                <div className="flex items-center gap-4">
-                  <Image src={item.image} width={40} height={40} alt={item.name} className="object-cover rounded" />
-                  <p className="font-semibold">{item.name}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <p>x{item.quantity}</p>
-                  <p>${(item.price * item.quantity).toFixed(2)}</p>
-                </div>
-              </div>
-            ))
-          )}
-        </CardContent>
-        <CardFooter>
-          <p className="text-xl font-semibold">Всього: ${totalPrice.toFixed(2)}</p>
-        </CardFooter>
-      </Card>
-    </div>
+          </Card>
+        </div>
+      </form>
+    </Form>
   );
 }
