@@ -922,22 +922,43 @@ body {
 
 .banner-button-wrapper {
   position: absolute;
-  bottom: 24px;
+  bottom: 80px;
   left: 5%;
   z-index: 20;
+  
 }
 
 /* Customized button style */
 .banner-button {
-  background-color: #1996a3;
+  font-family: sans-serif;
+  background-color: var(--cta-color);
   color: white;
-  padding: 1.1rem 1.5rem;
-  font-size: 1.8rem;
+  padding: 1.0rem 1.0rem;
+  font-size: 2rem;
   border: none;
   border-radius: 0.75rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   cursor: pointer;
   transition: all 0.3s ease;
+
+
+}
+
+
+/* Medium screens */
+@media (max-width: 768px) {
+  .banner-button {
+    font-size: 1.5rem;
+    padding: 0.75rem 1.5rem;
+  }
+}
+
+/* Small screens */
+@media (max-width: 480px) {
+  .banner-button {
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+  }
 }
 
 .banner-button:hover {

@@ -55,6 +55,7 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ images }) => {
         <Link href="/products">
           <button className="banner-button">До каталогу</button>
         </Link>
+        
       </div>
     </div>
   );
