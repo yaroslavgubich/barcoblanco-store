@@ -19,7 +19,7 @@ import {
   ListItemText,
   Divider,
   useMediaQuery,
-  Paper,
+  Paper
 } from "@mui/material";
 
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
@@ -102,9 +102,7 @@ const BurgerMenuContainer = styled(Box)({
 const Navbar: FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [suggestions, setSuggestions] = useState<
-    { name: string; slug: string }[]
-  >([]);
+  const [suggestions, setSuggestions] = useState<{ name: string; slug: string }[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -113,10 +111,7 @@ const Navbar: FC = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setShowSuggestions(false);
       }
     };
@@ -128,9 +123,7 @@ const Navbar: FC = () => {
     const fetchSuggestions = async () => {
       if (!searchValue.trim()) return setSuggestions([]);
       try {
-        const res = await fetch(
-          `/api/search?query=${encodeURIComponent(searchValue)}`
-        );
+        const res = await fetch(`/api/search?query=${encodeURIComponent(searchValue)}`);
         if (res.ok) {
           const data = await res.json();
           setSuggestions(data);
@@ -318,12 +311,7 @@ const Navbar: FC = () => {
           {/* Поиск всегда отображается */}
           <Box
             ref={containerRef}
-            sx={{
-              position: "relative",
-              flex: 1,
-              my: isMobile ? 1 : 0,
-              mx: isMobile ? 2 : 10,
-            }}
+            sx={{ position: "relative", flex: 1, my: isMobile ? 1 : 0 }}
           >
             <SearchContainer>
               <SearchIconWrapper>
@@ -366,7 +354,7 @@ const Navbar: FC = () => {
                     },
                   }}
                 >
-                  <ShoppingCartIcon />
+                  <ShoppingCartIcon sx={{ width: 32, height: 32 }} />
                 </Badge>
               </IconButton>
             </Link>
