@@ -49,14 +49,14 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ images }) => {
             />
           </SwiperSlide>
         ))}
-      </Swiper>
-
       <div className="banner-button-wrapper">
         <Link href="/products">
-          <button className="banner-button">До каталогу</button>
+          <button className="banner-button">ДО КАТАЛОГУ</button>
         </Link>
         
       </div>
+      </Swiper>
+
     </div>
   );
 };
