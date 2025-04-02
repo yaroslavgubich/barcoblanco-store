@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import React, { FC, useState, useEffect, useRef, KeyboardEvent } from "react";
-import { styled, useTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import {
   AppBar,
   Toolbar,
@@ -125,7 +125,6 @@ const Navbar: FC = () => {
   const router = useRouter();
   const { getTotalItems } = useCart();
 
-  const theme = useTheme();
   const isMobile = useMediaQuery("(max-width: 600px)");
   // A second check for 468px screens
   const isVeryNarrow = useMediaQuery("(max-width: 468px)");
@@ -310,18 +309,18 @@ const Navbar: FC = () => {
         <Toolbar
           sx={{
             marginTop: "-10px",
-            minHeight: 60, // Ensures vertical space for centering
+            minHeight: 60,
             maxWidth: "1400px",
             width: "100%",
             mx: "auto",
             display: "flex",
             justifyContent: "space-between",
-            alignItems: "center", // Vertically center items
+            alignItems: "center",
             flexWrap: "nowrap",
             gap: {
-              xs: 1, // smaller gap on mobile
-              sm: 2, // normal gap on small screens
-              md: 4, // bigger gap on medium and up
+              xs: 1,
+              sm: 2,
+              md: 4,
             },
             px: {
               xs: 1,
