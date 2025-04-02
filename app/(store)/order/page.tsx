@@ -142,7 +142,7 @@ export default function OrderForm() {
     const orderData: OrderFormData = {
       ...values,
       city: selectedCity ?? "",
-      warehouse: "",
+      warehouse: values.warehouse ?? "",
       selectedToggle: selectedToggle,
       cart: cart?.map((item) => ({
         id: item.id,
@@ -166,7 +166,7 @@ export default function OrderForm() {
         throw new Error("Помилка оформлення замовлення.");
       }
 
-      
+
       setOpen(true);
       form.reset();
     } catch {
@@ -327,9 +327,22 @@ export default function OrderForm() {
                                 <FormControl>
                                   <Select
                                     {...field}
-                                    onChange={(selectedOption) => field.onChange(selectedOption?.value)}
-                                    value={warehouses.find(w => w.Description === field.value) ? { value: field.value, label: field.value } : null}
-                                    options={warehouses.filter(w => w.Description.includes(selectedToggle)).map(w => ({ value: w.Description, label: w.Description }))}
+                                    onChange={(selectedOption) => {
+                                      field.onChange(selectedOption?.value);
+                                      if (selectedOption) {
+                                        form.setValue("warehouse", selectedOption.value);
+                                      } else {
+                                        form.setValue("warehouse", ""); // Löscht den Wert, wenn nichts ausgewählt
+                                      }
+                                    }}
+                                    value={warehouses.find(w => w.Description === field.value)
+                                      ? { value: field.value, label: field.value }
+                                      : null
+                                    }
+                                    options={warehouses
+                                      .filter(w => w.Description.includes(selectedToggle))
+                                      .map(w => ({ value: w.Description, label: w.Description }))
+                                    }
                                     placeholder={loadingWarehouses ? "Завантаження..." : "Оберіть відділення"}
                                     isDisabled={!selectedCity || loadingWarehouses || selectedToggle === "courier"}
                                     noOptionsMessage={() => "Немає доступних відділень"}
@@ -383,11 +396,11 @@ export default function OrderForm() {
           <Card className="border-none shadow-none outline-none ring-0 p-0 gap-0">
             <CardContent className="space-y-5">
               <Card className="shadow-md p-4 m-2">
-              <CardHeader> 
-                <CardTitle className="text-[#1996A3] text-[25px] font-semibold">
-                  Підсумок замовлення
-                </CardTitle>
-                </CardHeader> 
+                <CardHeader>
+                  <CardTitle className="text-[#1996A3] text-[25px] font-semibold">
+                    Підсумок замовлення
+                  </CardTitle>
+                </CardHeader>
 
                 <CardContent>
                   <div className=" p-4 rounded-lg space-y-3 text-[13px]">
@@ -437,8 +450,8 @@ export default function OrderForm() {
                     )}
                   </div>
                   <CardTitle className="text-[#1996A3] text-[20px] font-semibold py-4">
-                  <p>Товари в замовленні</p>
-                </CardTitle>
+                    <p>Товари в замовленні</p>
+                  </CardTitle>
                   {cart.length === 0 ? (
                     <p>Ваш кошик порожній.</p>
                   ) : (
@@ -470,16 +483,16 @@ export default function OrderForm() {
         </div>
       </form>
       {open && (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-6">
-        <div className="bg-white p-6 rounded-lg shadow-lg space-y-3 grid">
-          <h1 className="text-lg font-semibold text-center">Замовлення успішно оформлене!</h1>
-          <p className="text-gray-600 text-[14px] pb-3 text-center"> Вам надіслано підтвердження на пошту.</p>
-          <Button className="flex bg-[#1996A3] p-3" onClick={() => setOpen(false)}>Закрити</Button>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-6">
+          <div className="bg-white p-6 rounded-lg shadow-lg space-y-3 grid">
+            <h1 className="text-lg font-semibold text-center">Замовлення успішно оформлене!</h1>
+            <p className="text-gray-600 text-[14px] pb-3 text-center"> Вам надіслано підтвердження на пошту.</p>
+            <Button className="flex bg-[#1996A3] p-3" onClick={() => setOpen(false)}>Закрити</Button>
+          </div>
         </div>
-      </div>
-    )}
+      )}
     </Form>
-    
-     
+
+
   );
 }
