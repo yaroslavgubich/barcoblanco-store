@@ -1,6 +1,8 @@
 // context/CartContext.tsx
 "use client";
-import { createContext, useContext, useState, ReactNode,  useEffect } from "react";
+
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { toast } from "react-hot-toast";
 
 export interface CartItem {
   id: string;
@@ -8,6 +10,7 @@ export interface CartItem {
   price: number;
   image: string;
   quantity: number;
+  slug?: { current: string }; // ← добавлено, если используешь переход на товар
 }
 
 interface CartContextType {
@@ -16,7 +19,7 @@ interface CartContextType {
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   getTotalItems: () => number;
-  clearCart: () => void; 
+  clearCart: () => void;
   getCartTotalPrice: () => number;
 }
 
@@ -25,7 +28,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  // 1️⃣ Load cart from localStorage on mount
+  // ✅ Загрузка из localStorage (только один useEffect!)
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
@@ -36,21 +39,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
     }
   }, []);
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedCart = localStorage.getItem("cart");
-      if (storedCart) {
-        try {
-          setCart(JSON.parse(storedCart));
-        } catch (error) {
-          console.error("Error parsing cart from localStorage:", error);
-        }
-      }
-    }
-  }, []);
-  
 
-  // 2️⃣ Save cart to localStorage whenever it changes
+  // ✅ Сохранение в localStorage при изменении корзины
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
@@ -59,39 +49,37 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setCart((prevCart) => {
       const existing = prevCart.find((i) => i.id === item.id);
       if (existing) {
-        // If item is already in the cart, just increment quantity
+        toast.success("Кількість товару оновлено 🛒");
         return prevCart.map((i) =>
-          i.id === item.id
-            ? { ...i, quantity: i.quantity + item.quantity }
-            : i
+          i.id === item.id ? { ...i, quantity: i.quantity + item.quantity } : i
         );
+      } else {
+        toast.success("Товар додано до кошика 🛒");
+        return [...prevCart, item];
       }
-      return [...prevCart, item];
     });
   };
 
   const removeFromCart = (id: string) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
+    toast("Товар видалено з кошика 🗑️", { icon: "🗑️" });
   };
 
   const updateQuantity = (id: string, quantity: number) => {
     setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.id === id ? { ...item, quantity } : item
-      )
+      prevCart.map((item) => (item.id === id ? { ...item, quantity } : item))
     );
   };
 
   const clearCart = () => {
     setCart([]);
+    toast("Кошик очищено");
   };
-  
 
   const getTotalItems = () => {
     return cart.reduce((total, item) => total + item.quantity, 0);
   };
 
-  // 3️⃣ Calculate total price
   const getCartTotalPrice = () => {
     return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   };

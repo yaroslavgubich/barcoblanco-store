@@ -14,13 +14,18 @@ export function Pagination({ totalPages, currentPage, onPageChange }: Pagination
         <Button
           key={page}
           size="icon"
-          className={`rounded-full w-8 h-8 border border-[#1996A3] 
-            transition font-semibold
-            ${currentPage === page 
-              ? "bg-[#1996A3] text-white"  // Активная страница
-              : "bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white" // Остальные
-            }`}
           onClick={() => onPageChange(page)}
+          className={`
+            rounded-full w-8 h-8 
+            border border-[#1996A3] 
+            transition font-semibold
+            outline-none focus:outline-none focus:ring-0 active:bg-white
+            ${
+              currentPage === page
+                ? "bg-[#1996A3] text-white" 
+                : "bg-white text-[#1996A3] hover:bg-white hover:text-[#1996A3]"
+            }
+          `}
         >
           {page}
         </Button>
