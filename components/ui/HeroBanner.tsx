@@ -35,7 +35,8 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ images }) => {
         modules={[Navigation, Pagination, Autoplay]}
         navigation
         pagination={{ clickable: true }}
-        autoplay={{ delay: 3000, disableOnInteraction: false }}
+        autoplay={{ delay: 4000, disableOnInteraction: false }}
+        speed={1100}
         className="banner-swiper"
       >
         {images.map((image) => (
@@ -49,14 +50,12 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ images }) => {
             />
           </SwiperSlide>
         ))}
-      <div className="banner-button-wrapper">
-        <Link href="/products">
-          <button className="banner-button">ДО КАТАЛОГУ</button>
-        </Link>
-        
-      </div>
+        <div className="banner-button-wrapper">
+          <Link href="/products">
+            <button className="banner-button">ДО КАТАЛОГУ</button>
+          </Link>
+        </div>
       </Swiper>
-
     </div>
   );
 };
