@@ -71,7 +71,7 @@ export async function POST(request: Request) {
             : "Не вказано"}  
         </li>
         <li><b>Відділення:</b> ${data.warehouse}</li>
-        <li><b>Загальна сума:</b> $${totalAmount.toFixed(2)}</li>
+        <li><b>Загальна сума:</b> ${totalAmount.toFixed(2)} грн.</li>
     </ul>
     <h3 style="color: #333;">Деталі замовлення:</h3>
     <table role="presentation" style="width: 800px; border-collapse: collapse; font-size: 16px; color: #333; display: block !important; visibility: visible !important;">
@@ -90,7 +90,7 @@ export async function POST(request: Request) {
                         <img src="${item.image}" alt="${item.name}" width="80" style="border-radius: 8px; display: block;">
                     </td>
                     <td style="padding: 10px; border-bottom: 1px solid #ddd;">${item.name}</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #ddd;">$${item.price.toFixed(2)}</td>
+                    <td style="padding: 10px; border-bottom: 1px solid #ddd;">${item.price.toFixed(2)} грн.</td>
                     <td style="padding: 10px; border-bottom: 1px solid #ddd;">${item.quantity}</td>
                 </tr>
             `).join('')}
@@ -116,7 +116,7 @@ export async function POST(request: Request) {
                 : "Не вказано"}  
             </li>
                 <li><b>Відділення:</b> ${data.warehouse}</li>
-              <li><b>Загальна сума:</b> $${totalAmount.toFixed(2)}</li>
+              <li><b>Загальна сума:</b> ${totalAmount.toFixed(2)} грн.</li>
           </ul>
           <h3 style="color: #333;">Деталі замовлення:</h3>
     <table role="presentation" style="width: 800px; border-collapse: collapse; font-size: 16px; color: #333; display: block !important; visibility: visible !important;">
@@ -135,7 +135,7 @@ export async function POST(request: Request) {
                         <img src="${item.image}" alt="${item.name}" width="80" style="border-radius: 8px; display: block;">
                     </td>
                     <td style="padding: 10px; border-bottom: 1px solid #ddd;">${item.name}</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #ddd;">$${item.price.toFixed(2)}</td>
+                    <td style="padding: 10px; border-bottom: 1px solid #ddd;">${item.price.toFixed(2)} грн.</td>
                     <td style="padding: 10px; border-bottom: 1px solid #ddd;">${item.quantity}</td>
                 </tr>
             `).join('')}
