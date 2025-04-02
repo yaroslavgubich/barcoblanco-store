@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
-import Lightbox from "yet-another-react-lightbox";
-import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
-import "yet-another-react-lightbox/styles.css";
-import "yet-another-react-lightbox/plugins/thumbnails.css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 interface ProductDetailsProps {
   productData: {
@@ -24,118 +25,133 @@ interface ProductDetailsProps {
 
 export default function ProductDetails({ productData }: ProductDetailsProps) {
   const { name, image, price, details, width, isPopular, color } = productData;
+  const { addToCart } = useCart();
 
   const images =
     Array.isArray(image) && image.length > 0
       ? image
       : [{ asset: { url: "/images/placeholder.svg" }, alt: "placeholder" }];
 
-  const [activeImage, setActiveImage] = useState<string>(images[0].asset.url);
-  const [openLightbox, setOpenLightbox] = useState(false);
-
-  const lightboxSlides = images.map((img) => ({
-    src: img.asset.url,
-    alt: img.alt || "",
-  }));
-
-  const { addToCart } = useCart();
-
   const handleAddToCart = () => {
     addToCart({
       id: name,
       name,
       price,
-      image: activeImage,
+      image: images[0].asset.url,
       quantity: 1,
     });
   };
 
-  return (
-    <div className="max-w-7xl mx-auto bg-white p-4 sm:p-6 md:p-8 flex flex-col md:flex-row gap-12">
-      {/* Блок изображений */}
-      <div className="flex-1 max-w-full md:max-w-[500px] flex flex-col md:flex-row items-center md:items-start gap-4">
-        {/* Главное изображение */}
-        <div
-          onClick={() => setOpenLightbox(true)}
-          className="w-full max-w-[300px] sm:max-w-[350px] md:max-w-[400px] aspect-[3/4] overflow-hidden rounded-lg shadow-md cursor-zoom-in"
-        >
-          <Image
-            src={activeImage}
-            alt={name}
-            width={400}
-            height={600}
-            className="w-full h-full object-cover"
-          />
-        </div>
+  const prevRef = useRef(null);
+  const nextRef = useRef(null);
+  const [swiperReady, setSwiperReady] = useState(false);
 
-        {/* Миниатюры */}
-        {images.length > 1 && (
-          <div className="flex flex-col gap-3 md:mt-0 mt-4">
-            {images.slice(0, 4).map((img, index) => (
-              <button
-                key={index}
-                onClick={() => setActiveImage(img.asset.url)}
-                className={`rounded-md border transition overflow-hidden ${activeImage === img.asset.url
-                    ? "border-[#1996A3] border-2"
-                    : "border-gray-300"
-                  } 
-                  w-[70px] h-[50px] sm:w-[90px] sm:h-[65px] md:w-[110px] md:h-[80px]`}
-              >
+  useEffect(() => {
+    setSwiperReady(true);
+  }, []);
+
+  return (
+    <div className="max-w-4xl mx-auto bg-white p-2 sm:p-4 flex flex-col md:flex-row gap-12 rounded-2xl">
+      {/* Слайдер */}
+      <div className="w-full md:max-w-[400px] mx-auto relative">
+        {swiperReady && (
+          <Swiper
+            modules={[Navigation, Pagination]}
+            navigation={{
+              prevEl: prevRef.current,
+              nextEl: nextRef.current,
+            }}
+            pagination={{
+              clickable: true,
+              renderBullet: (index, className) =>
+                `<span class="${className} !bg-[#CFE8EC] !w-3 !h-3 rounded-full mx-1"></span>`,
+            }}
+            className="w-full aspect-[3/4] rounded-2xl overflow-hidden"
+          >
+            {images.map((img, index) => (
+              <SwiperSlide key={index}>
                 <Image
                   src={img.asset.url}
-                  alt={img.alt || `thumbnail-${index}`}
-                  width={110}
-                  height={80}
+                  alt={img.alt || `image-${index}`}
+                  width={600}
+                  height={800}
                   className="w-full h-full object-cover"
                 />
-              </button>
+              </SwiperSlide>
             ))}
-          </div>
+          </Swiper>
         )}
+
+        {/* Стрелка влево */}
+        <button
+          ref={prevRef}
+          className="absolute top-1/2 left-2 -translate-y-1/2 bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white transition w-8 h-8 rounded-full shadow-md z-10 flex items-center justify-center"
+          aria-label="Previous slide"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        {/* Стрелка вправо */}
+        <button
+          ref={nextRef}
+          className="absolute top-1/2 right-2 -translate-y-1/2 bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white transition w-8 h-8 rounded-full shadow-md z-10 flex items-center justify-center"
+          aria-label="Next slide"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
       </div>
 
-      {/* Блок информации */}
-      <div className="flex-1 space-y-4 text-center md:text-left">
-        <h1 className="text-3xl sm:text-4xl font-bold text-[#1996A3]">{name}</h1>
+      {/* Информация о товаре */}
+      <div className="flex-1 text-center md:text-left flex flex-col justify-center">
+        <h1 className="text-2xl sm:text-3xl font-bold text-[#1996A3]">{name}</h1>
 
-        {/* Ціна */}
-        <p className="text-xl sm:text-2xl font-semibold text-gray-900 mb-6">{price} грн</p>
+        {/* Цена */}
+        <p className="text-lg sm:text-xl font-bold text-gray-900 mt-4 mb-4 leading-[1.2]">
+          {price.toFixed(2)} грн
+        </p>
 
-        {/* Описание, ширина, цвет, популярность */}
-        <div className="space-y-4 mt-6">
-          <p className="text-gray-700 text-base sm:text-lg">{details}</p>
+        {/* Кнопка */}
+        <Button
+          onClick={handleAddToCart}
+          className="w-full bg-[#1996a3] hover:bg-[#147a86] text-white py-2 px-4 text-base font-medium rounded-lg shadow-md transition mb-4"
+        >
+          Додати в кошик
+        </Button>
+
+        {/* Описание и характеристики */}
+        <div className="space-y-3 text-gray-700 text-sm sm:text-base">
+          <p>{details}</p>
           {width && <p className="text-gray-500">Ширина: {width} см</p>}
           {color && (
-            <div className="flex items-center gap-2 text-gray-500">
+            <div className="flex items-center gap-2 justify-center md:justify-start text-gray-500">
               <span>Колір: {color}</span>
               <span
-                className="inline-block w-4 h-4 rounded-full border border-gray-300"
+                className="inline-block w-3 h-3 rounded-full border border-gray-300"
                 style={{ backgroundColor: color.toLowerCase() }}
               />
             </div>
           )}
-          {isPopular && <p className="text-[#1996A3] font-semibold">🔥 Популярний продукт</p>}
-        </div>
-
-        {/* Кнопка */}
-        <div className="flex justify-center md:justify-start">
-          <Button
-            onClick={handleAddToCart}
-            className="w-full max-w-xs bg-[#1996a3] hover:bg-[#147a86] text-white py-3 text-lg"
-          >
-            Додати в кошик
-          </Button>
+          {isPopular && (
+            <p className="text-[#1996A3] font-semibold">🔥 Популярний продукт</p>
+          )}
         </div>
       </div>
-
-      {/* Lightbox */}
-      <Lightbox
-        open={openLightbox}
-        close={() => setOpenLightbox(false)}
-        slides={lightboxSlides}
-        plugins={[Thumbnails]}
-        styles={{ container: { backgroundColor: "transparent" } }}
-      />
     </div>
   );
 }

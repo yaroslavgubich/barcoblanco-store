@@ -7,7 +7,9 @@ import { Pagination } from "../../../components/ui/pagination";
 import Product from "../../../components/ui/Product";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
-
+import { useScrollToTop } from "@/hook/useScrollToTop";
+import Image from 'next/image';
+// Тип товара
 interface ProductType {
   _id: string;
   name: string;
@@ -23,7 +25,7 @@ interface ProductsClientProps {
   selectedCategory?: string;
 }
 
-// Ширины по категориям
+// Фильтры ширины по категориям
 const categoryWidthFilters: { [key: string]: number[] } = {
   mirrors: [40, 50, 55, 60, 65, 70, 80, 90],
   wardrobe: [40, 45, 50, 55, 60, 65, 70, 75, 80, 90, 100],
@@ -31,7 +33,7 @@ const categoryWidthFilters: { [key: string]: number[] } = {
   waterproof: [30, 35, 40, 50, 60],
 };
 
-// Названия категорий для вывода
+// Названия категорий для отображения
 const categoryLabels: Record<string, string> = {
   mirrors: "Дзеркала",
   wardrobe: "Шафи",
@@ -43,35 +45,32 @@ export default function ProductsClient({
   products,
   selectedCategory,
 }: ProductsClientProps) {
-  // ------ Пагинация ------
+  useScrollToTop();
+  // Пагинация
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 15;
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
 
-  // ------ Фильтры ------
   // Фильтр по ширине
   const [selectedWidths, setSelectedWidths] = useState<number[]>([]);
 
-  // Один ползунок для максимальной цены
-  const [maxPrice, setMaxPrice] = useState<number>(10000);
-
-  // ------ Мобильное отображение фильтра ------
+  // Мобильное отображение фильтра (по ширине)
   const [showMobileFilter, setShowMobileFilter] = useState(false);
 
-  // ------ Количество товаров ------
-  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
 
-  // ------ Сообщение об успехе ------
+
+
+  // Сообщение об успехе
   const [successMessage, setSuccessMessage] = useState("");
 
-  // ------ Контекст корзины ------
+  // Контекст корзины
   const { addToCart } = useCart();
 
   // Список всех категорий
   const allCategories = ["mirrors", "wardrobe", "cabinet", "waterproof"];
 
-  // Отфильтрованные по категории
+  // Отфильтрованные по категории товары
   const categoryProducts = selectedCategory
     ? products.filter(
       (p) => p.category?.toLowerCase() === selectedCategory.toLowerCase()
@@ -85,51 +84,36 @@ export default function ProductsClient({
       (a, b) => a - b
     );
 
-  // При смене категории сбрасываем фильтры
+  // При смене категории сбрасываем фильтр по ширине
   useEffect(() => {
     setSelectedWidths([]);
-    setMaxPrice(10000);
   }, [selectedCategory]);
 
-  // Установка/снятие конкретной ширины
   const toggleWidth = (width: number) => {
     setSelectedWidths((prev) =>
       prev.includes(width) ? prev.filter((w) => w !== width) : [...prev, width]
     );
   };
 
-  // Главная логика фильтрации (по ширине и цене)
+  // Фильтрация товаров (по ширине)
   const filteredProducts = categoryProducts.filter((product) => {
     const matchWidth =
       selectedWidths.length > 0
         ? selectedWidths.includes(product.width || 0)
         : true;
-
-    // Условие: product.price <= maxPrice
-    const matchPrice = product.price <= maxPrice;
-
-    return matchWidth && matchPrice;
+    return matchWidth;
   });
 
   // Товары для текущей страницы
   const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
 
-  // Активна ли конкретная категория (для подсветки кнопки)
   const isActive = (category: string) =>
     selectedCategory?.toLowerCase() === category.toLowerCase();
 
-  // Изменение количества
-  const handleQuantityChange = (productId: string, newQuantity: number) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [productId]: newQuantity < 1 ? 1 : newQuantity,
-    }));
-  };
 
-  // Добавление товара в корзину
+
   const handleAddToCart = (product: ProductType) => {
-    const quantity = quantities[product._id] || 1;
-
+    const quantity = 1;
     addToCart({
       id: product._id,
       name: product.name,
@@ -137,47 +121,109 @@ export default function ProductsClient({
       image: product.image?.[0]?.asset.url || "/images/placeholder.svg",
       quantity,
     });
-
     setSuccessMessage("Товар успішно доданий до кошика!");
     setTimeout(() => setSuccessMessage(""), 3000);
   };
 
-  // Очистка всех фильтров
   const handleClearFilters = () => {
     setSelectedWidths([]);
-    setMaxPrice(10000);
   };
 
-  // ------ Обработчики изменения цены ------
-  // При движении ползунка
-  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMaxPrice(Number(e.target.value));
-  };
-  // При вводе вручную
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const typed = Number(e.target.value);
-    // Не даём вводить меньше нуля
-    setMaxPrice(typed < 0 ? 0 : typed);
-  };
+  const [showCategories, setShowCategories] = useState(false);
 
   return (
     <>
-      {/* Кнопка «Фільтр» (для мобильных) */}
-      <div className="md:hidden flex justify-end w-full px-4 mb-4">
+      {/* Мобильное меню для фильтра и категорий */}
+      <div className="md:hidden bg-100 flex flex-wrap justify-center w-full px-4 mb-4 mt-4 gap-6">
         <button
           onClick={() => setShowMobileFilter(true)}
-          className="p-2 bg-white border border-[#1996A3] text-[#1996A3] rounded-full shadow hover:bg-[#1996A3] hover:text-white transition"
+          className="flex-1 min-w-[150px] flex items-center justify-center gap-2 px-4 py-3 bg-[#4FA7B9] hover:bg-[#1996A3] text-white rounded-lg transition"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="w-6 h-6"
+            className="w-5 h-5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M6 12h12M10 18h4" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v16a1 1 0 01-1 1H4a1 1 0 01-1-1V4z"
+            />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 4v16M4 9h16" />
           </svg>
+          <span>Фільтр</span>
         </button>
+        <div className="relative flex-1 min-w-[150px]">
+          <button
+            className="w-full flex items-center justify-between px-4 py-3 bg-gray-100 text-gray-800 rounded-lg transition"
+            onClick={() => setShowCategories(!showCategories)}
+          >
+            <span>
+              {selectedCategory
+                ? categoryLabels[selectedCategory] || selectedCategory
+                : "Категорії"}
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          {showCategories && (
+            <div className="absolute top-full mt-1 w-full bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 z-10">
+              <Link
+                href="/products"
+                className={`block px-4 py-2 text-sm text-gray-700 hover:bg-[#1996A3] hover:text-white transition ${!selectedCategory ? "bg-[#1996A3] text-white" : ""
+                  }`}
+              >
+                Усі товари
+              </Link>
+              {allCategories.map((category) => (
+                <Link
+                  key={category}
+                  href={`/category/${category}`}
+                  className={`block px-4 py-2 text-sm text-gray-700 hover:bg-[#1996A3] hover:text-white transition ${isActive(category) ? "bg-[#1996A3] text-white" : ""
+                    }`}
+                >
+                  {categoryLabels[category] || category}
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Категории для десктопа */}
+      <div className="hidden md:flex flex-wrap gap-2 mb-6 mt-6 justify-center">
+        <Link href="/products">
+          <button
+            className={`px-4 py-1.5 rounded-full text-sm font-medium transition border border-[#1996A3] ${!selectedCategory
+                ? "bg-[#1996A3] text-white"
+                : "bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white"
+              }`}
+          >
+            Усі товари
+          </button>
+        </Link>
+        {allCategories.map((category) => (
+          <Link key={category} href={`/category/${category}`}>
+            <button
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition border border-[#1996A3] ${isActive(category)
+                  ? "bg-[#1996A3] text-white"
+                  : "bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white"
+                }`}
+            >
+              {categoryLabels[category] || category}
+            </button>
+          </Link>
+        ))}
       </div>
 
       {/* Мобильный фильтр (выезжающая панель) */}
@@ -187,47 +233,25 @@ export default function ProductsClient({
             {/* Шапка модалки */}
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-medium text-[#1996A3]">Фільтри</h2>
-              <button
-                onClick={() => setShowMobileFilter(false)}
-                className="text-2xl"
-              >
+              <button onClick={() => setShowMobileFilter(false)} className="text-2xl">
                 &times;
               </button>
             </div>
-
             {/* Фильтр по ширине (мобильный) */}
             {availableWidths.length > 0 && (
               <>
                 <h3 className="font-medium mb-2">Ширина</h3>
                 <div className="flex flex-col space-y-2 mb-4">
                   {availableWidths.map((width) => (
-                    <label
-                      key={width}
-                      className="flex items-center space-x-2 text-sm cursor-pointer"
-                    >
+                    <label key={width} className="flex items-center space-x-2 text-sm cursor-pointer">
                       <input
                         type="checkbox"
                         checked={selectedWidths.includes(width)}
                         onChange={() => toggleWidth(width)}
                         className="peer hidden"
                       />
-                      <span
-                        className="
-                          w-4 h-4 border-2 border-[#1996A3] 
-                          rounded flex items-center justify-center 
-                          transition 
-                          hover:bg-[#1996A3] hover:text-white
-                          peer-checked:bg-[#1996A3] peer-checked:text-white
-                        "
-                      >
-                        <span
-                          className="
-                            w-2 h-2 bg-white
-                            opacity-0 peer-checked:opacity-100
-                            transition-opacity 
-                            rounded-sm
-                          "
-                        />
+                      <span className="w-4 h-4 border-2 border-[#1996A3] rounded flex items-center justify-center transition hover:bg-[#1996A3] hover:text-white peer-checked:bg-[#1996A3] peer-checked:text-white">
+                        <span className="w-2 h-2 bg-white opacity-0 peer-checked:opacity-100 transition-opacity rounded-sm" />
                       </span>
                       <span>{width} см</span>
                     </label>
@@ -236,48 +260,13 @@ export default function ProductsClient({
               </>
             )}
 
-            {/* Фильтр по цене (один ползунок + ввод вручную) */}
-            <h3 className="font-medium mb-2">Ціна</h3>
-            <div className="mb-4 space-y-2 text-sm text-gray-600">
-              {/* Поле ввода */}
-              <div className="flex items-center gap-2">
-                <label>До:</label>
-                <input
-                  type="number"
-                  min={0}
-                  className="w-20 p-1 border rounded"
-                  value={maxPrice}
-                  onChange={handleInputChange}
-                />
-                <span>грн</span>
-              </div>
-              {/* Ползунок */}
-              <input
-                type="range"
-                min={0}
-                max={10000}
-                step={50}
-                value={maxPrice}
-                onChange={handleSliderChange}
-                className="
-                  w-full cursor-pointer 
-                  accent-[#1996A3]
-                  appearance-none h-1 rounded-lg bg-gray-200 
-                  [&::-webkit-slider-runnable-track]:bg-[#1996A3] 
-                  [&::-moz-range-track]:bg-[#1996A3]
-                "
-              />
-            </div>
+            {/* Убрали фильтр по цене */}
 
             {/* Кнопка сброса */}
-            <button
-              onClick={handleClearFilters}
-              className="text-sm text-[#1996A3] underline"
-            >
+            <button onClick={handleClearFilters} className="text-sm text-[#1996A3] underline">
               Очистити
             </button>
-
-            {/* Закрыть модалку (Применить) */}
+            {/* Кнопка закрытия модалки */}
             <button
               onClick={() => setShowMobileFilter(false)}
               className="mt-auto w-full bg-[#1996A3] text-white py-2 rounded mt-6 transition hover:opacity-90"
@@ -291,71 +280,23 @@ export default function ProductsClient({
       {/* Основная часть */}
       <div className="w-full bg-gray-50 py-4 px-2">
         <div className="max-w-[1400px] mx-auto px-4">
-          {/* Блок категорий (центрируем) */}
-          <div className="flex flex-wrap gap-2 mb-6 justify-center">
-            <Link href="/products">
-              <button
-                className={`px-4 py-1.5 rounded-full text-sm font-medium transition border border-[#1996A3] ${!selectedCategory
-                  ? "bg-[#1996A3] text-white"
-                  : "bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white"
-                  }`}
-              >
-                Усі товари
-              </button>
-            </Link>
-            {allCategories.map((category) => (
-              <Link key={category} href={`/category/${category}`}>
-                <button
-                  className={`px-4 py-1.5 rounded-full text-sm font-medium transition border border-[#1996A3] ${isActive(category)
-                    ? "bg-[#1996A3] text-white"
-                    : "bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white"
-                    }`}
-                >
-                  {categoryLabels[category] || category}
-                </button>
-              </Link>
-            ))}
-          </div>
-
-          {/* Контейнер: фильтры слева, товары справа (только на десктопе) */}
-          <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex bg-gray flex-col md:flex-row gap-4">
             {/* Левая колонка (десктоп) */}
             <div className="hidden md:block w-fit bg-white border border-gray-200 rounded-lg p-4 h-min">
-              {/* Фильтр по ширине */}
               {availableWidths.length > 0 && (
                 <div className="mb-6">
-                  <h3 className="font-medium text-sm text-[#1996A3] mb-2">
-                    Ширина
-                  </h3>
+                  <h3 className="font-medium text-sm text-[#1996A3] mb-2">Ширина</h3>
                   <div className="flex flex-col space-y-2">
                     {availableWidths.map((width) => (
-                      <label
-                        key={width}
-                        className="flex items-center space-x-2 text-sm cursor-pointer"
-                      >
+                      <label key={width} className="flex items-center space-x-2 text-sm cursor-pointer">
                         <input
                           type="checkbox"
                           checked={selectedWidths.includes(width)}
                           onChange={() => toggleWidth(width)}
                           className="peer hidden"
                         />
-                        <span
-                          className="
-                            w-4 h-4 border-2 border-[#1996A3] 
-                            rounded flex items-center justify-center 
-                            transition 
-                            hover:bg-[#1996A3] hover:text-white
-                            peer-checked:bg-[#1996A3] peer-checked:text-white
-                          "
-                        >
-                          <span
-                            className="
-                              w-2 h-2 bg-white
-                              opacity-0 peer-checked:opacity-100
-                              transition-opacity 
-                              rounded-sm
-                            "
-                          />
+                        <span className="w-4 h-4 border-2 border-[#1996A3] rounded flex items-center justify-center transition hover:bg-[#1996A3] hover:text-white peer-checked:bg-[#1996A3] peer-checked:text-white">
+                          <span className="w-2 h-2 bg-white opacity-0 peer-checked:opacity-100 transition-opacity rounded-sm" />
                         </span>
                         <span>{width} см</span>
                       </label>
@@ -364,61 +305,48 @@ export default function ProductsClient({
                 </div>
               )}
 
-              {/* Фильтр по цене: один ползунок + ручной ввод (десктоп) */}
-              <div className="mb-6 text-sm text-gray-600 space-y-3">
-                <h3 className="font-medium text-sm text-[#1996A3] mb-1">
-                  Ціна
-                </h3>
-
-                {/* Поле ввода */}
-                <div className="flex items-center gap-2">
-                  <label>До:</label>
-                  <input
-                    type="number"
-                    min={0}
-                    className="w-20 p-1 border rounded"
-                    value={maxPrice}
-                    onChange={handleInputChange}
-                  />
-                  <span>грн.</span>
-                </div>
-
-                {/* Ползунок */}
-                <input
-                  type="range"
-                  min={0}
-                  max={10000}
-                  step={50}
-                  value={maxPrice}
-                  onChange={handleSliderChange}
-                  className="
-                    w-full cursor-pointer 
-                    accent-[#1996A3]
-                    appearance-none h-1 rounded-lg bg-gray-200 
-                    [&::-webkit-slider-runnable-track]:bg-[#1996A3] 
-                    [&::-moz-range-track]:bg-[#1996A3]
-                  "
-                />
-              </div>
-
-              {/* Кнопка очистки */}
-              <button
-                onClick={handleClearFilters}
-                className="text-sm text-[#1996A3] underline"
-              >
+              {/* Убрали фильтр по цене */}
+              <button onClick={handleClearFilters} className="text-sm text-[#1996A3] underline">
                 Очистити
               </button>
             </div>
 
-            {/* Правая колонка: товары */}
-            {/* Правая колонка: товары */}
+            {/* Правая колонка: список товаров */}
             <div className="flex-1">
+            {selectedCategory === "waterproof" && (
+  <div className="border-l-4 border-[#1996A3] rounded-xl p-6 mb-6 shadow-md text-sm sm:text-base leading-relaxed">
+    <div className="flex items-start gap-4">
+      <div>
+        <h2 className="text-2xl font-bold text-[#1996A3] mb-3">💧 Тумби Water від Barco Blanco</h2>
+        <p className="mb-2">
+          Ця тумба зроблена <span className="font-semibold text-[#1996A3]">водостійкою</span>!
+          Корпус і фасади виготовлені зі спеціального МДФ, поверхня ламінована
+          водонепроникним матеріалом, а крайка приклеєна поліуретановим клеєм,
+          який не боїться води.
+        </p>
+        <p className="mb-2">
+          Завіси з <span className="font-medium text-[#1996A3]">нержавіючої сталі з дотягом</span> забезпечують
+          плавне закриття. Ніжки — <span className="font-medium text-[#1996A3]">алюмінієві</span>, фурнітура
+          кріпиться нержавіючими саморізами.
+        </p>
+        <p className="mb-2">
+          Всі матеріали та метод складання роблять тумбу стійкою не лише до вологості,
+          але й до <span className="font-semibold text-[#1996A3]">прямих потраплянь води</span>, наприклад, при аварії змішувача чи сифона —
+          зовні та всередині!
+        </p>
+        <p className="mt-4 font-semibold italic text-[#1996A3] text-base">
+          Тумба Water — це справжня <span >яхта у вашій ванній кімнаті</span>!
+        </p>
+      </div>
+    </div>
+  </div>
+)}
+
+
               <div className="grid grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))] gap-4">
                 <AnimatePresence>
                   {paginatedProducts.length > 0 ? (
                     paginatedProducts.map((product) => {
-                      const quantity = quantities[product._id] || 1;
-
                       return (
                         <motion.div
                           key={product._id}
@@ -428,42 +356,20 @@ export default function ProductsClient({
                           exit={{ opacity: 0, scale: 0.95 }}
                           transition={{ duration: 0.2 }}
                         >
-                          {/* Карточка товара */}
                           <div>
                             <Product product={product} />
                           </div>
-
-                          {/* Цена, счётчик, кнопка */}
-                          <div className="mt-2 flex flex-wrap items-center justify-between min-h-[50px] gap-2">
+                          <div className="mt-2 flex items-center justify-between gap-2">
                             <span className="whitespace-nowrap text-base sm:text-lg md:text-xl font-normal text-[#1996A3]">
-                              {product.price} грн
+                              ₴{product.price}
                             </span>
-
-                            <div className="flex items-center gap-1">
-                              <button
-                                onClick={() => handleQuantityChange(product._id, quantity - 1)}
-                                className="bg-[#4FA7B9] text-white text-xs font-normal w-6 h-6 rounded hover:opacity-90 transition flex items-center justify-center"
-                              >
-                                –
-                              </button>
-                              <span className="text-xs font-normal w-5 text-center">{quantity}</span>
-                              <button
-                                onClick={() => handleQuantityChange(product._id, quantity + 1)}
-                                className="bg-[#4FA7B9] text-white text-xs font-normal w-6 h-6 rounded hover:opacity-90 transition flex items-center justify-center"
-                              >
-                                +
-                              </button>
-                            </div>
+                            <Button
+                              onClick={() => handleAddToCart(product)}
+                              className="bg-[#4FA7B9] hover:bg-[#1996A3] text-white px-3 py-2 rounded-md transition flex items-center justify-center"
+                            >
+                             <Image src="/icons/cart.png" alt="Cart" width={20} height={20} />
+                            </Button>
                           </div>
-
-                          {/* Кнопка «Додати в кошик» (растянутая) */}
-                          <Button
-                            onClick={() => handleAddToCart(product)}
-                            className="bg-[#4FA7B9] hover:bg-[#1996A3] text-white text-xs sm:text-sm font-normal
-                           w-full mt-2 px-3 py-2 rounded-md transition"
-                          >
-                            Додати в кошик
-                          </Button>
                         </motion.div>
                       );
                     })
@@ -476,30 +382,41 @@ export default function ProductsClient({
                   )}
                 </AnimatePresence>
               </div>
-
-              {/* Пагинация */}
               <div className="w-full mt-6 flex justify-center">
                 <Pagination
                   totalPages={Math.ceil(filteredProducts.length / ITEMS_PER_PAGE)}
                   currentPage={currentPage}
-                  onPageChange={setCurrentPage}
+                  onPageChange={(page) => {
+                    setCurrentPage(page);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}                  
                 />
               </div>
             </div>
-
           </div>
         </div>
       </div>
 
-      {/* Сообщение об успехе (внизу) */}
-      {successMessage && (
-        <div className="fixed bottom-0 left-0 right-0 bg-500 bg-[#1996A3] text-white text-center py-2 z-50">
-          {successMessage}
-        </div>
-      )}
+      {/* Сообщение об успехе */}
+      <AnimatePresence>
+        {successMessage && (
+          <motion.div
+            initial={{ x: "100%", opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: "100%", opacity: 0 }}
+            transition={{ type: "spring", duration: 0.5 }}
+            className="fixed bottom-4 right-4 bg-white border border-[#1996A3] text-[#1996A3] px-6 py-4 shadow-xl rounded-lg text-xl z-50"
+          >
+            {successMessage}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
+
+
+
 
 
 

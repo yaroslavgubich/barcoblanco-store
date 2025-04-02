@@ -904,6 +904,10 @@ body {
   background: transparent !important;
   transition: all 0.2s ease-in-out;
 }
+.swiper-pagination-bullet-active {
+  background-color: #1996A3 !important;
+}
+
 
 /* === CUSTOM BANNER STYLES === */
 
