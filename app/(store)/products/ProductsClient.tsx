@@ -8,7 +8,7 @@ import Product from "../../../components/ui/Product";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { useScrollToTop } from "@/hook/useScrollToTop";
-import Image from 'next/image';
+import Image from "next/image";
 
 interface ProductType {
   _id: string;
@@ -180,34 +180,6 @@ export default function ProductsClient({
         </div>
       </div>
 
-      {/* Категории для десктопа */}
-      <div className="hidden md:flex flex-wrap gap-2 mb-6 mt-6 justify-center">
-        <Link href="/products">
-          <button
-            className={`px-4 py-1.5 rounded-full text-sm font-medium transition border border-[#1996A3] ${
-              !selectedCategory
-                ? "bg-[#1996A3] text-white"
-                : "bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white"
-            }`}
-          >
-            Усі товари
-          </button>
-        </Link>
-        {allCategories.map((category) => (
-          <Link key={category} href={`/category/${category}`}>
-            <button
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition border border-[#1996A3] ${
-                isActive(category)
-                  ? "bg-[#1996A3] text-white"
-                  : "bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white"
-              }`}
-            >
-              {categoryLabels[category] || category}
-            </button>
-          </Link>
-        ))}
-      </div>
-
       {/* Мобильный фильтр (выезжающая панель) */}
       {showMobileFilter && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
@@ -252,17 +224,88 @@ export default function ProductsClient({
         </div>
       )}
 
+      {/* Категории для десктопа */}
+      <div className="hidden md:flex flex-wrap gap-2 mb-6 mt-6 justify-center">
+        <Link href="/products">
+          <button
+            className={`px-4 py-1.5 rounded-full text-sm font-medium transition border border-[#1996A3] ${
+              !selectedCategory
+                ? "bg-[#1996A3] text-white"
+                : "bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white"
+            }`}
+          >
+            Усі товари
+          </button>
+        </Link>
+        {allCategories.map((category) => (
+          <Link key={category} href={`/category/${category}`}>
+            <button
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition border border-[#1996A3] ${
+                isActive(category)
+                  ? "bg-[#1996A3] text-white"
+                  : "bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white"
+              }`}
+            >
+              {categoryLabels[category] || category}
+            </button>
+          </Link>
+        ))}
+      </div>
+
       {/* Основная часть */}
       <div className="w-full bg-gray-50 py-4 px-2">
         <div className="max-w-[1400px] mx-auto px-4">
-          <div className="flex bg-gray flex-col md:flex-row gap-4">
+          {/* Если категория waterproof, выводим описание на всю ширину с центрированием текста */}
+          {selectedCategory === "waterproof" && (
+            <div className="w-full mb-6">
+              <div className=" border-[#1996A3] rounded-xl p-6 shadow-md text-sm sm:text-base leading-relaxed text-center">
+                <div className="flex flex-col gap-4">
+                  <h2 className="text-2xl font-bold text-[#1996A3]">
+                    💧 Тумби Water від Barco Blanco
+                  </h2>
+                  <p>
+                    Ця тумба зроблена{" "}
+                    <span className="font-semibold text-[#1996A3]">водостійкою</span>!
+                    Корпус і фасади виготовлені зі спеціального МДФ, поверхня
+                    ламінована водонепроникним матеріалом, а крайка приклеєна
+                    поліуретановим клеєм, який не боїться води.
+                  </p>
+                  <p>
+                    Завіси з{" "}
+                    <span className="font-medium text-[#1996A3]">
+                      нержавіючої сталі з дотягом
+                    </span>{" "}
+                    забезпечують плавне закриття. Ніжки —{" "}
+                    <span className="font-medium text-[#1996A3]">алюмінієві</span>, фурнітура
+                    кріпиться нержавіючими саморізами.
+                  </p>
+                  <p>
+                    Всі матеріали та метод складання роблять тумбу стійкою не лише до
+                    вологості, але й до{" "}
+                    <span className="font-semibold text-[#1996A3]">
+                      прямих потраплянь води
+                    </span>, наприклад, при аварії змішувача чи сифона — зовні та всередині!
+                  </p>
+                  <p className="mt-4 font-semibold italic text-[#1996A3]">
+                    Тумба Water — це справжня <span>яхта у вашій ванній кімнаті</span>!
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Блок с фильтрами и товарами */}
+          <div className="flex flex-col md:flex-row gap-4">
             <div className="hidden md:block w-fit bg-white border border-gray-200 rounded-lg p-4 h-min">
               {availableWidths.length > 0 && (
                 <div className="mb-6">
                   <h3 className="font-medium text-sm text-[#1996A3] mb-2">Ширина</h3>
                   <div className="flex flex-col space-y-2">
                     {availableWidths.map((width) => (
-                      <label key={width} className="flex items-center space-x-2 text-sm cursor-pointer">
+                      <label
+                        key={width}
+                        className="flex items-center space-x-2 text-sm cursor-pointer"
+                      >
                         <input
                           type="checkbox"
                           checked={selectedWidths.includes(width)}
@@ -283,38 +326,8 @@ export default function ProductsClient({
               </button>
             </div>
 
-            {/* Правая колонка: список товаров */}
+            {/* Список товаров */}
             <div className="flex-1">
-              {selectedCategory === "waterproof" && (
-                <div className="border-l-4 border-[#1996A3] rounded-xl p-6 mb-6 shadow-md text-sm sm:text-base leading-relaxed">
-                  <div className="flex items-start gap-4">
-                    <div>
-                      <h2 className="text-2xl font-bold text-[#1996A3] mb-3">💧 Тумби Water від Barco Blanco</h2>
-                      <p className="mb-2">
-                        Ця тумба зроблена <span className="font-semibold text-[#1996A3]">водостійкою</span>!
-                        Корпус і фасади виготовлені зі спеціального МДФ, поверхня ламінована
-                        водонепроникним матеріалом, а крайка приклеєна поліуретановим клеєм,
-                        який не боїться води.
-                      </p>
-                      <p className="mb-2">
-                        Завіси з <span className="font-medium text-[#1996A3]">нержавіючої сталі з дотягом</span> забезпечують
-                        плавне закриття. Ніжки — <span className="font-medium text-[#1996A3]">алюмінієві</span>, фурнітура
-                        кріпиться нержавіючими саморізами.
-                      </p>
-                      <p className="mb-2">
-                        Всі матеріали та метод складання роблять тумбу стійкою не лише до вологості,
-                        але й до <span className="font-semibold text-[#1996A3]">прямих потраплянь води</span>, наприклад, при аварії змішувача чи сифона —
-                        зовні та всередині!
-                      </p>
-                      <p className="mt-4 font-semibold italic text-[#1996A3] text-base">
-                        Тумба Water — це справжня <span>яхта у вашій ванній кімнаті</span>!
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Сетка товаров */}
               <div className="grid grid-cols-2 md:grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))] gap-4">
                 <AnimatePresence>
                   {paginatedProducts.length > 0 ? (

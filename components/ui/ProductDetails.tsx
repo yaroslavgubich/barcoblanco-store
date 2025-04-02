@@ -10,21 +10,40 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
+interface ProductImage {
+  asset: { url: string };
+  alt?: string;
+}
+
 interface ProductDetailsProps {
   productData: {
     name: string;
-    image: { asset: { url: string }; alt?: string }[] | null;
+    image: ProductImage[] | null;
     price: number;
     details: string;
     category: string;
     width?: number;
     isPopular?: boolean;
     color?: string;
+    article?: string;
+    reviewsCount?: number;
+    availability?: boolean;
   };
 }
 
 export default function ProductDetails({ productData }: ProductDetailsProps) {
-  const { name, image, price, details, width, isPopular, color } = productData;
+  const {
+    name,
+    image,
+    price,
+    details,
+    width,
+    color,
+    article = "HB0014",
+    reviewsCount = 4,
+    availability = true,
+  } = productData;
+
   const { addToCart } = useCart();
 
   const images =
@@ -42,8 +61,8 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
     });
   };
 
-  const prevRef = useRef(null);
-  const nextRef = useRef(null);
+  const prevRef = useRef<HTMLButtonElement>(null);
+  const nextRef = useRef<HTMLButtonElement>(null);
   const [swiperReady, setSwiperReady] = useState(false);
 
   useEffect(() => {
@@ -51,109 +70,139 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto bg-white p-2 sm:p-4 flex flex-col md:flex-row gap-12 rounded-2xl">
-      {/* Слайдер */}
-      <div className="w-full md:max-w-[400px] mx-auto relative">
-        {swiperReady && (
-          <Swiper
-            modules={[Navigation, Pagination]}
-            navigation={{
-              prevEl: prevRef.current,
-              nextEl: nextRef.current,
-            }}
-            pagination={{
-              clickable: true,
-              renderBullet: (index, className) =>
-                `<span class="${className} !bg-[#CFE8EC] !w-3 !h-3 rounded-full mx-1"></span>`,
-            }}
-            className="w-full aspect-[3/4] rounded-2xl overflow-hidden"
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-10">
+      {/* Контейнер: вертикально на мобильном, горизонтально на md+ */}
+      <div className="flex flex-col md:flex-row gap-10">
+        {/* Левая часть – слайдер */}
+        <div className="w-11/12 max-w-sm mx-auto md:w-1/2 lg:w-5/12 relative">
+          {swiperReady && (
+            <Swiper
+              modules={[Navigation, Pagination]}
+              navigation={{
+                prevEl: prevRef.current,
+                nextEl: nextRef.current,
+              }}
+              pagination={{
+                clickable: true,
+                renderBullet: (index, className) =>
+                  `<span class="${className} !bg-[#CFE8EC] !w-3 !h-3 rounded-full mx-1"></span>`,
+              }}
+              // На мобильном устройстве высота больше, чтобы картинка выглядела более "портретной"
+              className="w-full h-96 sm:h-[500px] md:h-[450px] rounded-xl overflow-hidden"
+            >
+              {images.map((img, index) => (
+                <SwiperSlide key={index}>
+                  <div className="relative w-full h-full">
+                    <Image
+                      src={img.asset.url}
+                      alt={img.alt || `image-${index}`}
+                      fill
+                      className="object-cover transition-transform duration-300 hover:scale-105"
+                    />
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
+
+          {/* Стрелка "Назад" вне картинки */}
+          <button
+            ref={prevRef}
+            className="absolute top-1/2 left-[-20px] md:left-[-60px] -translate-y-1/2 bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white transition transform hover:scale-110 w-9 h-9 rounded-full shadow-lg z-10 flex items-center justify-center"
+            aria-label="Previous slide"
           >
-            {images.map((img, index) => (
-              <SwiperSlide key={index}>
-                <Image
-                  src={img.asset.url}
-                  alt={img.alt || `image-${index}`}
-                  width={600}
-                  height={800}
-                  className="w-full h-full object-cover"
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        )}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
 
-        {/* Стрелка влево */}
-        <button
-          ref={prevRef}
-          className="absolute top-1/2 left-2 -translate-y-1/2 bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white transition w-8 h-8 rounded-full shadow-md z-10 flex items-center justify-center"
-          aria-label="Previous slide"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-4 h-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+          {/* Стрелка "Вперед" вне картинки */}
+          <button
+            ref={nextRef}
+            className="absolute top-1/2 right-[-20px] md:right-[-60px] -translate-y-1/2 bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white transition transform hover:scale-110 w-9 h-9 rounded-full shadow-lg z-10 flex items-center justify-center"
+            aria-label="Next slide"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
 
-        {/* Стрелка вправо */}
-        <button
-          ref={nextRef}
-          className="absolute top-1/2 right-2 -translate-y-1/2 bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white transition w-8 h-8 rounded-full shadow-md z-10 flex items-center justify-center"
-          aria-label="Next slide"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-4 h-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-      </div>
+        {/* Правая часть – информация о товаре */}
+        <div className="w-full md:w-1/2 lg:w-7/12 flex flex-col md:ml-16 space-y-6 text-center md:text-left">
+          <h1 className="text-2xl md:text-3xl font-semibold text-gray-800">{name}</h1>
 
-      {/* Информация о товаре */}
-      <div className="flex-1 text-center md:text-left flex flex-col justify-center">
-        <h1 className="text-2xl sm:text-3xl font-bold text-[#1996A3]">{name}</h1>
-
-        {/* Цена */}
-        <p className="text-lg sm:text-xl font-bold text-gray-900 mt-4 mb-4 leading-[1.2]">
-          {price.toFixed(2)} грн
-        </p>
-
-        {/* Кнопка */}
-        <Button
-          onClick={handleAddToCart}
-          className="w-full bg-[#1996a3] hover:bg-[#147a86] text-white py-2 px-4 text-base font-medium rounded-lg shadow-md transition mb-4"
-        >
-          Додати в кошик
-        </Button>
-
-        {/* Описание и характеристики */}
-        <div className="space-y-3 text-gray-700 text-sm sm:text-base">
-          <p>{details}</p>
-          {width && <p className="text-gray-500">Ширина: {width} см</p>}
-          {color && (
-            <div className="flex items-center gap-2 justify-center md:justify-start text-gray-500">
-              <span>Колір: {color}</span>
-              <span
-                className="inline-block w-3 h-3 rounded-full border border-gray-300"
-                style={{ backgroundColor: color.toLowerCase() }}
-              />
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 text-sm text-gray-600">
+            <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded-md">Артикул: {article}</span>
+            <div className="flex items-center gap-1">
+              {Array(5)
+                .fill(0)
+                .map((_, i) => (
+                  <svg
+                    key={i}
+                    className={`w-4 h-4 ${i < reviewsCount ? "text-yellow-400" : "text-gray-300"}`}
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.285 3.955a1 1 0 00.95.69h4.163c.969 0 1.371 1.24.588 1.81l-3.37 2.448a1 1 0 00-.363 1.118l1.285 3.955c.3.921-.755 1.688-1.54 1.118L10 14.347l-3.349 2.51c-.785.57-1.84-.197-1.54-1.118l1.285-3.955a1 1 0 00-.363-1.118L2.663 9.382c-.783-.57-.38-1.81.588-1.81h4.163a1 1 0 00.95-.69l1.285-3.955z" />
+                  </svg>
+                ))}
             </div>
-          )}
-          {isPopular && (
-            <p className="text-[#1996A3] font-semibold">🔥 Популярний продукт</p>
-          )}
+            {availability ? (
+              <span className="text-green-600 font-semibold">В наявності</span>
+            ) : (
+              <span className="text-red-500 font-semibold">Немає в наявності</span>
+            )}
+          </div>
+
+          <div className="text-3xl font-bold text-gray-800">
+            {price.toFixed(2)} <span className="text-xl font-medium">грн</span>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
+            <Button
+              onClick={handleAddToCart}
+              className="bg-[#1996a3] hover:bg-[#147a86] text-white py-4 px-8 text-lg font-bold rounded-lg shadow-lg transition transform hover:scale-105"
+            >
+              <div className="flex items-center gap-3">
+                <Image src="/icons/cart.png" alt="Cart" width={24} height={24} />
+                <span>В кошик</span>
+              </div>
+            </Button>
+          </div>
+
+          <div className="border-t border-gray-200 pt-4 space-y-3 text-gray-700 text-sm">
+            <p>{details}</p>
+            {width && (
+              <p className="text-gray-600">
+                <span className="font-medium">Ширина:</span> {width} см
+              </p>
+            )}
+            {color && (
+              <div className="flex items-center justify-center md:justify-start gap-2">
+                <span className="font-medium text-gray-600">Колір:</span>
+                <span className="text-gray-600">{color}</span>
+                <span
+                  className="inline-block w-4 h-4 rounded-full border border-gray-300"
+                  style={{ backgroundColor: color.toLowerCase() }}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
-
