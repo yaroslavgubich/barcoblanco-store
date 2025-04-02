@@ -949,7 +949,7 @@ body {
   background-color: var(--cta-color);
   color: white;
   padding: 1rem 1rem;
-  font-size: 2rem;
+  font-size: 1.3rem;
   border: none;
   border-radius: 0.75rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);

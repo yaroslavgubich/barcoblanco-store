@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react"; 
+import React, { useRef } from "react";
 import { Product } from "../ui";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -18,12 +18,12 @@ const PopularProducts = ({ productsData }) => {
           ПОПУЛЯРНІ ПРОДУКТИ
         </h3>
 
-
         <div className="relative">
           <Swiper
             modules={[Pagination, Autoplay]}
-            spaceBetween={24}
-            slidesPerView={1.2}
+            // Mobile-first default:
+            slidesPerView={1}
+            spaceBetween={16}
             pagination={{
               el: ".custom-pagination",
               clickable: true,
@@ -35,18 +35,20 @@ const PopularProducts = ({ productsData }) => {
               disableOnInteraction: false,
             }}
             speed={1000}
+            // Adjust slides per view for each breakpoint:
             breakpoints={{
-              480: { slidesPerView: 1 },
-              640: { slidesPerView: 2 },
-              768: { slidesPerView: 2 },
-              900: { slidesPerView: 2 },
-              1024: { slidesPerView: 3 },
-              1280: { slidesPerView: 4 },
+              640: {
+                slidesPerView: 2, // e.g. small tablets
+              },
+              768: {
+                slidesPerView: 3, // e.g. iPad portrait
+              },
+              1024: {
+                slidesPerView: 4, // desktops
+              },
             }}
-
             className="w-full pb-16"
           >
-
             {limitedProducts.map((product) => (
               <SwiperSlide key={product._id}>
                 <div className="px-3 h-full">
@@ -58,6 +60,7 @@ const PopularProducts = ({ productsData }) => {
             ))}
           </Swiper>
 
+          {/* Custom pagination container */}
           <div className="custom-pagination mt-8 flex justify-center"></div>
         </div>
       </div>
@@ -66,10 +69,3 @@ const PopularProducts = ({ productsData }) => {
 };
 
 export default PopularProducts;
-
-
-
-
-
-
-
