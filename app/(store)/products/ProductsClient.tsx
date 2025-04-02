@@ -7,7 +7,8 @@ import { Pagination } from "../../../components/ui/pagination";
 import Product from "../../../components/ui/Product";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
-
+import { useScrollToTop } from "@/hook/useScrollToTop";
+import Image from 'next/image';
 // Тип товара
 interface ProductType {
   _id: string;
@@ -44,6 +45,7 @@ export default function ProductsClient({
   products,
   selectedCategory,
 }: ProductsClientProps) {
+  useScrollToTop();
   // Пагинация
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 15;
@@ -56,8 +58,8 @@ export default function ProductsClient({
   // Мобильное отображение фильтра (по ширине)
   const [showMobileFilter, setShowMobileFilter] = useState(false);
 
-  // Количество товаров
-  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
+
+
 
   // Сообщение об успехе
   const [successMessage, setSuccessMessage] = useState("");
@@ -71,16 +73,16 @@ export default function ProductsClient({
   // Отфильтрованные по категории товары
   const categoryProducts = selectedCategory
     ? products.filter(
-        (p) => p.category?.toLowerCase() === selectedCategory.toLowerCase()
-      )
+      (p) => p.category?.toLowerCase() === selectedCategory.toLowerCase()
+    )
     : products;
 
   // Доступные ширины в текущей категории
   const availableWidths = selectedCategory
     ? categoryWidthFilters[selectedCategory.toLowerCase()] || []
     : Array.from(new Set(Object.values(categoryWidthFilters).flat())).sort(
-        (a, b) => a - b
-      );
+      (a, b) => a - b
+    );
 
   // При смене категории сбрасываем фильтр по ширине
   useEffect(() => {
@@ -108,15 +110,10 @@ export default function ProductsClient({
   const isActive = (category: string) =>
     selectedCategory?.toLowerCase() === category.toLowerCase();
 
-  const handleQuantityChange = (productId: string, newQuantity: number) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [productId]: newQuantity < 1 ? 1 : newQuantity,
-    }));
-  };
+
 
   const handleAddToCart = (product: ProductType) => {
-    const quantity = quantities[product._id] || 1;
+    const quantity = 1;
     addToCart({
       id: product._id,
       name: product.name,
@@ -183,9 +180,8 @@ export default function ProductsClient({
             <div className="absolute top-full mt-1 w-full bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 z-10">
               <Link
                 href="/products"
-                className={`block px-4 py-2 text-sm text-gray-700 hover:bg-[#1996A3] hover:text-white transition ${
-                  !selectedCategory ? "bg-[#1996A3] text-white" : ""
-                }`}
+                className={`block px-4 py-2 text-sm text-gray-700 hover:bg-[#1996A3] hover:text-white transition ${!selectedCategory ? "bg-[#1996A3] text-white" : ""
+                  }`}
               >
                 Усі товари
               </Link>
@@ -193,9 +189,8 @@ export default function ProductsClient({
                 <Link
                   key={category}
                   href={`/category/${category}`}
-                  className={`block px-4 py-2 text-sm text-gray-700 hover:bg-[#1996A3] hover:text-white transition ${
-                    isActive(category) ? "bg-[#1996A3] text-white" : ""
-                  }`}
+                  className={`block px-4 py-2 text-sm text-gray-700 hover:bg-[#1996A3] hover:text-white transition ${isActive(category) ? "bg-[#1996A3] text-white" : ""
+                    }`}
                 >
                   {categoryLabels[category] || category}
                 </Link>
@@ -209,11 +204,10 @@ export default function ProductsClient({
       <div className="hidden md:flex flex-wrap gap-2 mb-6 mt-6 justify-center">
         <Link href="/products">
           <button
-            className={`px-4 py-1.5 rounded-full text-sm font-medium transition border border-[#1996A3] ${
-              !selectedCategory
+            className={`px-4 py-1.5 rounded-full text-sm font-medium transition border border-[#1996A3] ${!selectedCategory
                 ? "bg-[#1996A3] text-white"
                 : "bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white"
-            }`}
+              }`}
           >
             Усі товари
           </button>
@@ -221,11 +215,10 @@ export default function ProductsClient({
         {allCategories.map((category) => (
           <Link key={category} href={`/category/${category}`}>
             <button
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition border border-[#1996A3] ${
-                isActive(category)
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition border border-[#1996A3] ${isActive(category)
                   ? "bg-[#1996A3] text-white"
                   : "bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white"
-              }`}
+                }`}
             >
               {categoryLabels[category] || category}
             </button>
@@ -320,11 +313,40 @@ export default function ProductsClient({
 
             {/* Правая колонка: список товаров */}
             <div className="flex-1">
+            {selectedCategory === "waterproof" && (
+  <div className="border-l-4 border-[#1996A3] rounded-xl p-6 mb-6 shadow-md text-sm sm:text-base leading-relaxed">
+    <div className="flex items-start gap-4">
+      <div>
+        <h2 className="text-2xl font-bold text-[#1996A3] mb-3">💧 Тумби Water від Barco Blanco</h2>
+        <p className="mb-2">
+          Ця тумба зроблена <span className="font-semibold text-[#1996A3]">водостійкою</span>!
+          Корпус і фасади виготовлені зі спеціального МДФ, поверхня ламінована
+          водонепроникним матеріалом, а крайка приклеєна поліуретановим клеєм,
+          який не боїться води.
+        </p>
+        <p className="mb-2">
+          Завіси з <span className="font-medium text-[#1996A3]">нержавіючої сталі з дотягом</span> забезпечують
+          плавне закриття. Ніжки — <span className="font-medium text-[#1996A3]">алюмінієві</span>, фурнітура
+          кріпиться нержавіючими саморізами.
+        </p>
+        <p className="mb-2">
+          Всі матеріали та метод складання роблять тумбу стійкою не лише до вологості,
+          але й до <span className="font-semibold text-[#1996A3]">прямих потраплянь води</span>, наприклад, при аварії змішувача чи сифона —
+          зовні та всередині!
+        </p>
+        <p className="mt-4 font-semibold italic text-[#1996A3] text-base">
+          Тумба Water — це справжня <span >яхта у вашій ванній кімнаті</span>!
+        </p>
+      </div>
+    </div>
+  </div>
+)}
+
+
               <div className="grid grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))] gap-4">
                 <AnimatePresence>
                   {paginatedProducts.length > 0 ? (
                     paginatedProducts.map((product) => {
-                      const quantity = quantities[product._id] || 1;
                       return (
                         <motion.div
                           key={product._id}
@@ -345,7 +367,7 @@ export default function ProductsClient({
                               onClick={() => handleAddToCart(product)}
                               className="bg-[#4FA7B9] hover:bg-[#1996A3] text-white px-3 py-2 rounded-md transition flex items-center justify-center"
                             >
-                              <img src="/icons/cart.png" alt="Cart" className="w-5 h-5" />
+                             <Image src="/icons/cart.png" alt="Cart" width={20} height={20} />
                             </Button>
                           </div>
                         </motion.div>
@@ -364,7 +386,10 @@ export default function ProductsClient({
                 <Pagination
                   totalPages={Math.ceil(filteredProducts.length / ITEMS_PER_PAGE)}
                   currentPage={currentPage}
-                  onPageChange={setCurrentPage}
+                  onPageChange={(page) => {
+                    setCurrentPage(page);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}                  
                 />
               </div>
             </div>

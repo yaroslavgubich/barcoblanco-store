@@ -36,6 +36,8 @@ export default function PriceFilter({ value, onChange }: PriceFilterProps) {
   return (
     <div className="mb-6 text-sm text-gray-600">
       <h3 className="font-medium text-[#1996A3] mb-3">Ціна</h3>
+
+      {/* Ввод чисел */}
       <div className="flex items-center gap-2 mb-4">
         <input
           type="number"
@@ -43,7 +45,6 @@ export default function PriceFilter({ value, onChange }: PriceFilterProps) {
           max={value[1] - 500}
           value={value[0]}
           onChange={handleMinInputChange}
-          inputMode="numeric"
           className="w-full max-w-[100px] bg-gray-100 rounded-lg p-2 text-center"
         />
         <span className="text-[#1996A3] font-medium">—</span>
@@ -53,64 +54,67 @@ export default function PriceFilter({ value, onChange }: PriceFilterProps) {
           max={MAX}
           value={value[1]}
           onChange={handleMaxInputChange}
-          inputMode="numeric"
           className="w-full max-w-[100px] bg-gray-100 rounded-lg p-2 text-center"
         />
       </div>
+
+      {/* Слайдер */}
       <Range
         values={value}
         step={STEP}
         min={MIN}
         max={MAX}
         onChange={handleRangeChange}
-        renderTrack={({ props, children }) => {
-          // Извлекаем key, чтобы не передавать его через spread
-          const { key, ...restProps } = props as any;
-          return (
+        renderTrack={({ props, children }) => (
+          <div
+            {...props}
+            style={{
+              ...props.style,
+              height: "6px",
+              width: "100%",
+              background: getTrackBackground({
+                values: value,
+                colors: ["#4FA7B9", "#CFE8EC"],
+                min: MIN,
+                max: MAX,
+              }),
+              borderRadius: "3px",
+            }}
+          >
+            {children}
+          </div>
+        )}
+        renderThumb={({ props, index }) => (
+          <div
+            {...props}
+            style={{
+              ...props.style,
+              height: "24px",
+              width: "24px",
+              borderRadius: "50%",
+              backgroundColor: "#1996A3",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              boxShadow: "0px 2px 6px #AAA",
+              position: "relative",
+            }}
+          >
             <div
-              {...restProps}
-              key={key}
               style={{
-                ...restProps.style,
-                height: "6px",
-                width: "100%",
-                background: getTrackBackground({
-                  values: value,
-                  colors: ["#4FA7B9", "#CFE8EC"],
-                  min: MIN,
-                  max: MAX,
-                }),
-                borderRadius: "3px",
-              }}
-            >
-              {children}
-            </div>
-          );
-        }}
-        renderThumb={({ props, isDragged, index }) => {
-          const { key, ...restProps } = props as any;
-          return (
-            <div
-              {...restProps}
-              key={key}
-              style={{
-                ...restProps.style,
-                height: "24px",
-                width: "24px",
-                borderRadius: "12px",
+                position: "absolute",
+                top: "-28px",
+                fontSize: "12px",
                 backgroundColor: "#1996A3",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                boxShadow: "0px 2px 6px #AAA",
+                color: "#fff",
+                padding: "2px 6px",
+                borderRadius: "4px",
               }}
             >
-              <div style={{ position: "absolute", top: "-28px", color: "#fff" }}>
-                {value[index]}
-              </div>
+              {value[index]}
             </div>
-          );
-        }}
+          </div>
+        )}
       />
     </div>
   );
