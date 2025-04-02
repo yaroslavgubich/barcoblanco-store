@@ -1,4 +1,3 @@
-// components/ui/Navbar.tsx
 "use client";
 
 import Link from "next/link";
@@ -19,7 +18,7 @@ import {
   ListItemText,
   Divider,
   useMediaQuery,
-  Paper
+  Paper,
 } from "@mui/material";
 
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
@@ -29,14 +28,24 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useCart } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
 
-const SearchContainer = styled(Box)(() => ({
+const SearchContainer = styled(Box)(({ theme }) => ({
   position: "relative",
   borderRadius: "20px",
   backgroundColor: "transparent",
   border: "1px solid #008c99",
   display: "flex",
   alignItems: "center",
+  // default padding
   padding: "4px 8px",
+  // margin around the search container
+  margin: "0 30px",
+
+  // Narrower for small screens
+  [theme.breakpoints.down("sm")]: {
+    height: "35px",
+    margin: "0 10px",
+    padding: "0px 6px", // less padding on smaller screens
+  },
 }));
 
 const SearchIconWrapper = styled("div")({
@@ -47,7 +56,7 @@ const SearchIconWrapper = styled("div")({
   justifyContent: "center",
 });
 
-const StyledInputBase = styled(InputBase)({
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "#008c99",
   flexGrow: 1,
   border: "none",
@@ -57,8 +66,13 @@ const StyledInputBase = styled(InputBase)({
   "& .MuiInputBase-input": {
     padding: "8px",
     width: "100%",
+    // Make text smaller on very small screens if needed
+    [theme.breakpoints.down(468)]: {
+      padding: "4px", // even less vertical padding
+      fontSize: "14px",
+    },
   },
-});
+}));
 
 const SuggestionsContainer = styled(Paper)({
   position: "absolute",
@@ -102,16 +116,25 @@ const BurgerMenuContainer = styled(Box)({
 const Navbar: FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [suggestions, setSuggestions] = useState<{ name: string; slug: string }[]>([]);
+  const [suggestions, setSuggestions] = useState<
+    { name: string; slug: string }[]
+  >([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { getTotalItems } = useCart();
+
   const isMobile = useMediaQuery("(max-width: 600px)");
+  // A second check for 468px screens
+  const isVeryNarrow = useMediaQuery("(max-width: 468px)");
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setShowSuggestions(false);
       }
     };
@@ -123,7 +146,9 @@ const Navbar: FC = () => {
     const fetchSuggestions = async () => {
       if (!searchValue.trim()) return setSuggestions([]);
       try {
-        const res = await fetch(`/api/search?query=${encodeURIComponent(searchValue)}`);
+        const res = await fetch(
+          `/api/search?query=${encodeURIComponent(searchValue)}`
+        );
         if (res.ok) {
           const data = await res.json();
           setSuggestions(data);
@@ -153,37 +178,81 @@ const Navbar: FC = () => {
 
   return (
     <>
+      {/* Desktop Menu (hidden on mobile) */}
       {!isMobile && (
-        <Box sx={{ backgroundColor: "#008c99", display: "flex", justifyContent: "center", padding: "0.5rem 0" }}>
-          <Link href="/" passHref><HoverLink>Головна</HoverLink></Link>
-          <Link href="/products" passHref><HoverLink>Каталог</HoverLink></Link>
-          <Link href="/guarantee" passHref><HoverLink>Гарантія</HoverLink></Link>
-          <Link href="/delivery" passHref><HoverLink>Доставка та оплата</HoverLink></Link>
-          <Link href="/contacts" passHref><HoverLink>Контакти</HoverLink></Link>
+        <Box
+          sx={{
+            backgroundColor: "#008c99",
+            display: "flex",
+            justifyContent: "center",
+            padding: "0.5rem 0",
+          }}
+        >
+          <Link href="/" passHref>
+            <HoverLink>Головна</HoverLink>
+          </Link>
+          <Link href="/products" passHref>
+            <HoverLink>Каталог</HoverLink>
+          </Link>
+          <Link href="/guarantee" passHref>
+            <HoverLink>Гарантія</HoverLink>
+          </Link>
+          <Link href="/delivery" passHref>
+            <HoverLink>Доставка та оплата</HoverLink>
+          </Link>
+          <Link href="/contacts" passHref>
+            <HoverLink>Контакти</HoverLink>
+          </Link>
         </Box>
       )}
 
-      <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+      {/* Mobile Drawer */}
+      <Drawer
+        anchor="left"
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      >
         <BurgerMenuContainer>
           <Link href="/">
             <BurgerMenuHeader>
-              <Box component="img" src="/icons/logo.svg" alt="logo" sx={{ width: 150, height: 50 }} />
+              <Box
+                component="img"
+                src="/icons/logo.svg"
+                alt="logo"
+                sx={{ width: 150, height: 50 }}
+              />
             </BurgerMenuHeader>
           </Link>
           <Divider />
           <List>
             <ListItem disablePadding>
-              <ListItemButton component={Link} href="/products" onClick={() => setDrawerOpen(false)}>
-                <ListItemText primary="Каталог" primaryTypographyProps={{ fontWeight: "bold", fontSize: 20, color: "#008c99" }} />
+              <ListItemButton
+                component={Link}
+                href="/products"
+                onClick={() => setDrawerOpen(false)}
+              >
+                <ListItemText
+                  primary="Каталог"
+                  primaryTypographyProps={{
+                    fontWeight: "bold",
+                    fontSize: 20,
+                    color: "#008c99",
+                  }}
+                />
               </ListItemButton>
             </ListItem>
-            {[{ text: "Шафи", href: "/category/wardrobe" },
+            {[
+              { text: "Шафи", href: "/category/wardrobe" },
               { text: "Тумби", href: "/category/cabinet" },
               { text: "Дзеркала", href: "/category/mirrors" },
-              { text: "Водонепроникні", href: "/category/waterproof" }
+              { text: "Водонепроникні", href: "/category/waterproof" },
             ].map((item) => (
               <ListItem key={item.href} disablePadding>
-                <ListItemButton component={Link} href={item.href} onClick={() => setDrawerOpen(false)}>
+                <ListItemButton
+                  component={Link}
+                  href={item.href}
+                  onClick={() => setDrawerOpen(false)}
+                >
                   <ListItemText primary={item.text} />
                 </ListItemButton>
               </ListItem>
@@ -191,14 +260,19 @@ const Navbar: FC = () => {
           </List>
           <Divider />
           <List>
-            {[{ text: "Головна", href: "/" },
+            {[
+              { text: "Головна", href: "/" },
               { text: "Каталог", href: "/products" },
               { text: "Гарантія", href: "/guarantee" },
               { text: "Доставка та оплата", href: "/delivery" },
-              { text: "Контакти", href: "/contacts" }
+              { text: "Контакти", href: "/contacts" },
             ].map((item) => (
               <ListItem key={item.href} disablePadding>
-                <ListItemButton component={Link} href={item.href} onClick={() => setDrawerOpen(false)}>
+                <ListItemButton
+                  component={Link}
+                  href={item.href}
+                  onClick={() => setDrawerOpen(false)}
+                >
                   <ListItemText primary={item.text} />
                 </ListItemButton>
               </ListItem>
@@ -207,31 +281,106 @@ const Navbar: FC = () => {
           <Divider />
           <List>
             <ListItem disablePadding>
-              <ListItemButton component={Link} href="/basket" onClick={() => setDrawerOpen(false)}>
-                <ListItemText primary="Кошик" primaryTypographyProps={{ fontWeight: "bold", fontSize: 20, color: "#008c99" }} />
+              <ListItemButton
+                component={Link}
+                href="/basket"
+                onClick={() => setDrawerOpen(false)}
+              >
+                <ListItemText
+                  primary="Кошик"
+                  primaryTypographyProps={{
+                    fontWeight: "bold",
+                    fontSize: 20,
+                    color: "#008c99",
+                  }}
+                />
               </ListItemButton>
             </ListItem>
           </List>
         </BurgerMenuContainer>
       </Drawer>
 
-      <AppBar position="static" elevation={0} sx={{ backgroundColor: "transparent", mt: "10px" }}>
-        <Toolbar sx={{ maxWidth: "1400px", width: "100%", mx: "auto", display: "flex", justifyContent: "space-between", alignItems: "center", px: 2, gap: 2, flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <IconButton sx={{ color: "#008c99" }} onClick={() => setDrawerOpen(true)}>
-              <MenuOutlinedIcon fontSize="large" />
+      {/* Main Navbar */}
+      <AppBar
+        position="static"
+        elevation={0}
+        sx={{ backgroundColor: "transparent", mt: "10px" }}
+      >
+        <Toolbar
+          sx={{
+            marginTop: "-10px",
+            minHeight: 60,
+            maxWidth: "1400px",
+            width: "100%",
+            mx: "auto",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "nowrap",
+            gap: {
+              xs: 1,
+              sm: 2,
+              md: 4,
+            },
+            px: {
+              xs: 1,
+              sm: 2,
+            },
+          }}
+        >
+          {/* Left Section: Menu Icon + Logo */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: {
+                xs: 1,
+                sm: 2,
+              },
+            }}
+          >
+            <IconButton
+              sx={{ color: "#008c99" }}
+              onClick={() => setDrawerOpen(true)}
+            >
+              <MenuOutlinedIcon
+                sx={{
+                  fontSize: {
+                    xs: "1.8rem",
+                    sm: "2rem",
+                  },
+                }}
+              />
             </IconButton>
             <Link href="/">
-              <Box component="img" src="/icons/logo.svg" alt="Logo" sx={{ height: 40, cursor: "pointer" }} />
+              <Box
+                component="img"
+                src="/icons/logo.svg"
+                alt="Logo"
+                sx={{
+                  height: 40,
+                  cursor: "pointer",
+                }}
+              />
             </Link>
           </Box>
 
-          {/* Поиск всегда отображается */}
-          <Box ref={containerRef} sx={{ position: "relative", flex: 1, my: isMobile ? 1 : 0 }}>
+          {/* Search Bar */}
+          <Box ref={containerRef} sx={{ position: "relative", flex: 1 }}>
             <SearchContainer>
-              <SearchIconWrapper><SearchIcon /></SearchIconWrapper>
+              <SearchIconWrapper>
+                <SearchIcon
+                  sx={{
+                    fontSize: {
+                      xs: "1.3rem",
+                      sm: "1.rem",
+                    },
+                  }}
+                />
+              </SearchIconWrapper>
+
               <StyledInputBase
-                placeholder="Пошук"
+                placeholder={isVeryNarrow ? "" : "Пошук"}
                 value={searchValue}
                 onChange={(e) => {
                   setSearchValue(e.target.value);
@@ -244,7 +393,10 @@ const Navbar: FC = () => {
             {showSuggestions && suggestions.length > 0 && (
               <SuggestionsContainer>
                 {suggestions.map((item) => (
-                  <ListItemButton key={item.slug} onClick={() => handleSuggestionClick(item.slug)}>
+                  <ListItemButton
+                    key={item.slug}
+                    onClick={() => handleSuggestionClick(item.slug)}
+                  >
                     <ListItemText primary={item.name} />
                   </ListItemButton>
                 ))}
@@ -252,22 +404,53 @@ const Navbar: FC = () => {
             )}
           </Box>
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Typography sx={{ cursor: "pointer", color: "#008c99" }}>UA</Typography>
-            <Typography sx={{ color: "#008c99" }}>|</Typography>
-            <Typography sx={{ cursor: "pointer", color: "#ccc" }}>EN</Typography>
+          {/* Right Section: Shopping Cart */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: {
+                xs: 1,
+                sm: 2,
+              },
+            }}
+          >
             <Link href="/basket">
               <IconButton sx={{ color: "#008c99" }}>
                 <Badge
                   badgeContent={getTotalItems()}
                   sx={{
+                    mr: 2,
                     "& .MuiBadge-badge": {
                       backgroundColor: "#008c99",
-                      color: "#fff"
-                    }
+                      color: "#fff",
+                      fontSize: {
+                        xs: "0.8rem",
+                        sm: "0.9rem",
+                      },
+                      minWidth: {
+                        xs: 16,
+                        sm: 20,
+                      },
+                      height: {
+                        xs: 16,
+                        sm: 20,
+                      },
+                    },
                   }}
                 >
-                  <ShoppingCartIcon />
+                  <ShoppingCartIcon
+                    sx={{
+                      width: {
+                        xs: 24,
+                        sm: 28,
+                      },
+                      height: {
+                        xs: 24,
+                        sm: 28,
+                      },
+                    }}
+                  />
                 </Badge>
               </IconButton>
             </Link>
