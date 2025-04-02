@@ -181,10 +181,10 @@ export default function OrderForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-        <div className="grid gap-0 lg:grid-cols-2 py-12 text-lg max-w-7xl mx-auto mt-0 p-1">
+        <div className="grid gap-5 sm:grid-cols-1 md:grid-cols-2 py-12 text-lg max-w-7xl mx-auto mt-0 p-3">
           <Card className="border-none shadow-none outline-none ring-0 p-0 gap-0">
             <CardContent>
-              <Card className="shadow-md p-4 m-2">
+              <Card className="shadow-md p-4 m-2 w-full">
                 <CardHeader>
                   <CardTitle className="text-[#1996A3] text-[25px] font-semibold">
                     Контактні дані
@@ -252,29 +252,34 @@ export default function OrderForm() {
                 </CardContent>
               </Card>
 
-              <Card className="shadow-md p-4 m-2">
+              <Card className="shadow-md p-4 m-2 w-full max-w-full">
                 <CardHeader>
-                  <CardTitle className="text-[#1996A3] text-[25px] font-semibold">
+                  <CardTitle className="text-[#1996A3] text-[20px] md:text-[25px] font-semibold">
                     Доставка
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <Accordion type="single" collapsible>
-                    <AccordionItem value="nova-poshta" className="border-b-0 p-5 py-3 rounded-lg">
+                    <AccordionItem value="nova-poshta" className="border-b-0 p-3 py-3 rounded-lg w-full">
                       <AccordionTrigger>
-                        <div className="flex items-center gap-2">
-                          <Image src={logo} alt="Nova Poshta" className="w-5 h-9" />
+                        <div className="flex items-center gap-3 w-full">
+                          <Image src={logo} alt="Nova Poshta" className="w-6 h-auto" />
                           Нова Пошта
                         </div>
                       </AccordionTrigger>
-                      <AccordionContent>
-                        <div className="space-y-4 p-4 rounded-lg overflow-visible">
-                          <ToggleGroup type="single" value={selectedToggle} onValueChange={(value) => {
-                            setSelectedToggle(value);
-                            setSelectedCity("");
-                            form.setValue("city", ""); // Löscht den Wert im Formular
-                            form.setValue("warehouse", ""); // Löscht das Warehouse-Feld
-                          }}>
+                      <AccordionContent className="w-full max-w-full overflow-x-hidden">
+                        <div className="space-y-4 p-4 rounded-lg">
+                          <ToggleGroup
+                            type="single"
+                            value={selectedToggle}
+                            onValueChange={(value) => {
+                              setSelectedToggle(value);
+                              setSelectedCity("");
+                              form.setValue("city", "");
+                              form.setValue("warehouse", "");
+                            }}
+                            className="flex flex-wrap gap-2"
+                          >
                             <ToggleGroupItem value="Відділення">🏢 Відділення</ToggleGroupItem>
                             <ToggleGroupItem value="Поштомат">📦 Поштомат</ToggleGroupItem>
                             <ToggleGroupItem value="courier">🚚 Кур&apos;єром</ToggleGroupItem>
@@ -286,33 +291,15 @@ export default function OrderForm() {
                                 <CreatableSelect
                                   options={cities}
                                   value={selectedCity ? { value: selectedCity, label: selectedCity } : null}
-                                  styles={{
-                                    // Stile für das Dropdown-Menü
-                                    menu: (provided) => ({
-                                      ...provided,
-                                      zIndex: 9999, // Stelle sicher, dass das Menü über anderen Elementen liegt
-                                      position: 'absolute', // Stelle sicher, dass das Menü korrekt positioniert wird
-                                      top: '100%', // Positioniere das Menü direkt unter dem Input
-                                    }),
-                                    menuPortal: (base) => ({
-                                      ...base,
-                                      zIndex: 9999, // Damit das Dropdown-Menü über anderen Komponenten erscheint
-                                    }),
-                                  }}
+                                  styles={{ menu: (provided) => ({ ...provided, zIndex: 9999 }) }}
                                   menuPortalTarget={document.body}
                                   onChange={(city) => {
                                     if (city) {
                                       setSelectedCity(city.value);
-                                      form.setValue("city", city.value); // Fügt den Wert in das Formular ein!
+                                      form.setValue("city", city.value);
                                       fetchWarehouses(city.value);
                                     }
                                   }}
-                                  onCreateOption={(inputValue) => {
-                                    setSelectedCity(inputValue);
-                                    form.setValue("city", inputValue); // Jetzt wird der Wert übernommen
-                                    fetchWarehouses(inputValue);
-                                  }}
-                                  formatCreateLabel={(inputValue) => `Обрати "${inputValue}"`}
                                   placeholder="Оберіть місто"
                                   isClearable
                                 />
@@ -329,31 +316,13 @@ export default function OrderForm() {
                                     {...field}
                                     onChange={(selectedOption) => {
                                       field.onChange(selectedOption?.value);
-                                      if (selectedOption) {
-                                        form.setValue("warehouse", selectedOption.value);
-                                      } else {
-                                        form.setValue("warehouse", ""); // Löscht den Wert, wenn nichts ausgewählt
-                                      }
+                                      form.setValue("warehouse", selectedOption?.value || "");
                                     }}
-                                    value={warehouses.find(w => w.Description === field.value)
-                                      ? { value: field.value, label: field.value }
-                                      : null
-                                    }
-                                    options={warehouses
-                                      .filter(w => w.Description.includes(selectedToggle))
-                                      .map(w => ({ value: w.Description, label: w.Description }))
-                                    }
+                                    value={warehouses.find(w => w.Description === field.value) ? { value: field.value, label: field.value } : null}
+                                    options={warehouses.map(w => ({ value: w.Description, label: w.Description }))}
                                     placeholder={loadingWarehouses ? "Завантаження..." : "Оберіть відділення"}
                                     isDisabled={!selectedCity || loadingWarehouses || selectedToggle === "courier"}
-                                    noOptionsMessage={() => "Немає доступних відділень"}
-                                    styles={{
-                                      menu: (provided) => ({
-                                        ...provided,
-                                        zIndex: 9999,
-                                        position: "absolute",
-                                      }),
-                                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                                    }}
+                                    styles={{ menu: (provided) => ({ ...provided, zIndex: 9999 }) }}
                                     menuPortalTarget={document.body}
                                   />
                                 </FormControl>
@@ -361,7 +330,7 @@ export default function OrderForm() {
                               </FormItem>
                             )} />
                           )}
-                          {selectedToggle == "courier" && (
+                          {selectedToggle === "courier" && (
                             <FormField name="addressCourier" control={form.control} render={({ field }) => (
                               <FormItem>
                                 <FormLabel>Адреса доставки</FormLabel>
@@ -376,13 +345,12 @@ export default function OrderForm() {
                       </AccordionContent>
                     </AccordionItem>
                   </Accordion>
-
                 </CardContent>
               </Card>
 
-              <Card className="shadow-md p-4 m-2">
+              <Card className="shadow-md p-4 m-2 w-full">
                 <CardHeader>
-                  <CardTitle className="text-[#1996A3] text-[25px] font-semibold">
+                  <CardTitle className="text-[#1996A3] text-[25px] font-semibold w-full">
                     Оплата
                   </CardTitle>
                 </CardHeader>
@@ -395,7 +363,7 @@ export default function OrderForm() {
 
           <Card className="border-none shadow-none outline-none ring-0 p-0 gap-0">
             <CardContent className="space-y-5">
-              <Card className="shadow-md p-4 m-2">
+              <Card className="shadow-md p-4 m-2 w-full">
                 <CardHeader>
                   <CardTitle className="text-[#1996A3] text-[25px] font-semibold">
                     Підсумок замовлення
@@ -473,7 +441,7 @@ export default function OrderForm() {
                 <CardFooter>
                   <p className="text-xl font-semibold p-2">Всього: {totalPrice.toFixed(2)} грн.</p>
                 </CardFooter>
-                <Button type="submit" className="w-full bg-[#1996A3] hover:bg-[#167A8A] text-white text-lg font-semibold py-3" disabled={isSubmitting}>
+                <Button type="submit" className="w-full bg-[#1996A3] hover:bg-[#167A8A] sm:w-auto text-white text-lg font-semibold py-3" disabled={isSubmitting}>
                   {isSubmitting ? "Обробка..." : "Оформити замовлення"}
                 </Button>
               </Card>
