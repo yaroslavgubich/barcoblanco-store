@@ -45,8 +45,10 @@ function AboutSection() {
           <Image
             src="/images/about_section.jpeg"
             alt="Про нас"
-            width={800}
-            height={200}
+            width={0}
+            height={0}
+            sizes="100vw"
+            style={{ width: "100%", height: "auto" }}
             priority
           />
         </div>
