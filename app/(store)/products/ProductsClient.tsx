@@ -8,8 +8,8 @@ import Product from "../../../components/ui/Product";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { useScrollToTop } from "@/hook/useScrollToTop";
-import Image from 'next/image';
-// Тип товара
+import Image from "next/image";
+
 interface ProductType {
   _id: string;
   name: string;
@@ -25,7 +25,6 @@ interface ProductsClientProps {
   selectedCategory?: string;
 }
 
-// Фильтры ширины по категориям
 const categoryWidthFilters: { [key: string]: number[] } = {
   mirrors: [40, 50, 55, 60, 65, 70, 80, 90],
   wardrobe: [40, 45, 50, 55, 60, 65, 70, 75, 80, 90, 100],
@@ -33,7 +32,6 @@ const categoryWidthFilters: { [key: string]: number[] } = {
   waterproof: [30, 35, 40, 50, 60],
 };
 
-// Названия категорий для отображения
 const categoryLabels: Record<string, string> = {
   mirrors: "Дзеркала",
   wardrobe: "Шафи",
@@ -46,45 +44,29 @@ export default function ProductsClient({
   selectedCategory,
 }: ProductsClientProps) {
   useScrollToTop();
-  // Пагинация
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 15;
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
 
-  // Фильтр по ширине
   const [selectedWidths, setSelectedWidths] = useState<number[]>([]);
-
-  // Мобильное отображение фильтра (по ширине)
   const [showMobileFilter, setShowMobileFilter] = useState(false);
-
-
-
-
-  // Сообщение об успехе
   const [successMessage, setSuccessMessage] = useState("");
-
-  // Контекст корзины
   const { addToCart } = useCart();
-
-  // Список всех категорий
   const allCategories = ["mirrors", "wardrobe", "cabinet", "waterproof"];
 
-  // Отфильтрованные по категории товары
   const categoryProducts = selectedCategory
     ? products.filter(
-      (p) => p.category?.toLowerCase() === selectedCategory.toLowerCase()
-    )
+        (p) => p.category?.toLowerCase() === selectedCategory.toLowerCase()
+      )
     : products;
 
-  // Доступные ширины в текущей категории
   const availableWidths = selectedCategory
     ? categoryWidthFilters[selectedCategory.toLowerCase()] || []
     : Array.from(new Set(Object.values(categoryWidthFilters).flat())).sort(
-      (a, b) => a - b
-    );
+        (a, b) => a - b
+      );
 
-  // При смене категории сбрасываем фильтр по ширине
   useEffect(() => {
     setSelectedWidths([]);
   }, [selectedCategory]);
@@ -95,7 +77,6 @@ export default function ProductsClient({
     );
   };
 
-  // Фильтрация товаров (по ширине)
   const filteredProducts = categoryProducts.filter((product) => {
     const matchWidth =
       selectedWidths.length > 0
@@ -104,13 +85,10 @@ export default function ProductsClient({
     return matchWidth;
   });
 
-  // Товары для текущей страницы
   const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
 
   const isActive = (category: string) =>
     selectedCategory?.toLowerCase() === category.toLowerCase();
-
-
 
   const handleAddToCart = (product: ProductType) => {
     const quantity = 1;
@@ -180,8 +158,9 @@ export default function ProductsClient({
             <div className="absolute top-full mt-1 w-full bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 z-10">
               <Link
                 href="/products"
-                className={`block px-4 py-2 text-sm text-gray-700 hover:bg-[#1996A3] hover:text-white transition ${!selectedCategory ? "bg-[#1996A3] text-white" : ""
-                  }`}
+                className={`block px-4 py-2 text-sm text-gray-700 hover:bg-[#1996A3] hover:text-white transition ${
+                  !selectedCategory ? "bg-[#1996A3] text-white" : ""
+                }`}
               >
                 Усі товари
               </Link>
@@ -189,8 +168,9 @@ export default function ProductsClient({
                 <Link
                   key={category}
                   href={`/category/${category}`}
-                  className={`block px-4 py-2 text-sm text-gray-700 hover:bg-[#1996A3] hover:text-white transition ${isActive(category) ? "bg-[#1996A3] text-white" : ""
-                    }`}
+                  className={`block px-4 py-2 text-sm text-gray-700 hover:bg-[#1996A3] hover:text-white transition ${
+                    isActive(category) ? "bg-[#1996A3] text-white" : ""
+                  }`}
                 >
                   {categoryLabels[category] || category}
                 </Link>
@@ -200,44 +180,16 @@ export default function ProductsClient({
         </div>
       </div>
 
-      {/* Категории для десктопа */}
-      <div className="hidden md:flex flex-wrap gap-2 mb-6 mt-6 justify-center">
-        <Link href="/products">
-          <button
-            className={`px-4 py-1.5 rounded-full text-sm font-medium transition border border-[#1996A3] ${!selectedCategory
-                ? "bg-[#1996A3] text-white"
-                : "bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white"
-              }`}
-          >
-            Усі товари
-          </button>
-        </Link>
-        {allCategories.map((category) => (
-          <Link key={category} href={`/category/${category}`}>
-            <button
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition border border-[#1996A3] ${isActive(category)
-                  ? "bg-[#1996A3] text-white"
-                  : "bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white"
-                }`}
-            >
-              {categoryLabels[category] || category}
-            </button>
-          </Link>
-        ))}
-      </div>
-
       {/* Мобильный фильтр (выезжающая панель) */}
       {showMobileFilter && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
           <div className="w-[90%] max-w-xs bg-white h-full p-5 shadow-lg flex flex-col">
-            {/* Шапка модалки */}
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-medium text-[#1996A3]">Фільтри</h2>
               <button onClick={() => setShowMobileFilter(false)} className="text-2xl">
                 &times;
               </button>
             </div>
-            {/* Фильтр по ширине (мобильный) */}
             {availableWidths.length > 0 && (
               <>
                 <h3 className="font-medium mb-2">Ширина</h3>
@@ -259,14 +211,9 @@ export default function ProductsClient({
                 </div>
               </>
             )}
-
-            {/* Убрали фильтр по цене */}
-
-            {/* Кнопка сброса */}
             <button onClick={handleClearFilters} className="text-sm text-[#1996A3] underline">
               Очистити
             </button>
-            {/* Кнопка закрытия модалки */}
             <button
               onClick={() => setShowMobileFilter(false)}
               className="mt-auto w-full bg-[#1996A3] text-white py-2 rounded mt-6 transition hover:opacity-90"
@@ -277,18 +224,88 @@ export default function ProductsClient({
         </div>
       )}
 
+      {/* Категории для десктопа */}
+      <div className="hidden md:flex flex-wrap gap-2 mb-6 mt-6 justify-center">
+        <Link href="/products">
+          <button
+            className={`px-4 py-1.5 rounded-full text-sm font-medium transition border border-[#1996A3] ${
+              !selectedCategory
+                ? "bg-[#1996A3] text-white"
+                : "bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white"
+            }`}
+          >
+            Усі товари
+          </button>
+        </Link>
+        {allCategories.map((category) => (
+          <Link key={category} href={`/category/${category}`}>
+            <button
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition border border-[#1996A3] ${
+                isActive(category)
+                  ? "bg-[#1996A3] text-white"
+                  : "bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white"
+              }`}
+            >
+              {categoryLabels[category] || category}
+            </button>
+          </Link>
+        ))}
+      </div>
+
       {/* Основная часть */}
       <div className="w-full bg-gray-50 py-4 px-2">
         <div className="max-w-[1400px] mx-auto px-4">
-          <div className="flex bg-gray flex-col md:flex-row gap-4">
-            {/* Левая колонка (десктоп) */}
+          {/* Если категория waterproof, выводим описание на всю ширину с центрированием текста */}
+          {selectedCategory === "waterproof" && (
+            <div className="w-full mb-6">
+              <div className=" border-[#1996A3] rounded-xl p-6 shadow-md text-sm sm:text-base leading-relaxed text-center">
+                <div className="flex flex-col gap-4">
+                  <h2 className="text-2xl font-bold text-[#1996A3]">
+                    💧 Тумби Water від Barco Blanco
+                  </h2>
+                  <p>
+                    Ця тумба зроблена{" "}
+                    <span className="font-semibold text-[#1996A3]">водостійкою</span>!
+                    Корпус і фасади виготовлені зі спеціального МДФ, поверхня
+                    ламінована водонепроникним матеріалом, а крайка приклеєна
+                    поліуретановим клеєм, який не боїться води.
+                  </p>
+                  <p>
+                    Завіси з{" "}
+                    <span className="font-medium text-[#1996A3]">
+                      нержавіючої сталі з дотягом
+                    </span>{" "}
+                    забезпечують плавне закриття. Ніжки —{" "}
+                    <span className="font-medium text-[#1996A3]">алюмінієві</span>, фурнітура
+                    кріпиться нержавіючими саморізами.
+                  </p>
+                  <p>
+                    Всі матеріали та метод складання роблять тумбу стійкою не лише до
+                    вологості, але й до{" "}
+                    <span className="font-semibold text-[#1996A3]">
+                      прямих потраплянь води
+                    </span>, наприклад, при аварії змішувача чи сифона — зовні та всередині!
+                  </p>
+                  <p className="mt-4 font-semibold italic text-[#1996A3]">
+                    Тумба Water — це справжня <span>яхта у вашій ванній кімнаті</span>!
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Блок с фильтрами и товарами */}
+          <div className="flex flex-col md:flex-row gap-4">
             <div className="hidden md:block w-fit bg-white border border-gray-200 rounded-lg p-4 h-min">
               {availableWidths.length > 0 && (
                 <div className="mb-6">
                   <h3 className="font-medium text-sm text-[#1996A3] mb-2">Ширина</h3>
                   <div className="flex flex-col space-y-2">
                     {availableWidths.map((width) => (
-                      <label key={width} className="flex items-center space-x-2 text-sm cursor-pointer">
+                      <label
+                        key={width}
+                        className="flex items-center space-x-2 text-sm cursor-pointer"
+                      >
                         <input
                           type="checkbox"
                           checked={selectedWidths.includes(width)}
@@ -304,75 +321,41 @@ export default function ProductsClient({
                   </div>
                 </div>
               )}
-
-              {/* Убрали фильтр по цене */}
               <button onClick={handleClearFilters} className="text-sm text-[#1996A3] underline">
                 Очистити
               </button>
             </div>
 
-            {/* Правая колонка: список товаров */}
+            {/* Список товаров */}
             <div className="flex-1">
-            {selectedCategory === "waterproof" && (
-  <div className="border-l-4 border-[#1996A3] rounded-xl p-6 mb-6 shadow-md text-sm sm:text-base leading-relaxed">
-    <div className="flex items-start gap-4">
-      <div>
-        <h2 className="text-2xl font-bold text-[#1996A3] mb-3">💧 Тумби Water від Barco Blanco</h2>
-        <p className="mb-2">
-          Ця тумба зроблена <span className="font-semibold text-[#1996A3]">водостійкою</span>!
-          Корпус і фасади виготовлені зі спеціального МДФ, поверхня ламінована
-          водонепроникним матеріалом, а крайка приклеєна поліуретановим клеєм,
-          який не боїться води.
-        </p>
-        <p className="mb-2">
-          Завіси з <span className="font-medium text-[#1996A3]">нержавіючої сталі з дотягом</span> забезпечують
-          плавне закриття. Ніжки — <span className="font-medium text-[#1996A3]">алюмінієві</span>, фурнітура
-          кріпиться нержавіючими саморізами.
-        </p>
-        <p className="mb-2">
-          Всі матеріали та метод складання роблять тумбу стійкою не лише до вологості,
-          але й до <span className="font-semibold text-[#1996A3]">прямих потраплянь води</span>, наприклад, при аварії змішувача чи сифона —
-          зовні та всередині!
-        </p>
-        <p className="mt-4 font-semibold italic text-[#1996A3] text-base">
-          Тумба Water — це справжня <span >яхта у вашій ванній кімнаті</span>!
-        </p>
-      </div>
-    </div>
-  </div>
-)}
-
-
-              <div className="grid grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))] gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))] gap-4">
                 <AnimatePresence>
                   {paginatedProducts.length > 0 ? (
-                    paginatedProducts.map((product) => {
-                      return (
-                        <motion.div
-                          key={product._id}
-                          className="w-full bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-200 hover:scale-[1.02] p-3 flex flex-col justify-between"
-                          initial={{ opacity: 0, scale: 0.95 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.95 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <div>
-                            <Product product={product} />
-                          </div>
-                          <div className="mt-2 flex items-center justify-between gap-2">
-                            <span className="whitespace-nowrap text-base sm:text-lg md:text-xl font-normal text-[#1996A3]">
-                              ₴{product.price}
-                            </span>
-                            <Button
-                              onClick={() => handleAddToCart(product)}
-                              className="bg-[#4FA7B9] hover:bg-[#1996A3] text-white px-3 py-2 rounded-md transition flex items-center justify-center"
-                            >
-                             <Image src="/icons/cart.png" alt="Cart" width={20} height={20} />
-                            </Button>
-                          </div>
-                        </motion.div>
-                      );
-                    })
+                    paginatedProducts.map((product) => (
+                      <motion.div
+                        key={product._id}
+                        className="w-full bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-200 hover:scale-[1.02] p-3 flex flex-col justify-between"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <div>
+                          <Product product={product} />
+                        </div>
+                        <div className="mt-2 flex items-center justify-between gap-2">
+                          <span className="whitespace-nowrap text-lg sm:text-xl md:text-2xl font-normal text-[#1996A3]">
+                            ₴{product.price}
+                          </span>
+                          <Button
+                            onClick={() => handleAddToCart(product)}
+                            className="bg-[#4FA7B9] hover:bg-[#1996A3] text-white px-3 py-2 rounded-md transition flex items-center justify-center"
+                          >
+                            <Image src="/icons/cart.png" alt="Cart" width={20} height={20} />
+                          </Button>
+                        </div>
+                      </motion.div>
+                    ))
                   ) : (
                     <div className="col-span-full flex justify-center items-center">
                       <p className="text-center text-gray-500">
@@ -389,7 +372,7 @@ export default function ProductsClient({
                   onPageChange={(page) => {
                     setCurrentPage(page);
                     window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}                  
+                  }}
                 />
               </div>
             </div>
