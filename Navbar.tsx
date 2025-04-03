@@ -18,11 +18,10 @@ import {
   Divider,
   useMediaQuery,
   Paper,
-  SwipeableDrawer,
+  SwipeableDrawer, // <-- SwipeableDrawer instead of Drawer
 } from "@mui/material";
 
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
@@ -96,7 +95,6 @@ const HoverLink = styled(Typography)({
 
 const BurgerMenuHeader = styled("div")({
   display: "flex",
-  justifyContent: "space-between",
   alignItems: "center",
   padding: "16px",
   backgroundColor: "#f5f5f5",
@@ -114,9 +112,7 @@ const BurgerMenuContainer = styled(Box)({
 const Navbar: FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [suggestions, setSuggestions] = useState<
-    { name: string; slug: string }[]
-  >([]);
+  const [suggestions, setSuggestions] = useState<{ name: string; slug: string }[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -207,28 +203,20 @@ const Navbar: FC = () => {
       <SwipeableDrawer
         anchor="left"
         open={drawerOpen}
-        disableSwipeToOpen
-        onOpen={() => {}}
+        onOpen={() => setDrawerOpen(true)}
         onClose={() => setDrawerOpen(false)}
       >
         <BurgerMenuContainer>
-          <BurgerMenuHeader>
-            <Link href="/">
+          <Link href="/">
+            <BurgerMenuHeader>
               <Box
                 component="img"
                 src="/icons/logo.svg"
                 alt="logo"
                 sx={{ width: 150, height: 50 }}
               />
-            </Link>
-            <IconButton
-              onClick={() => setDrawerOpen(false)}
-              sx={{ color: "#1996a3" }}
-            >
-              {" "}
-              <CloseIcon />
-            </IconButton>
-          </BurgerMenuHeader>
+            </BurgerMenuHeader>
+          </Link>
           <Divider />
           <List>
             <ListItem disablePadding>
