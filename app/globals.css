@@ -952,7 +952,7 @@ body {
 
 .banner-swiper,
 .banner-slide {
-  width: 95%;
+  width: 100%;
   max-width: 2100px; /* Prevents stretching on large desktops */
   height: 100%;
   position: relative;
@@ -965,15 +965,15 @@ body {
   height: auto;
 }
 
-.banner-button-wrapper {
+/* .banner-button-wrapper {
   position: absolute;
   left: 5%;
   bottom: 60px;
   z-index: 20;
-}
+} */
 
 /* Customized button style */
-.banner-button {
+/* .banner-button {
   font-family: sans-serif;
   background-color: var(--cta-color);
   color: white;
@@ -987,7 +987,7 @@ body {
 }
 
 /* Medium screens */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .banner-button {
     font-size: 1.5rem;
     padding: 0.75rem 1.5rem;
@@ -995,16 +995,16 @@ body {
 }
 
 /* Small screens */
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .banner-button {
     font-size: 1.2rem;
     padding: 0.5rem 1rem;
   }
-}
+} */
 
-.banner-button:hover {
+/* .banner-button:hover {
   box-shadow: 0 4px 16px rgba(1, 1, 1, 0.25);
-}
+} */
 
 .swiper-pagination-bullet-active {
   background-color: var(--cta-color) !important; /* Active dot color */

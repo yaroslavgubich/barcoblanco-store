@@ -8,7 +8,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 import Image from "next/image";
-import Link from "next/link";
+// import Link from "next/link";
 import { urlFor } from "../../sanity/lib/client";
 
 interface BannerImage {
@@ -50,11 +50,11 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ images }) => {
             />
           </SwiperSlide>
         ))}
-        <div className="banner-button-wrapper">
+        {/* <div className="banner-button-wrapper">
           <Link href="/products">
             <button className="banner-button">ДО КАТАЛОГУ</button>
           </Link>
-        </div>
+        </div> */}
       </Swiper>
     </div>
   );
