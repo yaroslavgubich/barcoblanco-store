@@ -416,7 +416,16 @@ const Navbar: FC = () => {
             }}
           >
             <Link href="/basket">
-              <IconButton sx={{ color: "#008c99" }}>
+              <IconButton
+                disableRipple
+                sx={{
+                  color: "#008c99",
+                  "&:hover": {
+                    boxShadow: "none",
+                    backgroundColor: "transparent",
+                  },
+                }}
+              >
                 <Badge
                   badgeContent={getTotalItems()}
                   sx={{
