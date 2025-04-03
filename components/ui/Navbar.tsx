@@ -1,3 +1,4 @@
+//components/ui/Navbar.tsx
 "use client";
 
 import Link from "next/link";
@@ -118,6 +119,7 @@ const Navbar: FC = () => {
     { name: string; slug: string }[]
   >([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [hideLogo, setHideLogo] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -225,7 +227,6 @@ const Navbar: FC = () => {
               onClick={() => setDrawerOpen(false)}
               sx={{ color: "#1996a3" }}
             >
-              {" "}
               <CloseIcon />
             </IconButton>
           </BurgerMenuHeader>
@@ -323,15 +324,8 @@ const Navbar: FC = () => {
             justifyContent: "space-between",
             alignItems: "center",
             flexWrap: "nowrap",
-            gap: {
-              xs: 1,
-              sm: 2,
-              md: 4,
-            },
-            px: {
-              xs: 1,
-              sm: 2,
-            },
+            gap: { xs: 1, sm: 2, md: 4 },
+            px: { xs: 1, sm: 2 },
           }}
         >
           {/* Left Section: Menu Icon + Logo */}
@@ -339,10 +333,7 @@ const Navbar: FC = () => {
             sx={{
               display: "flex",
               alignItems: "center",
-              gap: {
-                xs: 1,
-                sm: 2,
-              },
+              gap: { xs: 1, sm: 2 },
             }}
           >
             <IconButton
@@ -351,24 +342,21 @@ const Navbar: FC = () => {
             >
               <MenuOutlinedIcon
                 sx={{
-                  fontSize: {
-                    xs: "1.8rem",
-                    sm: "2rem",
-                  },
+                  fontSize: { xs: "1.8rem", sm: "2rem" },
                 }}
               />
             </IconButton>
-            <Link href="/">
-              <Box
-                component="img"
-                src="/icons/logo.svg"
-                alt="Logo"
-                sx={{
-                  height: 40,
-                  cursor: "pointer",
-                }}
-              />
-            </Link>
+            {/* Conditionally render logo based on hideLogo state */}
+            {!hideLogo && (
+              <Link href="/">
+                <Box
+                  component="img"
+                  src="/icons/logo.svg"
+                  alt="Logo"
+                  sx={{ height: 40, cursor: "pointer" }}
+                />
+              </Link>
+            )}
           </Box>
 
           {/* Search Bar */}
@@ -377,10 +365,7 @@ const Navbar: FC = () => {
               <SearchIconWrapper>
                 <SearchIcon
                   sx={{
-                    fontSize: {
-                      xs: "1.3rem",
-                      sm: "1.rem",
-                    },
+                    fontSize: { xs: "1.3rem", sm: "1.rem" },
                   }}
                 />
               </SearchIconWrapper>
@@ -392,8 +377,10 @@ const Navbar: FC = () => {
                   setSearchValue(e.target.value);
                   setShowSuggestions(true);
                 }}
+                onClick={() => setHideLogo(true)}
+                onFocus={() => setHideLogo(true)}
+                onBlur={() => setHideLogo(false)}
                 onKeyDown={handleKeyDown}
-                onFocus={() => setShowSuggestions(true)}
               />
             </SearchContainer>
             {showSuggestions && suggestions.length > 0 && (
@@ -415,10 +402,7 @@ const Navbar: FC = () => {
             sx={{
               display: "flex",
               alignItems: "center",
-              gap: {
-                xs: 1,
-                sm: 2,
-              },
+              gap: { xs: 1, sm: 2 },
             }}
           >
             <Link href="/basket">
@@ -439,31 +423,17 @@ const Navbar: FC = () => {
                     "& .MuiBadge-badge": {
                       backgroundColor: "#008c99",
                       color: "#fff",
-                      fontSize: {
-                        xs: "0.8rem",
-                        sm: "0.9rem",
-                      },
-                      minWidth: {
-                        xs: 16,
-                        sm: 20,
-                      },
-                      height: {
-                        xs: 16,
-                        sm: 20,
-                      },
+                      
+                      fontSize: { xs: "0.8rem", sm: "0.9rem" },
+                      minWidth: { xs: 16, sm: 20 },
+                      height: { xs: 16, sm: 20 },
                     },
                   }}
                 >
                   <ShoppingCartIcon
                     sx={{
-                      width: {
-                        xs: 24,
-                        sm: 28,
-                      },
-                      height: {
-                        xs: 24,
-                        sm: 28,
-                      },
+                      width: { xs: 24, sm: 28 },
+                      height: { xs: 24, sm: 28 },
                     }}
                   />
                 </Badge>
