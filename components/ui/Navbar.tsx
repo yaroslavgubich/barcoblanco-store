@@ -127,6 +127,7 @@ const Navbar: FC = () => {
 
   const isMobile = useMediaQuery("(max-width: 600px)");
   const isVeryNarrow = useMediaQuery("(max-width: 468px)");
+const isNarrowScreen = useMediaQuery("(max-width:475px)");
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -377,9 +378,9 @@ const Navbar: FC = () => {
                   setSearchValue(e.target.value);
                   setShowSuggestions(true);
                 }}
-                onClick={() => setHideLogo(true)}
-                onFocus={() => setHideLogo(true)}
-                onBlur={() => setHideLogo(false)}
+                onClick={() => { if (isNarrowScreen) setHideLogo(true); }}
+                onFocus={() => { if (isNarrowScreen) setHideLogo(true); }}
+                onBlur={() => { if (isNarrowScreen) setHideLogo(false); }}
                 onKeyDown={handleKeyDown}
               />
             </SearchContainer>
