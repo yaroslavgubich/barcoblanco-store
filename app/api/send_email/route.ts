@@ -4,7 +4,7 @@ import nodemailer from "nodemailer";
 const SMTP_SERVER = "smtp.gmail.com";
 const SMTP_PORT = 587;
 const SMTP_USERNAME = "barcoblancotest@gmail.com";
-const SMTP_PASSWORD = "lkym qujz nwck ploq";
+const SMTP_PASSWORD = "oimq jjxg atqb etmk";
 const MANAGER_EMAIL = "barcoblancotest@gmail.com";
 
 interface OrderItem {
