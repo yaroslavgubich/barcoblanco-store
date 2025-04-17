@@ -14,8 +14,8 @@ const Footer = () => {
             <a href="tel:+380666924322" className="hover:underline">
               +38 (066) 69-24-322
             </a>
-            <a href="mailto:avsdom@ukr.net" className="hover:underline">
-              avsdom@ukr.net
+            <a href="mailto:barcoblanco@ukr.net" className="hover:underline">
+            barcoblanco@ukr.net
             </a>
           </div>
 

@@ -36,7 +36,7 @@ const categoryLabels: Record<string, string> = {
   mirrors: "Дзеркала",
   wardrobe: "Шафи",
   cabinet: "Комоди",
-  waterproof: "WATER",
+  waterproof: "Тумби Water",
 };
 
 export default function ProductsClient({

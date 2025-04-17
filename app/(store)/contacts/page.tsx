@@ -10,7 +10,9 @@ const Contacts = () => {
     <Box
       sx={{
         maxWidth: "1350px",
-        margin: { xs: "20px auto", md: "20px auto" },
+        mt: { xs: "30px", md: "30px" },       // отступ сверху
+        mb: { xs: "60px", md: "60px" },       // отступ снизу больше, чем сверху
+        mx: "auto",
         px: { xs: "20px", md: "40px" },
         display: "flex",
         gap: { xs: "2rem", md: "3rem" },
@@ -119,7 +121,7 @@ const Contacts = () => {
             <Typography
               variant="body1"
               component="a"
-              href="mailto:avsdom@ukr.net"
+              href="mailto:barcoblanco@ukr.net"
               sx={{
                 fontSize: { xs: "20px", md: "24px" },
                 color: "#1996A3",
@@ -127,7 +129,7 @@ const Contacts = () => {
                 "&:hover": { transform: "scale(1.1)" },
               }}
             >
-              avsdom@ukr.net
+              barcoblanco@ukr.net
             </Typography>
           </Box>
         </Box>
@@ -137,7 +139,8 @@ const Contacts = () => {
           sx={{
             height: "2px",
             bgcolor: "#008c99",
-            my: { xs: "20px", md: "50px" },
+            mt: 0,                               // убрали только сверху
+            mb: { xs: "20px", md: "50px" },
             width: "100%",
             maxWidth: { xs: "90%", md: "400px" },
             alignSelf: { xs: "center", md: "flex-start" },
