@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react"
+import { SetStateAction, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Select from "react-select";
@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea"
 import CreatableSelect from "react-select/creatable";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { RadioGroup } from '@headlessui/react';
 import {
   Form,
   FormControl,
@@ -52,6 +53,7 @@ type OrderFormData = {
   cart: CartItem[];
   warehouse: string;
   selectedToggle: string;
+  payment?: string;
 };
 
 type Warehouse = {
@@ -79,11 +81,16 @@ const formSchema = z
     warehouse: z.string().optional(),
     additionalInfo: z.string().optional(),
     selectedToggle: z.string().optional(),
+    paymentMethods: z.string().optional(),
   })
   .refine((data) => data.addressCourier || data.warehouse, {
     message: "Оберіть або введіть адресу доставки або відділення.",
     path: ["warehouse"], // Der Fehler erscheint bei diesem Feld
   });
+
+  const paymentMethods = [
+    { id: 'by_agreement', label: 'По домовленості' }
+  ];
 
 
 export default function OrderForm() {
@@ -94,6 +101,7 @@ export default function OrderForm() {
   const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
   const [loadingWarehouses, setLoadingWarehouses] = useState(false);
   const [open, setOpen] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState<string>("");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -108,6 +116,7 @@ export default function OrderForm() {
       warehouse: "",
       additionalInfo: "",
       selectedToggle: "",
+      paymentMethods: ""
     },
   })
 
@@ -150,7 +159,7 @@ export default function OrderForm() {
         price: item.price,
         quantity: item.quantity,
         image: item.image
-      })) || [],
+      })) || []
     };
 
     try {
@@ -177,6 +186,15 @@ export default function OrderForm() {
   }
 
   const totalPrice = getCartTotalPrice()
+
+  const handleSelectPayment = (value: string) => {
+    // Wenn das Feld schon ausgewählt ist → wieder abwählen
+    if (selectedPayment === value) {
+      setSelectedPayment("");
+    } else {
+      setSelectedPayment(value);
+    }
+  };
 
   return (
     <Form {...form}>
@@ -322,8 +340,35 @@ export default function OrderForm() {
                                     options={warehouses.map(w => ({ value: w.Description, label: w.Description }))}
                                     placeholder={loadingWarehouses ? "Завантаження..." : "Оберіть відділення"}
                                     isDisabled={!selectedCity || loadingWarehouses || selectedToggle === "courier"}
-                                    styles={{ menu: (provided) => ({ ...provided, zIndex: 9999 }) }}
                                     menuPortalTarget={document.body}
+                                    styles={{
+                                      container: (provided) => ({
+                                        ...provided,
+                                        width: '100%',
+                                      }),
+                                      control: (provided) => ({
+                                        ...provided,
+                                        maxWidth: '100%',
+                                        whiteSpace: 'normal',
+                                        wordBreak: 'break-word',
+                                      }),
+                                      menu: (provided) => ({
+                                        ...provided,
+                                        zIndex: 9999,
+                                        maxWidth: '100%',
+                                        wordWrap: 'break-word',
+                                      }),
+                                      singleValue: (provided) => ({
+                                        ...provided,
+                                        whiteSpace: 'normal',
+                                        wordBreak: 'break-word',
+                                      }),
+                                      option: (provided) => ({
+                                        ...provided,
+                                        whiteSpace: 'normal',
+                                        wordBreak: 'break-word',
+                                      }),
+                                    }}                                    
                                   />
                                 </FormControl>
                                 <FormMessage />
@@ -353,6 +398,46 @@ export default function OrderForm() {
                   <CardTitle className="text-[#1996A3] text-[25px] font-semibold w-full">
                     Оплата
                   </CardTitle>
+                  <CardContent>
+                  <RadioGroup
+                      value={selectedPayment}
+                      onChange={(value) => {
+                        handleSelectPayment(value);
+                        form.setValue("paymentMethods", value);
+                      }}
+                    >
+                    <div className="space-y-2 mt-8">
+                      {paymentMethods.map((method) => (
+                        <RadioGroup.Option
+                        key={method.id}
+                        value={method.label}
+                        className={({ checked }) =>
+                          `flex items-center justify-between gap-3 cursor-pointer rounded-lg px-4 py-2 border transition
+                           ${checked ? 'bg-blue-500 text-white border-blue-500' : 'bg-white border-gray-300'}`
+                        }
+                      >
+                        {({ checked }) => (
+                          <>
+                            <span className="text-sm">{method.label}</span>
+                            <div
+                              className={`h-4 w-4 rounded-full border-2 flex items-center justify-center
+                                ${checked ? 'border-white' : 'border-gray-300'}`}
+                            >
+                              {checked && <div className="h-2 w-2 rounded-full bg-white" />}
+                            </div>
+                          </>
+                        )}
+                      </RadioGroup.Option>                      
+                      ))}
+                    </div>
+                  </RadioGroup>
+                  {selectedPayment && (
+                    <div className="mt-4 text-[13px] text-gray-600">
+                      Вибрано: {paymentMethods.find(m => m.label === selectedPayment)?.label}
+                    </div>
+                  )}
+
+                  </CardContent>
                 </CardHeader>
                 <CardContent>
 
@@ -414,6 +499,12 @@ export default function OrderForm() {
                       <div className="flex justify-between border-b pb-2">
                         <span className="font-semibold text-gray-600">Додаткова інформація:</span>
                         <span>{form.watch("additionalInfo")}</span>
+                      </div>
+                    )}
+                    {form.watch("paymentMethods") && (
+                      <div className="flex justify-between border-b pb-2">
+                        <span className="font-semibold text-gray-600">Оплата:</span>
+                        <span>{form.watch("paymentMethods")}</span>
                       </div>
                     )}
                   </div>
