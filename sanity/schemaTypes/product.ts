@@ -57,9 +57,10 @@ const producjschema = {
       options: {
         list: [
           { title: "Mirrors", value: "mirrors" },
-          { title: "Wardrobe", value: "wardrobe" },
-          { title: "Cabinet", value: "cabinet" },
+          { title: "Wardrobes", value: "wardrobes" },
+          { title: "Cabinets", value: "cabinets" },
           { title: "Waterproof", value: "waterproof" },
+          { title: "dressers", value: "dressers" },
         ],
         layout: "dropdown",
       },

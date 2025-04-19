@@ -4,9 +4,10 @@ import Image from "next/image";
 function Categories() {
   const categories = [
     { title: "Дзеркала", href: "/category/mirrors", image: "/images/mirror.png" },
-    { title: "Шафи", href: "/category/wardrobe", image: "/images/wardrobe.png" },
-    { title: "Тумби", href: "/category/cabinet", image: "/images/cabinet.png" },
+    { title: "Шафи", href: "/category/wardrobes", image: "/images/wardrobe.png" },
+    { title: "Тумби", href: "/category/cabinets", image: "/images/cabinet.png" },
     { title: "Водонепроникні", href: "/category/waterproof", image: "/images/waterproof.jpg" },
+    { title: "dressers", href: "/category/dressers", image: "/images/" },
   ];
 
   return (
