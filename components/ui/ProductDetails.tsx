@@ -167,9 +167,7 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
             <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded-md">
               Артикул: {article}
             </span>
-            <div className="flex items-center gap-1">
-             
-            </div>
+            <div className="flex items-center gap-1"></div>
             {isAvailable ? (
               <span className="text-green-600 font-semibold">В наявності</span>
             ) : (
@@ -184,20 +182,22 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
           </div>
 
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
-            <Button
-              onClick={handleAddToCart}
-              className="bg-[#1996a3] hover:bg-[#147a86] text-white py-4 px-8 text-lg font-bold rounded-lg shadow-lg transition transform hover:scale-105"
-            >
-              <div className="flex items-center gap-3">
-                <Image
-                  src="/icons/cart.png"
-                  alt="Cart"
-                  width={24}
-                  height={24}
-                />
-                <span>В кошик</span>
-              </div>
-            </Button>
+            {isAvailable && (
+              <Button
+                onClick={handleAddToCart}
+                className="bg-[#1996a3] hover:bg-[#147a86] text-white py-4 px-8 text-lg font-bold rounded-lg shadow-lg transition transform hover:scale-105"
+              >
+                <div className="flex items-center gap-3">
+                  <Image
+                    src="/icons/cart.png"
+                    alt="Cart"
+                    width={24}
+                    height={24}
+                  />
+                  <span>В кошик</span>
+                </div>
+              </Button>
+            )}
           </div>
 
           <div className="border-t border-gray-200 pt-4 space-y-3 text-gray-700 text-sm">
