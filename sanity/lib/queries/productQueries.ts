@@ -15,6 +15,9 @@ export const productQuery = `
     },
     category,
     width,
-    isPopular
+    isPopular,
+    height,
+    depth,
+    isAvailable,
   }
 `;
