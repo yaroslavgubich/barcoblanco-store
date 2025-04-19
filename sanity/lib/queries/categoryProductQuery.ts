@@ -12,6 +12,7 @@ export const categoryProductQuery = (category: string) => `
       }
     },
     category,
-    width
+    width, depth, height,
+    isPopular,
   }
 `;

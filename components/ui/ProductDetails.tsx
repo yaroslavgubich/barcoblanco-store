@@ -1,3 +1,5 @@
+//components/ui/ProductDetails.tsx
+
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
@@ -23,11 +25,13 @@ interface ProductDetailsProps {
     details: string;
     category: string;
     width?: number;
+    height?: number;
+    depth?: number;
     isPopular?: boolean;
     color?: string;
     article?: string;
     reviewsCount?: number;
-    availability?: boolean;
+    isAvailable?: boolean;
   };
 }
 
@@ -41,7 +45,10 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
     color,
     article = "HB0014",
     reviewsCount = 4,
-    availability = true,
+    height,
+    depth,
+    isPopular,
+    isAvailable,
   } = productData;
 
   const { addToCart } = useCart();
@@ -68,6 +75,8 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
   useEffect(() => {
     setSwiperReady(true);
   }, []);
+  console.log("Product dimensions:", { width, height, depth });
+  console.log("Full productData:", productData);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-10">
@@ -118,7 +127,12 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
           </button>
 
@@ -135,17 +149,26 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
             </svg>
           </button>
         </div>
 
         {/* Правая часть – информация о товаре */}
         <div className="w-full md:w-1/2 lg:w-7/12 flex flex-col md:ml-16 space-y-6 text-center md:text-left">
-          <h1 className="text-2xl md:text-3xl font-semibold text-gray-800">{name}</h1>
+          <h1 className="text-2xl md:text-3xl font-semibold text-gray-800">
+            {name}
+          </h1>
 
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 text-sm text-gray-600">
-            <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded-md">Артикул: {article}</span>
+            <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded-md">
+              Артикул: {article}
+            </span>
             <div className="flex items-center gap-1">
               {Array(5)
                 .fill(0)
@@ -160,10 +183,12 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
                   </svg>
                 ))}
             </div>
-            {availability ? (
+            {isAvailable ? (
               <span className="text-green-600 font-semibold">В наявності</span>
             ) : (
-              <span className="text-red-500 font-semibold">Немає в наявності</span>
+              <span className="text-red-500 font-semibold">
+                Немає в наявності
+              </span>
             )}
           </div>
 
@@ -177,7 +202,12 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
               className="bg-[#1996a3] hover:bg-[#147a86] text-white py-4 px-8 text-lg font-bold rounded-lg shadow-lg transition transform hover:scale-105"
             >
               <div className="flex items-center gap-3">
-                <Image src="/icons/cart.png" alt="Cart" width={24} height={24} />
+                <Image
+                  src="/icons/cart.png"
+                  alt="Cart"
+                  width={24}
+                  height={24}
+                />
                 <span>В кошик</span>
               </div>
             </Button>
@@ -190,6 +220,17 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
                 <span className="font-medium">Ширина:</span> {width} см
               </p>
             )}
+            {height && (
+              <p className="text-gray-600">
+                <span className="font-medium">Висота:</span> {height} см
+              </p>
+            )}
+            {depth && (
+              <p className="text-gray-600">
+                <span className="font-medium">Глибіна:</span> {depth} см
+              </p>
+            )}
+            {/* why do we need this? */}
             {color && (
               <div className="flex items-center justify-center md:justify-start gap-2">
                 <span className="font-medium text-gray-600">Колір:</span>

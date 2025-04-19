@@ -2,7 +2,7 @@
 
 import ProductDetails from "../../../../components/ui/ProductDetails";
 import { client } from "../../../../sanity/lib/client";
-
+import { productQuery } from "@/sanity/lib/queries";
 // Function to fetch product data from Sanity using the slug.
 async function getProduct(slug: string) {
   const query = `*[_type == "product" && slug.current == $slug][0]{
@@ -14,7 +14,10 @@ async function getProduct(slug: string) {
     details,
     category,
     width,
-    isPopular
+    depth,
+    height,
+    isPopular,
+    isAvailable
   }`;
   return await client.fetch(query, { slug });
 }

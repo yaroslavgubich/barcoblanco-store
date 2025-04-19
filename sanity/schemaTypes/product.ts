@@ -32,7 +32,7 @@ const producjschema = {
     {
       name: "article",
       title: "Article",
-      type: "number",
+      type: "string",
     },
     {
       name: "slug",

@@ -1,5 +1,5 @@
 // sanity/lib/queries/productQueries.ts
-// Option B: Resolving the URL from the asset
+
 export const productQuery = `
   *[_type == "product" && !(_id in path("drafts.**"))] {
     _id,
