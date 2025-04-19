@@ -43,11 +43,9 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
     details,
     width,
     color,
-    article = "HB0014",
-    reviewsCount = 4,
+    article,
     height,
     depth,
-    isPopular,
     isAvailable,
   } = productData;
 
@@ -170,18 +168,7 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
               Артикул: {article}
             </span>
             <div className="flex items-center gap-1">
-              {Array(5)
-                .fill(0)
-                .map((_, i) => (
-                  <svg
-                    key={i}
-                    className={`w-4 h-4 ${i < reviewsCount ? "text-yellow-400" : "text-gray-300"}`}
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.285 3.955a1 1 0 00.95.69h4.163c.969 0 1.371 1.24.588 1.81l-3.37 2.448a1 1 0 00-.363 1.118l1.285 3.955c.3.921-.755 1.688-1.54 1.118L10 14.347l-3.349 2.51c-.785.57-1.84-.197-1.54-1.118l1.285-3.955a1 1 0 00-.363-1.118L2.663 9.382c-.783-.57-.38-1.81.588-1.81h4.163a1 1 0 00.95-.69l1.285-3.955z" />
-                  </svg>
-                ))}
+             
             </div>
             {isAvailable ? (
               <span className="text-green-600 font-semibold">В наявності</span>
