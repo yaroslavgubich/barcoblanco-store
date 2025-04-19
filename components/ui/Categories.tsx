@@ -7,7 +7,7 @@ function Categories() {
     { title: "Шафи", href: "/category/wardrobes", image: "/images/wardrobe.png" },
     { title: "Тумби", href: "/category/cabinets", image: "/images/cabinet.png" },
     { title: "Водонепроникні", href: "/category/waterproof", image: "/images/waterproof.jpg" },
-    { title: "dressers", href: "/category/dressers", image: "/images/" },
+    { title: "Комоди", href: "/category/dressers", image: "/images/" },
   ];
 
   return (
