@@ -23,6 +23,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+
 import {
   Card,
   CardContent,
@@ -34,6 +35,7 @@ import { useCart } from "@/context/CartContext"
 import Image from "next/image"
 import { Warehouse } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { FormProvider } from "react-hook-form";
 
 
 type CartItem = {
@@ -44,7 +46,7 @@ type CartItem = {
   image: string;
 };
 
-type DeliveryMethod = "nova-poshta" | "ukrposhta" | "pickup" | "";
+type DeliveryMethod = "nova-poshta" | "ukrposhta" | "pickup" | string;
 
 type OrderFormData = {
   // Kundeninfos
@@ -65,7 +67,8 @@ type OrderFormData = {
   // Weitere Angaben
   additionalInfo?: string;
   paymentMethods: string;
-  pickup?: string;                       // Nur wenn pickup gewählt wird
+  pickup?: string;
+  pickupDeatails?: string;                       // Nur wenn pickup gewählt wird
 
   // Warenkorb
   cart: CartItem[];
@@ -92,18 +95,55 @@ const formSchema = z
     phone: z.string().min(10, { message: "Введіть правильний номер телефону." }),
     address: z.string().min(5, { message: "Введіть правильну адресу." }),
     addressCourier: z.string().optional(),
-    city: z.string().min(2, { message: "Виберіть або введіть місто." }).nullable(),
+    city: z.string().nullable().optional(),
     warehouse: z.string().optional(),
     additionalInfo: z.string().optional(),
     selectedToggle: z.string().optional(),
     paymentMethods: z.string().min(1, { message: "Оберіть метод оплати." }),
-    pickup: z.string().min(1, { message: "" }),
-    deliveryMethod: z.string()
+    pickup: z.string().optional(),
+    pickupDeatails: z.string().optional(),
+    deliveryMethod: z.enum(["nova-poshta", "ukr-poshta", "pickup"], {
+      required_error: "Оберіть спосіб доставки.",
+    }),
   })
-  .refine((data) => data.addressCourier || data.warehouse, {
-    message: "Оберіть або введіть адресу доставки або відділення.",
-    path: ["warehouse"], // Der Fehler erscheint bei diesem Feld
+  .superRefine((data, ctx) => {
+    if (data.deliveryMethod === "pickup") {
+      if (!data.pickup) {
+        ctx.addIssue({
+          path: ["pickup"],
+          message: "Оберіть пункт самовивозу.",
+          code: z.ZodIssueCode.custom,
+        });
+      }
+    } else {
+      if (!data.city || data.city.trim().length < 2) {
+        ctx.addIssue({
+          path: ["city"],
+          message: "Оберіть або введіть місто.",
+          code: z.ZodIssueCode.custom,
+        });
+      }
+
+      if (data.selectedToggle === "courier") {
+        if (!data.addressCourier || data.addressCourier.trim().length < 5) {
+          ctx.addIssue({
+            path: ["addressCourier"],
+            message: "Введіть правильну адресу для кур’єра.",
+            code: z.ZodIssueCode.custom,
+          });
+        }
+      } else {
+        if (!data.warehouse || data.warehouse.trim().length < 3) {
+          ctx.addIssue({
+            path: ["warehouse"],
+            message: "Оберіть відділення або поштомат.",
+            code: z.ZodIssueCode.custom,
+          });
+        }
+      }
+    }
   });
+
 
 const paymentMethods = [
   { id: 'by_agreement', label: 'По домовленості' }
@@ -112,7 +152,7 @@ const paymentMethods = [
 
 export default function OrderForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedToggle, setSelectedToggle] = useState("Відділення");
+  const [selectedToggle, setSelectedToggle] = useState("");
   const { cart, getCartTotalPrice } = useCart();
   const [selectedCity, setSelectedCity] = useState<string>();
   const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
@@ -137,9 +177,11 @@ export default function OrderForm() {
       selectedToggle: "",
       paymentMethods: "",
       pickup: "",
-      deliveryMethod: ""
+      deliveryMethod: undefined,
+      pickupDeatails: "",
     },
-  })
+  });
+  
 
   async function fetchWarehouses(city: string) {
     setLoadingWarehouses(true);
@@ -240,7 +282,7 @@ export default function OrderForm() {
   }, []);
 
   return (
-    <Form {...form}>
+    <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
         <div className="grid gap-5 sm:grid-cols-1 md:grid-cols-2 py-12 text-lg max-w-7xl mx-auto mt-0 p-3">
           <Card className="border-none shadow-none outline-none ring-0 p-0 gap-0">
@@ -321,7 +363,8 @@ export default function OrderForm() {
                 <CardContent>
                   <Tabs value={activeTab} onValueChange={(value) => {
                     setActiveTab(value);
-                    form.setValue("deliveryMethod", value); // <-- dein Zod/React Hook Form Feld
+                    form.setValue("deliveryMethod", value as "nova-poshta" | "pickup" | "ukr-poshta"
+                    );
                   }} className="w-full">
                     <TabsList className="flex w-full justify-start mb-1">
                       <TabsTrigger value="nova-poshta"><Image src={logo} alt="Nova Poshta" className="w-3 h-auto mr-2" />Нова Пошта</TabsTrigger>
@@ -700,7 +743,7 @@ export default function OrderForm() {
           </div>
         </div>
       )}
-    </Form>
+    </FormProvider>
 
 
   );
