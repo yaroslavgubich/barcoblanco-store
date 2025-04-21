@@ -44,20 +44,31 @@ type CartItem = {
   image: string;
 };
 
+type DeliveryMethod = "nova-poshta" | "ukrposhta" | "pickup" | "";
+
 type OrderFormData = {
+  // Kundeninfos
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
-  address: string;
-  city: string;
+
+  // Lieferinfos
+  deliveryMethod: DeliveryMethod;        // Neue Methode zur Auswahl (z. B. Tabs, Accordion etc.)
+  selectedToggle?: string;               // Відділення / Поштомат / Кур’єр
+
+  city?: string;                         // Stadt (für NP/UP)
+  warehouse?: string;                    // Відділення oder поштомат
+  addressCourier?: string;              // Wenn Lieferung per Kurier
+  address?: string;                      // Optional: feste Adresse z. B. bei Abholung
+
+  // Weitere Angaben
   additionalInfo?: string;
-  addressCourier?: string;
-  cart: CartItem[];
-  warehouse: string;
-  selectedToggle: string;
   paymentMethods: string;
-  pickup: string;
+  pickup?: string;                       // Nur wenn pickup gewählt wird
+
+  // Warenkorb
+  cart: CartItem[];
 };
 
 type Warehouse = {
@@ -86,7 +97,8 @@ const formSchema = z
     additionalInfo: z.string().optional(),
     selectedToggle: z.string().optional(),
     paymentMethods: z.string().min(1, { message: "Оберіть метод оплати." }),
-    pickup: z.string().min(1, { message: "" })
+    pickup: z.string().min(1, { message: "" }),
+    deliveryMethod: z.string()
   })
   .refine((data) => data.addressCourier || data.warehouse, {
     message: "Оберіть або введіть адресу доставки або відділення.",
@@ -108,6 +120,7 @@ export default function OrderForm() {
   const [open, setOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<string>("");
   const [isClient, setIsClient] = useState(false);
+  const [activeTab, setActiveTab] = useState<string | undefined>(undefined);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -123,7 +136,8 @@ export default function OrderForm() {
       additionalInfo: "",
       selectedToggle: "",
       paymentMethods: "",
-      pickup: ""
+      pickup: "",
+      deliveryMethod: ""
     },
   })
 
@@ -155,10 +169,15 @@ export default function OrderForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
 
-    const orderData: OrderFormData = {
+    const deliveryMethod = values.deliveryMethod as DeliveryMethod;
+
+    const cleanedOrder: OrderFormData = {
       ...values,
-      city: selectedCity ?? "",
-      warehouse: values.warehouse ?? "",
+      deliveryMethod,
+      city: undefined,
+      warehouse: undefined,
+      addressCourier: undefined,
+      pickup: undefined,
       selectedToggle: selectedToggle,
       cart: cart?.map((item) => ({
         id: item.id,
@@ -169,13 +188,26 @@ export default function OrderForm() {
       })) || []
     };
 
+    // Setze je nach deliveryMethod passende Werte
+    if (deliveryMethod === "pickup") {
+      cleanedOrder.pickup = values.pickup;
+    } else if (deliveryMethod === "nova-poshta" || deliveryMethod === "ukrposhta") {
+      cleanedOrder.city = selectedCity ?? "";
+      if (selectedToggle === "courier") {
+        cleanedOrder.addressCourier = values.addressCourier;
+      } else {
+        cleanedOrder.warehouse = values.warehouse;
+      }
+    }
+
+
     try {
       const response = await fetch("/api/send_email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(orderData),
+        body: JSON.stringify(cleanedOrder),
       });
 
       if (!response.ok) {
@@ -287,18 +319,25 @@ export default function OrderForm() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Tabs defaultValue="nova-poshta" className="w-full">
+                  <Tabs value={activeTab} onValueChange={(value) => {
+                    setActiveTab(value);
+                    form.setValue("deliveryMethod", value); // <-- dein Zod/React Hook Form Feld
+                  }} className="w-full">
                     <TabsList className="flex w-full justify-start mb-1">
                       <TabsTrigger value="nova-poshta"><Image src={logo} alt="Nova Poshta" className="w-3 h-auto mr-2" />Нова Пошта</TabsTrigger>
                       <TabsTrigger value="ukr-poshta"><Image src={ukrLogo} alt="Ukr Poshta" className="w-2 h-auto mr-2" />Укр Пошта</TabsTrigger>
                       <TabsTrigger value="pickup"><Image src={pickupLogo} alt="Pickup" className="w-5 h-auto mr-2" />Самовивіз</TabsTrigger>
                     </TabsList>
+                    {!activeTab && (
+                      <div className="text-gray-500 text-sm px-4 py-2">
+                        Будь ласка, оберіть спосіб доставки
+                      </div>
+                    )}
 
                     {/* Нова Пошта */}
                     <TabsContent value="nova-poshta">
                       <div>
                         <div className="border-b-0 p-3 py-1 rounded-lg w-full">
-                            
                           <div className="w-full max-w-full overflow-x-hidden">
                             <div className="space-y-4 p-5 rounded-lg text-sm">
                               {/* ToggleGroup (відділення / поштомат / кур’єр) */}
@@ -323,7 +362,7 @@ export default function OrderForm() {
                                 <FormItem>
                                   <FormLabel>Місто</FormLabel>
                                   <FormControl>
-                                  {isClient && (
+                                    {isClient && (
                                       <CreatableSelect
                                         options={cities}
                                         value={selectedCity ? { value: selectedCity, label: selectedCity } : null}
@@ -351,27 +390,120 @@ export default function OrderForm() {
                                   <FormItem>
                                     <FormLabel>Відділення</FormLabel>
                                     <FormControl>
-                                    {isClient && (
-                                      <Select
-                                        {...field}
-                                        onChange={(selectedOption) => {
-                                          field.onChange(selectedOption?.value);
-                                          form.setValue("warehouse", selectedOption?.value || "");
-                                        }}
-                                        value={warehouses.find(w => w.Description === field.value) ? { value: field.value, label: field.value } : null}
-                                        options={warehouses.map(w => ({ value: w.Description, label: w.Description }))}
-                                        placeholder={loadingWarehouses ? "Завантаження..." : "Оберіть відділення"}
-                                        isDisabled={!selectedCity || loadingWarehouses}
-                                        styles={{ menu: (provided) => ({ ...provided, zIndex: 9999 }) }}
-                                        menuPortalTarget={document.body}
-                                      />
+                                      {isClient && (
+                                        <Select
+                                          {...field}
+                                          onChange={(selectedOption) => {
+                                            field.onChange(selectedOption?.value);
+                                            form.setValue("warehouse", selectedOption?.value || "");
+                                          }}
+                                          value={warehouses.find(w => w.Description === field.value) ? { value: field.value, label: field.value } : null}
+                                          options={warehouses.map(w => ({ value: w.Description, label: w.Description }))}
+                                          placeholder={loadingWarehouses ? "Завантаження..." : "Оберіть відділення"}
+                                          isDisabled={!selectedCity || loadingWarehouses}
+                                          styles={{ menu: (provided) => ({ ...provided, zIndex: 9999 }) }}
+                                          menuPortalTarget={document.body}
+                                        />
                                       )}
                                     </FormControl>
                                     <FormMessage />
                                   </FormItem>
                                 )}
                                 />
-                                ) : (
+                              ) : (
+                                <FormField name="addressCourier" control={form.control} render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Адреса доставки</FormLabel>
+                                    <FormControl>
+                                      <Input placeholder="вул. Шевченка, 10" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )} />
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </TabsContent>
+
+                    {/* Укр Пошта */}
+                    <TabsContent value="ukr-poshta">
+                      <div>
+                        <div className="border-b-0 p-3 py-1 rounded-lg w-full">
+                          <div className="w-full max-w-full overflow-x-hidden">
+                            <div className="space-y-4 p-5 rounded-lg text-sm">
+                              {/* ToggleGroup (відділення / поштомат / кур’єр) */}
+                              <ToggleGroup
+                                type="single"
+                                value={selectedToggle}
+                                onValueChange={(value) => {
+                                  setSelectedToggle(value);
+                                  setSelectedCity("");
+                                  form.setValue("city", "");
+                                  form.setValue("warehouse", "");
+                                }}
+                                className="flex flex-wrap gap-2"
+                              >
+                                <ToggleGroupItem value="Відділення">🏢 Відділення</ToggleGroupItem>
+                                <ToggleGroupItem value="Поштомат">📦 Поштомат</ToggleGroupItem>
+                                <ToggleGroupItem value="courier">🚚 Кур'єром</ToggleGroupItem>
+                              </ToggleGroup>
+
+                              {/* Місто */}
+                              <FormField name="city" render={() => (
+                                <FormItem>
+                                  <FormLabel>Місто</FormLabel>
+                                  <FormControl>
+                                    {isClient && (
+                                      <CreatableSelect
+                                        options={cities}
+                                        value={selectedCity ? { value: selectedCity, label: selectedCity } : null}
+                                        styles={{ menu: (provided) => ({ ...provided, zIndex: 9999 }) }}
+                                        menuPortalTarget={document.body}
+                                        onChange={(city) => {
+                                          if (city) {
+                                            setSelectedCity(city.value);
+                                            form.setValue("city", city.value);
+                                            fetchWarehouses(city.value);
+                                          }
+                                        }}
+                                        placeholder="Оберіть місто"
+                                        isClearable
+                                      />
+                                    )}
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )} />
+
+                              {/* Відділення або адреса */}
+                              {selectedToggle !== "courier" ? (
+                                <FormField name="warehouse" render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Відділення</FormLabel>
+                                    <FormControl>
+                                      {isClient && (
+                                        <Select
+                                          {...field}
+                                          onChange={(selectedOption) => {
+                                            field.onChange(selectedOption?.value);
+                                            form.setValue("warehouse", selectedOption?.value || "");
+                                          }}
+                                          value={warehouses.find(w => w.Description === field.value) ? { value: field.value, label: field.value } : null}
+                                          options={warehouses.map(w => ({ value: w.Description, label: w.Description }))}
+                                          placeholder={loadingWarehouses ? "Завантаження..." : "Оберіть відділення"}
+                                          isDisabled={!selectedCity || loadingWarehouses}
+                                          styles={{ menu: (provided) => ({ ...provided, zIndex: 9999 }) }}
+                                          menuPortalTarget={document.body}
+                                        />
+                                      )}
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                                />
+                              ) : (
                                 <FormField name="addressCourier" control={form.control} render={({ field }) => (
                                   <FormItem>
                                     <FormLabel>Адреса доставки</FormLabel>
