@@ -1,6 +1,7 @@
 "use client";
 
-import { SetStateAction, useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import {useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Select from "react-select";
@@ -12,11 +13,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import CreatableSelect from "react-select/creatable";
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { RadioGroup } from '@headlessui/react';
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
@@ -108,7 +107,7 @@ const formSchema = z
   })
   .superRefine((data, ctx) => {
     if (data.deliveryMethod === "pickup") {
-    } 
+    }
     else {
       if (!data.city || data.city.trim().length < 2) {
         ctx.addIssue({
@@ -176,6 +175,7 @@ export default function OrderForm() {
     },
   });
 
+  const router = useRouter();
 
   async function fetchWarehouses(city: string) {
     setLoadingWarehouses(true);
@@ -358,8 +358,14 @@ export default function OrderForm() {
                 <CardContent>
                   <Tabs value={activeTab} onValueChange={(value) => {
                     setActiveTab(value);
-                    form.setValue("deliveryMethod", value as "nova-poshta" | "pickup" | "ukr-poshta"
-                    );
+                    form.setValue("deliveryMethod", value as "nova-poshta" | "pickup" | "ukr-poshta");
+                    if (value === "pickup") {
+                      setSelectedToggle("");
+                      setSelectedCity("");
+                      form.setValue("selectedToggle", "");
+                      form.setValue("city", "");
+                      form.setValue("warehouse", "");
+                    }
                   }} className="w-full">
                     <TabsList className="flex w-full justify-start mb-1">
                       <TabsTrigger value="nova-poshta"><Image src={logo} alt="Nova Poshta" className="w-3 h-auto mr-2" />Нова Пошта</TabsTrigger>
@@ -392,7 +398,7 @@ export default function OrderForm() {
                               >
                                 <ToggleGroupItem value="Відділення">🏢 Відділення</ToggleGroupItem>
                                 <ToggleGroupItem value="Поштомат">📦 Поштомат</ToggleGroupItem>
-                                <ToggleGroupItem value="courier">🚚 Кур'єром</ToggleGroupItem>
+                                <ToggleGroupItem value="courier">🚚 Кур&apos;єром</ToggleGroupItem>
                               </ToggleGroup>
 
                               {/* Місто */}
@@ -485,7 +491,7 @@ export default function OrderForm() {
                               >
                                 <ToggleGroupItem value="Відділення">🏢 Відділення</ToggleGroupItem>
                                 <ToggleGroupItem value="Поштомат">📦 Поштомат</ToggleGroupItem>
-                                <ToggleGroupItem value="courier">🚚 Кур'єром</ToggleGroupItem>
+                                <ToggleGroupItem value="courier">🚚 Кур&apos;єром</ToggleGroupItem>
                               </ToggleGroup>
 
                               {/* Місто */}
@@ -562,7 +568,6 @@ export default function OrderForm() {
                     <TabsContent value="pickup">
                       <div className="space-y-4 p-4 rounded-lg bg-gray-50 text-sm">
                         <p>Ви можете забрати замовлення самостійно. <br></br>Деталі по телефону: +38 (066) 69-24-322</p>
-
                       </div>
                     </TabsContent>
                   </Tabs>
@@ -737,7 +742,10 @@ export default function OrderForm() {
           <div className="bg-white p-6 rounded-lg shadow-lg space-y-3 grid">
             <h1 className="text-lg font-semibold text-center">Замовлення успішно оформлене!</h1>
             <p className="text-gray-600 text-[14px] pb-3 text-center"> Вам надіслано підтвердження на пошту.</p>
-            <Button className="flex bg-[#1996A3] p-3" onClick={() => setOpen(false)}>Закрити</Button>
+            <Button className="flex bg-[#1996A3] p-3" onClick={() => {
+              setOpen(false);
+              router.push("/"); // ⬅️ redirect to homepage
+            }}>Закрити</Button>
           </div>
         </div>
       )}

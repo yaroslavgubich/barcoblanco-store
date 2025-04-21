@@ -101,7 +101,7 @@ export async function POST(request: Request) {
     </thead>
     <tbody>
       ${data.cart
-                .map((item, index) => `
+                .map((item) => `
           <tr style="background-color: #ffffff; box-shadow: 0 1px 4px rgba(0,0,0,0.06); border-radius: 8px;">
             <td style="padding: 12px; border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
               <img src="${item.image}" alt="${item.name}" width="70" style="border-radius: 6px;">
@@ -209,7 +209,7 @@ export async function POST(request: Request) {
     </thead>
     <tbody>
       ${data.cart
-        .map((item, index) => `
+        .map((item) => `
           <tr style="background-color: #ffffff; box-shadow: 0 1px 4px rgba(0,0,0,0.06); border-radius: 8px;">
             <td style="padding: 12px; border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
               <img src="${item.image}" alt="${item.name}" width="70" style="border-radius: 6px;">
