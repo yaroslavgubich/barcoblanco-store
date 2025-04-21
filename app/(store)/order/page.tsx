@@ -108,14 +108,8 @@ const formSchema = z
   })
   .superRefine((data, ctx) => {
     if (data.deliveryMethod === "pickup") {
-      if (!data.pickup) {
-        ctx.addIssue({
-          path: ["pickup"],
-          message: "Оберіть пункт самовивозу.",
-          code: z.ZodIssueCode.custom,
-        });
-      }
-    } else {
+    } 
+    else {
       if (!data.city || data.city.trim().length < 2) {
         ctx.addIssue({
           path: ["city"],
@@ -181,7 +175,7 @@ export default function OrderForm() {
       pickupDeatails: "",
     },
   });
-  
+
 
   async function fetchWarehouses(city: string) {
     setLoadingWarehouses(true);
@@ -259,6 +253,7 @@ export default function OrderForm() {
 
       setOpen(true);
       form.reset();
+      setSelectedPayment("");
     } catch {
       alert("Не вдалося оформити замовлення. Спробуйте ще раз.");
     } finally {
@@ -565,18 +560,9 @@ export default function OrderForm() {
 
                     {/* Самовивіз */}
                     <TabsContent value="pickup">
-                      <div className="space-y-4 p-4 rounded-lg bg-gray-50">
-                        <p>Ви можете забрати замовлення самостійно за адресою:</p>
-                        <p className="font-medium">м. Київ, вул. Хрещатик, 22</p>
-                        <FormField name="pickup" control={form.control} render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Коментар до замовлення</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Наприклад, коли вам зручно забрати..." {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )} />
+                      <div className="space-y-4 p-4 rounded-lg bg-gray-50 text-sm">
+                        <p>Ви можете забрати замовлення самостійно. <br></br>Деталі по телефону: +38 (066) 69-24-322</p>
+
                       </div>
                     </TabsContent>
                   </Tabs>
@@ -674,6 +660,18 @@ export default function OrderForm() {
                       <div className="flex justify-between border-b pb-2">
                         <span className="font-semibold text-gray-600">Місто:</span>
                         <span>{form.watch("city")}</span>
+                      </div>
+                    )}
+                    {form.watch("deliveryMethod") && (
+                      <div className="flex justify-between border-b pb-2">
+                        <span className="font-semibold text-gray-600">Доставка:</span>
+                        <span>{form.watch("deliveryMethod") === "pickup"
+                          ? "Самовивіз"
+                          : form.watch("deliveryMethod") === "ukr-poshta"
+                            ? "Укр Пошта"
+                            : form.watch("deliveryMethod") === "nova-poshta"
+                              ? "Нова Пошта"
+                              : "Не вказано"}</span>
                       </div>
                     )}
                     {form.watch("warehouse") && (
