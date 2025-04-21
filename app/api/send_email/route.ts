@@ -27,6 +27,7 @@ interface OrderData {
     selectedToggle: "",
     cart: OrderItem[];
     warehouse: string;
+    paymentMethods: string;
 }
 
 async function sendEmail(toEmail: string, subject: string, htmlBody: string): Promise<void> {
@@ -71,6 +72,7 @@ export async function POST(request: Request) {
             : "Не вказано"}  
         </li>
         <li><b>Відділення:</b> ${data.warehouse}</li>
+        <li><b>Оплата:</b> ${data.paymentMethods}</li>
         <li><b>Загальна сума:</b> ${totalAmount.toFixed(2)} грн.</li>
     </ul>
     <h3 style="color: #333;">Деталі замовлення:</h3>
@@ -116,6 +118,7 @@ export async function POST(request: Request) {
                 : "Не вказано"}  
             </li>
                 <li><b>Відділення:</b> ${data.warehouse}</li>
+                <li><b>Оплата:</b> ${data.paymentMethods}</li>
               <li><b>Загальна сума:</b> ${totalAmount.toFixed(2)} грн.</li>
           </ul>
           <h3 style="color: #333;">Деталі замовлення:</h3>
