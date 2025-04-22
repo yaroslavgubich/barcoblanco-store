@@ -50,7 +50,9 @@ const Guarantee = () => {
           sx={{
             fontWeight: "bold",
             fontFamily: "Roboto, sans-serif",
-            fontSize: "20px",
+            fontSize: "22px",   // чуть крупнее, если нужно
+            lineHeight: 2,    // ↑ «воздух» сверху и снизу (1.2–1.4 обычно достаточно)
+            py: "4px",          // по 4 px внутр. отступа сверху/снизу
             color: "#008c99",
             "&:hover": {
               color: "#005f69",
@@ -61,9 +63,11 @@ const Guarantee = () => {
             href="tel:+380666924322"
             style={{ textDecoration: "none", color: "inherit" }}
           >
-            +380-66-69-24-322
+            +380‑66‑69‑24‑322
           </a>
         </Typography>
+
+
         <Typography variant="body1" paragraph sx={{ fontSize: "18px" }}>
           або надішліть лист на електронну адресу:
         </Typography>
@@ -74,7 +78,7 @@ const Guarantee = () => {
             fontWeight: "bold",
             color: "#008c99",
             fontFamily: "Roboto, sans-serif",
-            fontSize: "20px",
+            fontSize: "22px",
             "&:hover": {
               color: "#005f69",
             },

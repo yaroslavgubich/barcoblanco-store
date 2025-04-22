@@ -55,7 +55,10 @@ const Delivery = () => {
             marginBottom: "2rem",
           }}
         >
-          LiqPay або по домовленості
+          <div>Sens Bank</div>
+          <div>Ощад Банк</div>
+          <div>Готівкою при отриманні</div>
+          <div>(Або інші варіанти по домовленості)</div>
         </Box>
         <Typography
           variant="body1"
@@ -69,8 +72,9 @@ const Delivery = () => {
           <strong>Доставка:</strong>
         </Typography>
         <Box sx={{ fontFamily: "Roboto, sans-serif", fontSize: "18px" }}>
-          <div>Доставка по місту</div>
+          <div>Самовивіз</div>
           <div>Нова Пошта</div>
+          <div>Укрпошта</div>
           <div>(Або інші варіанти по домовленості)</div>
         </Box>
         <Typography

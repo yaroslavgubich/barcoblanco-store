@@ -3,32 +3,44 @@ import Image from "next/image";
 
 function Categories() {
   const categories = [
-    { title: "Дзеркала", href: "/category/mirrors", image: "/images/mirror.png" },
-    { title: "Шафи", href: "/category/wardrobe", image: "/images/wardrobe.png" },
-    { title: "Тумби", href: "/category/cabinet", image: "/images/cabinet.png" },
-    { title: "Тумби Water", href: "/category/waterproof", image: "/images/waterproof.jpg" },
+    { title: "Дзеркала",      href: "/category/mirrors",    image: "/images/mirror.png"     },
+    { title: "Шафи",          href: "/category/wardrobe",   image: "/images/wardrobe.png"   },
+    { title: "Тумби",         href: "/category/cabinet",    image: "/images/cabinet.png"    },
+    { title: "Комоди",        href: "/category/dresser",    image: "/images/dresser.png"    }, // ← новая категория
+    { title: "Тумби Water",   href: "/category/waterproof", image: "/images/waterproof.jpg" },
   ];
 
   return (
     <section className="bg-white py-10 px-4">
       <div className="max-w-[1400px] mx-auto">
-        <div className="flex flex-wrap justify-center gap-x-4 gap-y-6">
+        {/* 2‑2‑3‑5 сетка */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
           {categories.map(({ title, href, image }) => (
             <Link
-              href={href}
               key={href}
-              className="w-full sm:w-[48%] lg:w-[23%]"
+              href={href}
+              className="group relative w-full aspect-square sm:aspect-auto h-auto
+                         sm:h-[220px] md:h-[260px] lg:h-[300px]
+                         rounded-2xl overflow-hidden shadow-md
+                         transition-transform hover:scale-[1.03] hover:shadow-lg
+                         bg-gray-100"
             >
-              <div className="relative aspect-square sm:aspect-auto h-auto sm:h-[220px] md:h-[260px] lg:h-[320px] rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-transform hover:scale-[1.03] bg-gray-100">
-                <Image
-                  src={image}
-                  alt={title}
-                  fill
-                  style={{ objectFit: "cover" }}
-                />
-                <div className="absolute bottom-0 left-0 right-0 bg-[#1996A3]/90 py-3 text-center z-10">
-                  <h4 className="text-white text-lg md:text-xl font-semibold m-0">{title}</h4>
-                </div>
+              <Image
+                src={image}
+                alt={title}
+                fill
+                sizes="(max-width:768px) 100vw,
+                       (max-width:1024px) 50vw,
+                       20vw"
+                className="object-cover"
+                priority
+              />
+
+              {/* подпись */}
+              <div className="absolute bottom-0 inset-x-0 bg-[#1996A3]/90 py-3 text-center">
+                <h4 className="text-white font-semibold text-base md:text-lg lg:text-xl m-0">
+                  {title}
+                </h4>
               </div>
             </Link>
           ))}
@@ -39,4 +51,5 @@ function Categories() {
 }
 
 export default Categories;
+
 

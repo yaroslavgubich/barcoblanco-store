@@ -161,7 +161,7 @@ const Contacts = () => {
             "& a:hover": { transform: "scale(1.1)" },
           }}
         >
-          <Link href="https://www.instagram.com" target="_blank">
+          <Link href="https://www.instagram.com/barco_blanco__/" target="_blank">
             <Image src="/icons/instagram.png" alt="Instagram" width={50} height={50} />
           </Link>
           <Link href="https://t.me" target="_blank">

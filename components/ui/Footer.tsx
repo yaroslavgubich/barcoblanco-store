@@ -23,7 +23,7 @@ const Footer = () => {
           <div className="flex flex-col items-center text-center">
             <h3 className="text-xl font-semibold mb-2">Інформація</h3>
             <Link href="/#about" className="hover:underline mb-1">
-              Про нас
+              Головнa
             </Link>
             <Link href="/guarantee" className="hover:underline mb-1">
               Гарантія
@@ -116,7 +116,7 @@ const Footer = () => {
                 />
               </a>
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/barco_blanco__/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
