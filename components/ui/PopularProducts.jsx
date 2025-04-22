@@ -61,7 +61,7 @@ const PopularProducts = ({ productsData }) => {
           </Swiper>
 
           {/* Custom pagination container */}
-          <div className="custom-pagination mt-8 flex justify-center"></div>
+          <div className="custom-pagination mt-4 flex justify-center"></div>
         </div>
       </div>
     </div>
