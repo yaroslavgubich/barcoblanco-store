@@ -253,7 +253,8 @@ const isNarrowScreen = useMediaQuery("(max-width:475px)");
               { text: "Шафи", href: "/category/wardrobe" },
               { text: "Тумби", href: "/category/cabinet" },
               { text: "Дзеркала", href: "/category/mirrors" },
-              { text: "Водонепроникні", href: "/category/waterproof" },
+              { text: "Комоди", href: "/category/ю" },
+              { text: "Тумби WATER", href: "/category/waterproof" },
             ].map((item) => (
               <ListItem key={item.href} disablePadding>
                 <ListItemButton
@@ -294,14 +295,6 @@ const isNarrowScreen = useMediaQuery("(max-width:475px)");
                 href="/basket"
                 onClick={() => setDrawerOpen(false)}
               >
-                <ListItemText
-                  primary="Кошик"
-                  primaryTypographyProps={{
-                    fontWeight: "bold",
-                    fontSize: 20,
-                    color: "#008c99",
-                  }}
-                />
               </ListItemButton>
             </ListItem>
           </List>

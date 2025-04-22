@@ -41,10 +41,10 @@ const Footer = () => {
                 aria-label="Telegram"
               >
                 <Image
-                  src="/icons/telegram_icon.svg"
+                  src="/icons/telegram_white.svg"
                   alt="Telegram"
                   width={35}
-                  height={30}
+                  height={35}
                   className="hover:scale-110 transition-transform"
                 />
               </a>

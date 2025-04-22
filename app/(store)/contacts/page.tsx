@@ -147,30 +147,51 @@ const Contacts = () => {
           }}
         />
 
-        <Typography variant="body1" sx={{ fontSize: "16px", mb: "1rem" }}>
-          Слідкуйте за нами в соціальних мережах
-        </Typography>
+<Typography
+  variant="body1"
+  sx={{
+    fontSize: "16px",
+    mb: "1rem",
+    textAlign: { xs: "center", md: "left" },
+    alignSelf: { xs: "center", md: "flex-start" },
+  }}
+>
+  Слідкуйте за нами в соціальних мережах
+</Typography>
 
-        {/* Social Media Links */}
-        <Box
-          sx={{
-            display: "flex",
-            gap: "40px",
-            justifyContent: { xs: "center", md: "flex-start" },
-            "& a": { transition: "transform 0.2s" },
-            "& a:hover": { transform: "scale(1.1)" },
-          }}
-        >
-          <Link href="https://www.instagram.com/barco_blanco__/" target="_blank">
-            <Image src="/icons/instagram.png" alt="Instagram" width={50} height={50} />
-          </Link>
-          <Link href="https://t.me" target="_blank">
-            <Image src="/icons/telegram.png" alt="Telegram" width={50} height={50} />
-          </Link>
-          <Link href="https://www.viber.com/ua/">
-            <Image src="/icons/viber.png" alt="Viber" width={50} height={50} />
-          </Link>
-        </Box>
+<Box
+  sx={{
+    display: "flex",
+    gap: "40px",
+    justifyContent: { xs: "center", md: "flex-start" },
+    "& a": {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      width: "70px",
+      height: "70px",
+      transition: "transform 0.2s",
+    },
+    "& a:hover": {
+      transform: "scale(1.1)",
+    },
+  }}
+>
+  <Link href="https://www.instagram.com/barco_blanco__/" target="_blank">
+    <Image src="/icons/instagram_bl.svg" alt="Instagram" width={52} height={52} />
+  </Link>
+
+  <Link href="https://t.me" target="_blank">
+    <Image src="/icons/telegram_blue.svg" alt="Telegram" width={48} height={48} />
+  </Link>
+
+  <Link href="https://www.viber.com/ua/" target="_blank">
+    <Image src="/icons/viber_blue.svg" alt="Viber" width={52} height={52} />
+  </Link>
+</Box>
+
+
+
       </Box>
     </Box>
   );
