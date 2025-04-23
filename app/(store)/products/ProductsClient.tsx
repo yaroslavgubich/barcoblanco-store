@@ -30,13 +30,15 @@ const categoryWidthFilters: { [key: string]: number[] } = {
   wardrobe: [40, 45, 50, 55, 60, 65, 70, 75, 80, 90, 100],
   cabinet: [50, 60, 70, 80],
   waterproof: [30, 35, 40, 50, 60],
+  dressers: [30, 35, 40, 50, 60],
 };
 
 const categoryLabels: Record<string, string> = {
   mirrors: "Дзеркала",
   wardrobe: "Шафи",
-  cabinet: "Комоди",
+  cabinet: "Тумби",
   waterproof: "WATER",
+  dressers: "Комоди",
 };
 
 export default function ProductsClient({
@@ -53,7 +55,7 @@ export default function ProductsClient({
   const [showMobileFilter, setShowMobileFilter] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const { addToCart } = useCart();
-  const allCategories = ["mirrors", "wardrobe", "cabinet", "waterproof"];
+  const allCategories = ["mirrors", "wardrobe", "cabinet", "waterproof", "dressers"];
 
   const categoryProducts = selectedCategory
     ? products.filter(

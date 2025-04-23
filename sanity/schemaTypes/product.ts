@@ -30,6 +30,11 @@ const producjschema = {
       type: "string",
     },
     {
+      name: "article",
+      title: "Article",
+      type: "string",
+    },
+    {
       name: "slug",
       title: "Slug",
       type: "slug",
@@ -52,9 +57,10 @@ const producjschema = {
       options: {
         list: [
           { title: "Mirrors", value: "mirrors" },
-          { title: "Wardrobe", value: "wardrobe" },
-          { title: "Cabinet", value: "cabinet" },
+          { title: "Wardrobes", value: "wardrobes" },
+          { title: "Cabinets", value: "cabinets" },
           { title: "Waterproof", value: "waterproof" },
+          { title: "dressers", value: "dressers" },
         ],
         layout: "dropdown",
       },
@@ -65,11 +71,29 @@ const producjschema = {
       type: "number",
     },
     {
+      name: "height",
+      title: "Height",
+      type: "number",
+    },
+    {
+      name: "depth",
+      title: "Depth",
+      type: "number",
+    },
+    {
       name: "isPopular",
       title: "Popular",
       type: "boolean",
       description:
         "Mark this product as popular to display it in the popular products section.",
+      initialValue: false,
+    },
+    {
+      name: "isAvailable",
+      title: "Is Available",
+      type: "boolean",
+      description:
+        "Mark this product as available to display that it is in a warehouse.",
       initialValue: false,
     },
   ],

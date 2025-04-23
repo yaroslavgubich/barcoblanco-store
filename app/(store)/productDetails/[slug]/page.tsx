@@ -1,22 +1,13 @@
 // app/(store)/productDetails/[slug]/page.tsx
 
+import { productDetailsQuery } from "@/sanity/lib/queries/productDetailsQuery";
 import ProductDetails from "../../../../components/ui/ProductDetails";
 import { client } from "../../../../sanity/lib/client";
 
 // Function to fetch product data from Sanity using the slug.
 async function getProduct(slug: string) {
-  const query = `*[_type == "product" && slug.current == $slug][0]{
-    _id,
-    name,
-    slug, // Make sure to fetch the slug field if it's used in the component
-    image[] { asset->{ url } },
-    price,
-    details,
-    category,
-    width,
-    isPopular
-  }`;
-  return await client.fetch(query, { slug });
+ 
+  return await client.fetch(productDetailsQuery, { slug });
 }
 
 // Define the page props so that params is a Promise (Workaround 1)
