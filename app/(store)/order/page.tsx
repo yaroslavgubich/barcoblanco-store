@@ -369,7 +369,7 @@ export default function OrderForm() {
                   }} className="w-full">
                     <TabsList className="flex flex-wrap sm:flex-nowrap overflow-x-auto gap-2 w-full mb-2">
                       <TabsTrigger value="nova-poshta"><Image src={logo} alt="Nova Poshta" className="w-3 h-auto mr-2" />Нова Пошта</TabsTrigger>
-                      <TabsTrigger value="ukr-poshta"><Image src={ukrLogo} alt="Ukr Poshta" className="w-2 h-auto mr-2" />Укр Пошта</TabsTrigger>
+                      <TabsTrigger value="ukr-poshta"><Image src={ukrLogo} alt="Ukr Poshta" className="w-2 h-auto mr-2 hidden" />Укр Пошта</TabsTrigger>
                       <TabsTrigger value="pickup"><Image src={pickupLogo} alt="Pickup" className="w-5 h-auto mr-2" />Самовивіз</TabsTrigger>
                     </TabsList>
                     {!activeTab && (
