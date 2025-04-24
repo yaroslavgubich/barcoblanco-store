@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation"
-import {useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Select from "react-select";
@@ -280,7 +280,7 @@ export default function OrderForm() {
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
         <div className="grid gap-5 sm:grid-cols-1 md:grid-cols-2 py-12 text-lg max-w-7xl mx-auto mt-0 p-3">
-          <Card className="border-none shadow-none outline-none ring-0 p-0 gap-0">
+          <Card className="border-none shadow-none outline-none ring-0 p-0 gap-0 max-w-full overflow-hidden">
             <CardContent>
               <Card className="shadow-md p-4 m-2 w-full">
                 <CardHeader>
@@ -349,7 +349,7 @@ export default function OrderForm() {
                   )} />
                 </CardContent>
               </Card>
-              <Card className="shadow-md p-4 m-2 w-full max-w-full">
+              <Card className="shadow-md p-4 m-2 w-full max-w-full overflow-hidden">
                 <CardHeader>
                   <CardTitle className="text-[#1996A3] text-[20px] md:text-[25px] font-semibold">
                     Доставка
@@ -367,7 +367,7 @@ export default function OrderForm() {
                       form.setValue("warehouse", "");
                     }
                   }} className="w-full">
-                    <TabsList className="flex w-full justify-start mb-1">
+                    <TabsList className="flex flex-wrap sm:flex-nowrap overflow-x-auto gap-2 w-full mb-2">
                       <TabsTrigger value="nova-poshta"><Image src={logo} alt="Nova Poshta" className="w-3 h-auto mr-2" />Нова Пошта</TabsTrigger>
                       <TabsTrigger value="ukr-poshta"><Image src={ukrLogo} alt="Ukr Poshta" className="w-2 h-auto mr-2" />Укр Пошта</TabsTrigger>
                       <TabsTrigger value="pickup"><Image src={pickupLogo} alt="Pickup" className="w-5 h-auto mr-2" />Самовивіз</TabsTrigger>
@@ -381,9 +381,9 @@ export default function OrderForm() {
                     {/* Нова Пошта */}
                     <TabsContent value="nova-poshta">
                       <div>
-                        <div className="border-b-0 p-3 py-1 rounded-lg w-full">
+                        <div className="border-b-0 p-3 py-1 rounded-lg w-full max-w-full overflow-x-hidden">
                           <div className="w-full max-w-full overflow-x-hidden">
-                            <div className="space-y-4 p-5 rounded-lg text-sm">
+                            <div className="space-y-4 p-3 sm:p-5 rounded-lg text-sm sm:text-base max-w-full overflow-x-hidden">
                               {/* ToggleGroup (відділення / поштомат / кур’єр) */}
                               <ToggleGroup
                                 type="single"
@@ -394,7 +394,7 @@ export default function OrderForm() {
                                   form.setValue("city", "");
                                   form.setValue("warehouse", "");
                                 }}
-                                className="flex flex-wrap gap-2"
+                                className="flex flex-wrap gap-2 sm:gap-3"
                               >
                                 <ToggleGroupItem value="Відділення">🏢 Відділення</ToggleGroupItem>
                                 <ToggleGroupItem value="Поштомат">📦 Поштомат</ToggleGroupItem>
@@ -476,7 +476,7 @@ export default function OrderForm() {
                       <div>
                         <div className="border-b-0 p-3 py-1 rounded-lg w-full">
                           <div className="w-full max-w-full overflow-x-hidden">
-                            <div className="space-y-4 p-5 rounded-lg text-sm">
+                          <div className="space-y-4 p-3 sm:p-5 rounded-lg text-sm sm:text-base w-full min-w-0 overflow-hidden">
                               {/* ToggleGroup (відділення / поштомат / кур’єр) */}
                               <ToggleGroup
                                 type="single"
@@ -487,7 +487,7 @@ export default function OrderForm() {
                                   form.setValue("city", "");
                                   form.setValue("warehouse", "");
                                 }}
-                                className="flex flex-wrap gap-2"
+                                className="flex flex-wrap gap-2 sm:gap-3"
                               >
                                 <ToggleGroupItem value="Відділення">🏢 Відділення</ToggleGroupItem>
                                 <ToggleGroupItem value="Поштомат">📦 Поштомат</ToggleGroupItem>
@@ -526,8 +526,8 @@ export default function OrderForm() {
                                 <FormField name="warehouse" render={({ field }) => (
                                   <FormItem>
                                     <FormLabel>Відділення</FormLabel>
-                                    <FormControl>
-                                      {isClient && (
+                                    <FormControl className="min-w-0 overflow-hidden w-full">
+                                      {isClient && (  
                                         <Select
                                           {...field}
                                           onChange={(selectedOption) => {
@@ -538,9 +538,58 @@ export default function OrderForm() {
                                           options={warehouses.map(w => ({ value: w.Description, label: w.Description }))}
                                           placeholder={loadingWarehouses ? "Завантаження..." : "Оберіть відділення"}
                                           isDisabled={!selectedCity || loadingWarehouses}
-                                          styles={{ menu: (provided) => ({ ...provided, zIndex: 9999 }) }}
+                                          styles={{
+                                            container: (provided) => ({
+                                              ...provided,
+                                              maxWidth: "100%",
+                                              minWidth: 0,
+                                            }),
+                                            control: (provided) => ({
+                                              ...provided,
+                                              minHeight: 42,
+                                              maxWidth: "100%",
+                                              overflow: "hidden",
+                                              display: "flex",
+                                              flexWrap: "nowrap",
+                                            }),
+                                            valueContainer: (provided) => ({
+                                              ...provided,
+                                              flex: 1,
+                                              minWidth: 0,
+                                              overflow: "hidden",
+                                            }),
+                                            singleValue: (provided) => ({
+                                              ...provided,
+                                              whiteSpace: "nowrap",
+                                              overflow: "hidden",
+                                              textOverflow: "ellipsis",
+                                              maxWidth: "100%",
+                                              title: field.value,
+                                            }),
+                                            placeholder: (provided) => ({
+                                              ...provided,
+                                              whiteSpace: "nowrap",
+                                              overflow: "hidden",
+                                              textOverflow: "ellipsis",
+                                            }),
+                                            indicatorsContainer: (provided) => ({
+                                              ...provided,
+                                              flexShrink: 0,
+                                            }),
+                                            menu: (provided) => ({
+                                              ...provided,
+                                              zIndex: 9999,
+                                              maxHeight: 200,
+                                              overflowY: "auto",
+                                            }),
+                                            option: (provided) => ({
+                                              ...provided,
+                                              whiteSpace: "normal",
+                                              wordBreak: "break-word",
+                                            }),
+                                          }}                                          
                                           menuPortalTarget={document.body}
-                                        />
+                                        />  
                                       )}
                                     </FormControl>
                                     <FormMessage />
