@@ -111,6 +111,7 @@ export default function ProductsClient({
 
   return (
     <>
+
       {/* Мобильное меню для фильтра и категорий */}
       <div className="md:hidden bg-100 flex flex-wrap justify-center w-full px-4 mb-4 mt-4 gap-6">
         <button
