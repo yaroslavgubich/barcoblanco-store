@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import BackButton from "./BackButton"
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: "Full name must be at least 2 characters." }),
@@ -51,6 +52,9 @@ export default function OrderForm() {
   }
 
   return (
+    <>
+    
+    <BackButton />
     <div className="grid gap-6 lg:grid-cols-2">
       <Card>
         <CardHeader>
@@ -184,6 +188,7 @@ export default function OrderForm() {
         </CardFooter>
       </Card>
     </div>
+    </>
   )
 }
 

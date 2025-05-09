@@ -9,6 +9,7 @@ import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import BackButton from "./BackButton";
 
 interface ProductImage {
   asset: { url: string };
@@ -70,9 +71,12 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
   }, []);
 
   return (
+    <>
+    <BackButton />
     <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-10">
       {/* Контейнер: вертикально на мобильном, горизонтально на md+ */}
       <div className="flex flex-col md:flex-row gap-10">
+      
         {/* Левая часть – слайдер */}
         <div className="w-11/12 max-w-sm mx-auto md:w-1/2 lg:w-5/12 relative">
           {swiperReady && (
@@ -204,5 +208,6 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
         </div>
       </div>
     </div>
+    </>
   );
 }

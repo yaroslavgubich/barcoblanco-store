@@ -10,6 +10,7 @@ import { useCart } from "@/context/CartContext";
 import { useScrollToTop } from "@/hook/useScrollToTop";
 import Image from "next/image";
 
+
 interface ProductType {
   _id: string;
   name: string;
@@ -111,9 +112,11 @@ export default function ProductsClient({
 
   return (
     <>
+    
 
       {/* Мобильное меню для фильтра и категорий */}
       <div className="md:hidden bg-100 flex flex-wrap justify-center w-full px-4 mb-4 mt-4 gap-6">
+     
         <button
           onClick={() => setShowMobileFilter(true)}
           className="flex-1 min-w-[150px] flex items-center justify-center gap-2 px-4 py-3 bg-[#4FA7B9] hover:bg-[#1996A3] text-white rounded-lg transition"
@@ -227,6 +230,7 @@ export default function ProductsClient({
 
       {/* Категории для десктопа */}
       <div className="hidden md:flex flex-wrap gap-2 mb-6 mt-6 justify-center">
+     
         <Link href="/products">
           <button
             className={`px-4 py-1.5 rounded-full text-sm font-medium transition border border-[#1996A3] ${

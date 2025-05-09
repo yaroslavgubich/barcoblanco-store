@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import BackButton from "@/components/ui/BackButton";
+
 
 export default function BasketPage() {
   const { cart, removeFromCart, updateQuantity, clearCart, getCartTotalPrice } = useCart();
@@ -12,6 +14,8 @@ export default function BasketPage() {
   const total = getCartTotalPrice();
 
   return (
+    <>
+     <BackButton />
     <div className="w-full max-w-[1400px] mx-auto py-6 px-4 sm:py-10">
       {cart.length === 0 ? (
         <div className="flex flex-col items-center justify-center text-center h-96">
@@ -181,6 +185,7 @@ export default function BasketPage() {
         </>
       )}
     </div>
+    </>
   );
 }
 
