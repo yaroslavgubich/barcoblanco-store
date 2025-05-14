@@ -55,7 +55,6 @@ const Delivery = () => {
             marginBottom: "2rem",
           }}
         >
-          <div>Sens Bank</div>
           <div>Ощад Банк</div>
           <div>Готівкою при отриманні</div>
           <div>(Або інші варіанти по домовленості)</div>
