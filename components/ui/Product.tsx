@@ -11,12 +11,18 @@ interface ProductType {
   _id?: string;
   image?: { asset: { url: string }; alt?: string }[] | null;
   name: string;
-  slug: { current: string };
+  slug?: { current?: string } | null;
   price: number;
 }
 
 const Product: React.FC<ProductProps> = ({ product }) => {
   const { image, name, slug } = product;
+
+  // Если нет slug или slug.current — не рендерим компонент
+  if (!slug?.current) {
+    console.warn("Товар пропущен, нет slug:", product);
+    return null;
+  }
 
   const imageUrl =
     image && Array.isArray(image) && image.length > 0
@@ -47,7 +53,6 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 };
 
 export default Product;
-
 
 
 
