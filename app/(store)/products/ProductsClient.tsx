@@ -26,19 +26,18 @@ interface ProductsClientProps {
 }
 
 const categoryWidthFilters: { [key: string]: number[] } = {
-  mirrors: [40, 50, 55, 60, 65, 70, 80, 90],
-  wardrobe: [40, 45, 50, 55, 60, 65, 70, 75, 80, 90, 100],
-  cabinet: [50, 60, 70, 80],
-  waterproof: [30, 35, 40, 50, 60],
-  dressers: [30, 35, 40, 50, 60],
+  mirrors: [45, 50, 55, 60, 65, 70, 80, 90],
+  cabinet: [40, 45, 50, 55, 60, 65, 70, 75, 80, 90, 100],
+  wardrobe: [40, 50, 60],
+  dressers: [30, 35, 40],
 };
 
 const categoryLabels: Record<string, string> = {
   mirrors: "Дзеркала",
-  wardrobe: "Шафи",
   cabinet: "Тумби",
+  wardrobe: "Нависні шафи",
   waterproof: "WATER",
-  dressers: "Комоди",
+  dressers: "Пенали",
 };
 
 export default function ProductsClient({
@@ -55,7 +54,7 @@ export default function ProductsClient({
   const [showMobileFilter, setShowMobileFilter] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const { addToCart } = useCart();
-  const allCategories = ["mirrors", "wardrobe", "cabinet", "waterproof", "dressers"];
+  const allCategories = ["mirrors", "cabinet","dressers",  "wardrobe",  "waterproof"];
 
   const categoryProducts = selectedCategory
     ? products.filter(
@@ -192,7 +191,7 @@ export default function ProductsClient({
                 &times;
               </button>
             </div>
-            {availableWidths.length > 0 && (
+            {availableWidths.length > 0 && selectedCategory !== "waterproof" && (
               <>
                 <h3 className="font-medium mb-2">Ширина</h3>
                 <div className="flex flex-col space-y-2 mb-4">

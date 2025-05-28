@@ -9,25 +9,26 @@ function Categories() {
       image: "/images/mirror.png",
     },
     {
-      title: "Шафи",
-      href: "/category/wardrobes",
-      image: "/images/wardrobe.png",
-    },
-    {
       title: "Тумби",
       href: "/category/cabinets",
       image: "/images/cabinet.png",
     },
     {
-      title: "Водонепроникні",
-      href: "/category/waterproof",
-      image: "/images/waterproof.jpg",
-    },
-    {
-      title: "Комоди",
+      title: "Пенали",
       href: "/category/dressers",
       image: "/images/dresser.webp",
     },
+    {
+      title: "Нависні Шафи",
+      href: "/category/wardrobes",
+      image: "/images/wardrobe.png",
+    },
+    {
+      title: "Water",
+      href: "/category/waterproof",
+      image: "/images/waterproof.jpg",
+    },
+ 
   ];
 
   return (
