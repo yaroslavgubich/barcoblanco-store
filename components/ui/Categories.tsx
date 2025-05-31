@@ -10,7 +10,7 @@ function Categories() {
     },
     {
       title: "Тумби",
-      href: "/category/cabinets",
+      href: "/category/cabinet",
       image: "/images/cabinet.png",
     },
     {
@@ -20,7 +20,7 @@ function Categories() {
     },
     {
       title: "Нависні Шафи",
-      href: "/category/wardrobes",
+      href: "/category/wardrobe",
       image: "/images/wardrobe.png",
     },
     {
