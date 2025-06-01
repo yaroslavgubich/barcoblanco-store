@@ -15,7 +15,7 @@ function Categories() {
     },
     {
       title: "Тумби",
-      href: "/category/cabinets",
+      href: "/category/cabinet",
       image: "/images/cabinet.png",
     },
     {
