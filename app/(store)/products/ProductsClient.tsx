@@ -26,19 +26,18 @@ interface ProductsClientProps {
 }
 
 const categoryWidthFilters: { [key: string]: number[] } = {
-  mirrors: [40, 50, 55, 60, 65, 70, 80, 90],
-  wardrobe: [40, 45, 50, 55, 60, 65, 70, 75, 80, 90, 100],
-  cabinet: [50, 60, 70, 80],
-  waterproof: [30, 35, 40, 50, 60],
-  dressers: [30, 35, 40, 50, 60],
+  mirrors: [45, 50, 55, 60, 65, 70, 80, 90],
+  cabinet: [40, 45, 50, 55, 60, 65, 70, 75, 80, 90, 100],
+  wardrobe: [40, 50, 60],
+  dressers: [30, 35, 40],
 };
 
 const categoryLabels: Record<string, string> = {
   mirrors: "Дзеркала",
-  wardrobe: "Шафи",
   cabinet: "Тумби",
+  wardrobe: "Нависні шафи",
   waterproof: "WATER",
-  dressers: "Комоди",
+  dressers: "Пенали",
 };
 
 export default function ProductsClient({
@@ -55,19 +54,19 @@ export default function ProductsClient({
   const [showMobileFilter, setShowMobileFilter] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const { addToCart } = useCart();
-  const allCategories = ["mirrors", "wardrobe", "cabinet", "waterproof", "dressers"];
+  const allCategories = ["mirrors", "cabinet", "dressers", "wardrobe", "waterproof"];
 
   const categoryProducts = selectedCategory
     ? products.filter(
-        (p) => p.category?.toLowerCase() === selectedCategory.toLowerCase()
-      )
+      (p) => p.category?.toLowerCase() === selectedCategory.toLowerCase()
+    )
     : products;
 
   const availableWidths = selectedCategory
     ? categoryWidthFilters[selectedCategory.toLowerCase()] || []
     : Array.from(new Set(Object.values(categoryWidthFilters).flat())).sort(
-        (a, b) => a - b
-      );
+      (a, b) => a - b
+    );
 
   useEffect(() => {
     setSelectedWidths([]);
@@ -115,27 +114,15 @@ export default function ProductsClient({
     <>
       {/* Мобильное меню для фильтра и категорий */}
       <div className="md:hidden bg-100 flex flex-wrap justify-center w-full px-4 mb-4 mt-4 gap-6">
-        <button
-          onClick={() => setShowMobileFilter(true)}
-          className="flex-1 min-w-[150px] flex items-center justify-center gap-2 px-4 py-3 bg-[#4FA7B9] hover:bg-[#1996A3] text-white rounded-lg transition"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+        {selectedCategory !== "waterproof" && (
+          <button
+            onClick={() => setShowMobileFilter(true)}
+            className="flex-1 min-w-[150px] flex items-center justify-center gap-2 px-4 py-3 bg-[#4FA7B9] hover:bg-[#1996A3] text-white rounded-lg transition"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v16a1 1 0 01-1 1H4a1 1 0 01-1-1V4z"
-            />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 4v16M4 9h16" />
-          </svg>
-          <span>Фільтр</span>
-        </button>
+            Фільтри
+          </button>
+        )}
+
         <div className="relative flex-1 min-w-[150px]">
           <button
             className="w-full flex items-center justify-between px-4 py-3 bg-gray-100 text-gray-800 rounded-lg transition"
@@ -160,9 +147,8 @@ export default function ProductsClient({
             <div className="absolute top-full mt-1 w-full bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 z-10">
               <Link
                 href="/products"
-                className={`block px-4 py-2 text-sm text-gray-700 hover:bg-[#1996A3] hover:text-white transition ${
-                  !selectedCategory ? "bg-[#1996A3] text-white" : ""
-                }`}
+                className={`block px-4 py-2 text-sm text-gray-700 hover:bg-[#1996A3] hover:text-white transition ${!selectedCategory ? "bg-[#1996A3] text-white" : ""
+                  }`}
               >
                 Усі товари
               </Link>
@@ -170,9 +156,8 @@ export default function ProductsClient({
                 <Link
                   key={category}
                   href={`/category/${category}`}
-                  className={`block px-4 py-2 text-sm text-gray-700 hover:bg-[#1996A3] hover:text-white transition ${
-                    isActive(category) ? "bg-[#1996A3] text-white" : ""
-                  }`}
+                  className={`block px-4 py-2 text-sm text-gray-700 hover:bg-[#1996A3] hover:text-white transition ${isActive(category) ? "bg-[#1996A3] text-white" : ""
+                    }`}
                 >
                   {categoryLabels[category] || category}
                 </Link>
@@ -183,7 +168,7 @@ export default function ProductsClient({
       </div>
 
       {/* Мобильный фильтр (выезжающая панель) */}
-      {showMobileFilter && (
+      {showMobileFilter && selectedCategory !== "waterproof" && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
           <div className="w-[90%] max-w-xs bg-white h-full p-5 shadow-lg flex flex-col">
             <div className="flex justify-between items-center mb-4">
@@ -192,7 +177,7 @@ export default function ProductsClient({
                 &times;
               </button>
             </div>
-            {availableWidths.length > 0 && (
+            {availableWidths.length > 0 && selectedCategory !== "waterproof" && (
               <>
                 <h3 className="font-medium mb-2">Ширина</h3>
                 <div className="flex flex-col space-y-2 mb-4">
@@ -230,11 +215,10 @@ export default function ProductsClient({
       <div className="hidden md:flex flex-wrap gap-2 mb-6 mt-6 justify-center">
         <Link href="/products">
           <button
-            className={`px-4 py-1.5 rounded-full text-sm font-medium transition border border-[#1996A3] ${
-              !selectedCategory
-                ? "bg-[#1996A3] text-white"
-                : "bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white"
-            }`}
+            className={`px-4 py-1.5 rounded-full text-sm font-medium transition border border-[#1996A3] ${!selectedCategory
+              ? "bg-[#1996A3] text-white"
+              : "bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white"
+              }`}
           >
             Усі товари
           </button>
@@ -242,11 +226,10 @@ export default function ProductsClient({
         {allCategories.map((category) => (
           <Link key={category} href={`/category/${category}`}>
             <button
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition border border-[#1996A3] ${
-                isActive(category)
-                  ? "bg-[#1996A3] text-white"
-                  : "bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white"
-              }`}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition border border-[#1996A3] ${isActive(category)
+                ? "bg-[#1996A3] text-white"
+                : "bg-white text-[#1996A3] hover:bg-[#1996A3] hover:text-white"
+                }`}
             >
               {categoryLabels[category] || category}
             </button>
@@ -298,35 +281,38 @@ export default function ProductsClient({
 
           {/* Блок с фильтрами и товарами */}
           <div className="flex flex-col md:flex-row gap-4">
-            <div className="hidden md:block w-fit bg-white border border-gray-200 rounded-lg p-4 h-min">
-              {availableWidths.length > 0 && (
-                <div className="mb-6">
-                  <h3 className="font-medium text-sm text-[#1996A3] mb-2">Ширина</h3>
-                  <div className="flex flex-col space-y-2">
-                    {availableWidths.map((width) => (
-                      <label
-                        key={width}
-                        className="flex items-center space-x-2 text-sm cursor-pointer"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={selectedWidths.includes(width)}
-                          onChange={() => toggleWidth(width)}
-                          className="peer hidden"
-                        />
-                        <span className="w-4 h-4 border-2 border-[#1996A3] rounded flex items-center justify-center transition hover:bg-[#1996A3] hover:text-white peer-checked:bg-[#1996A3] peer-checked:text-white">
-                          <span className="w-2 h-2 bg-white opacity-0 peer-checked:opacity-100 transition-opacity rounded-sm" />
-                        </span>
-                        <span>{width} см</span>
-                      </label>
-                    ))}
+            {selectedCategory !== "waterproof" && (
+              <div className="hidden md:block w-fit bg-white border border-gray-200 rounded-lg p-4 h-min">
+                {availableWidths.length > 0 && (
+                  <div className="mb-6">
+                    <h3 className="font-medium text-sm text-[#1996A3] mb-2">Ширина</h3>
+                    <div className="flex flex-col space-y-2">
+                      {availableWidths.map((width) => (
+                        <label
+                          key={width}
+                          className="flex items-center space-x-2 text-sm cursor-pointer"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={selectedWidths.includes(width)}
+                            onChange={() => toggleWidth(width)}
+                            className="peer hidden"
+                          />
+                          <span className="w-4 h-4 border-2 border-[#1996A3] rounded flex items-center justify-center transition hover:bg-[#1996A3] hover:text-white peer-checked:bg-[#1996A3] peer-checked:text-white">
+                            <span className="w-2 h-2 bg-white opacity-0 peer-checked:opacity-100 transition-opacity rounded-sm" />
+                          </span>
+                          <span>{width} см</span>
+                        </label>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
-              <button onClick={handleClearFilters} className="text-sm text-[#1996A3] underline">
-                Очистити
-              </button>
-            </div>
+                )}
+                <button onClick={handleClearFilters} className="text-sm text-[#1996A3] underline">
+                  Очистити
+                </button>
+              </div>
+            )}
+
 
             {/* Список товаров */}
             <div className="flex-1">
