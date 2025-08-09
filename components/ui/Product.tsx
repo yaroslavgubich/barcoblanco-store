@@ -25,20 +25,20 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 
   return (
     <Link href={`/productDetails/${slug.current}`} className="block">
-      <div className="group flex flex-col items-center text-center p-3 rounded-lg transition-transform cursor-pointer">
+      <div className="group flex flex-col items-center text-center rounded-lg transition-transform cursor-pointer h-full">
         {/* Картинка */}
-        <div className="w-full aspect-square overflow-hidden rounded-md bg-gray-100">
+        <div className="w-full aspect-[3/4] overflow-hidden rounded-lg bg-white">
           <Image
             src={imageUrl}
-            width={220}
-            height={220}
-            className="w-full h-full object-cover transition-transform duration-300 transform group-hover:scale-105"
+            width={320}
+            height={240}
+            className="w-full h-full object-cover transition-transform duration-300 transform group-hover:scale-105 rounded-lg"
             alt={name}
           />
         </div>
 
         {/* Название */}
-        <p className="mt-2 text-gray-800 text-base font-medium line-clamp-2 min-h-[48px]">
+        <p className="mt-3 text-gray-800 text-sm sm:text-base font-medium line-clamp-2 flex-grow flex items-center justify-center text-center">
           {name}
         </p>
       </div>
