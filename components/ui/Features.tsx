@@ -1,4 +1,3 @@
-// components/ui/Features.tsx
 import React from "react";
 import Image from "next/image";
 
@@ -31,17 +30,17 @@ const Features = () => {
   return (
     <section className="features-section">
       <div className="features-container">
-        {featuresData.map((feature, index) => (
-          <div key={index} className="feature-card">
+        {featuresData.map(({ icon, title, description }, index) => (
+          <div className="feature-card" key={index}>
             <Image
-              src={feature.icon}
-              alt={feature.title}
+              src={icon}
+              alt={title}
               width={50}
               height={50}
               className="feature-icon"
             />
-            <h3 className="feature-title">{feature.title}</h3>
-            <p className="feature-description">{feature.description}</p>
+            <h3 className="feature-title">{title}</h3>
+            <p className="feature-description">{description}</p>
           </div>
         ))}
       </div>

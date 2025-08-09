@@ -1,5 +1,4 @@
 // components/ui/pagination.tsx
-//app/components/ui/pagination.tsx
 import { Button } from "@/components/ui/button"
 
 interface PaginationProps {
@@ -14,10 +13,19 @@ export function Pagination({ totalPages, currentPage, onPageChange }: Pagination
       {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
         <Button
           key={page}
-          variant={currentPage === page ? "default" : "outline"}
           size="icon"
-          className="rounded-full w-8 h-8"
           onClick={() => onPageChange(page)}
+          className={`
+            rounded-full w-8 h-8 
+            border border-[#1996A3] 
+            transition font-semibold
+            outline-none focus:outline-none focus:ring-0 active:bg-white
+            ${
+              currentPage === page
+                ? "bg-[#1996A3] text-white" 
+                : "bg-white text-[#1996A3] hover:bg-white hover:text-[#1996A3]"
+            }
+          `}
         >
           {page}
         </Button>
@@ -25,4 +33,6 @@ export function Pagination({ totalPages, currentPage, onPageChange }: Pagination
     </div>
   )
 }
+
+
 
