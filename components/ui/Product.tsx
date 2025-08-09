@@ -27,12 +27,12 @@ const Product: React.FC<ProductProps> = ({ product }) => {
     <Link href={`/productDetails/${slug.current}`} className="block">
       <div className="group flex flex-col items-center text-center p-3 rounded-lg transition-transform cursor-pointer">
         {/* Картинка */}
-        <div className="w-full aspect-square overflow-hidden rounded-md bg-gray-100">
+        <div className="w-full aspect-[3/4] overflow-hidden rounded-lg bg-white">
           <Image
             src={imageUrl}
-            width={220}
-            height={220}
-            className="w-full h-full object-cover transition-transform duration-300 transform group-hover:scale-105"
+            width={320}
+            height={240}
+            className="w-full h-full object-cover transition-transform duration-300 transform group-hover:scale-105 rounded-lg"
             alt={name}
           />
         </div>
