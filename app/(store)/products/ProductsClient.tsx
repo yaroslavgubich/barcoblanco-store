@@ -316,13 +316,13 @@ export default function ProductsClient({
 
             {/* Список товаров */}
             <div className="flex-1">
-              <div className="grid grid-cols-2 md:grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))] gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
                 <AnimatePresence>
                   {paginatedProducts.length > 0 ? (
                     paginatedProducts.map((product) => (
                       <motion.div
                         key={product._id}
-                        className="w-full bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-200 hover:scale-[1.02] p-3 flex flex-col justify-between"
+                        className="w-full bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-200 hover:scale-[1.02] p-4 flex flex-col justify-between min-h-[450px]"
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}

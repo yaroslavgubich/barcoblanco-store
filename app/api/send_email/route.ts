@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
-const SMTP_SERVER = "smtp.gmail.com";
-const SMTP_PORT = 587;
-const SMTP_USERNAME = "barcoblancotest@gmail.com";
-const SMTP_PASSWORD = "oimq jjxg atqb etmk";
-const MANAGER_EMAIL = "barcoblancotest@gmail.com";
+const SMTP_SERVER = "smtp.ukr.net";
+const SMTP_PORT = 465;
+const SMTP_USERNAME = "barcoblanco@ukr.net";
+const SMTP_PASSWORD = "6ZixeIqjaqsfQF9A";
+const MANAGER_EMAIL = "barcoblanco@ukr.net";
 
 interface OrderItem {
     id: string;
@@ -37,7 +37,7 @@ async function sendEmail(toEmail: string, subject: string, htmlBody: string): Pr
     const transporter = nodemailer.createTransport({
         host: SMTP_SERVER,
         port: SMTP_PORT,
-        secure: false,
+        secure: true,
         auth: {
             user: SMTP_USERNAME,
             pass: SMTP_PASSWORD,
