@@ -84,7 +84,7 @@ const Contacts = () => {
               variant="body1"
               sx={{ fontSize: { xs: "20px", md: "24px" }, mb: "10px", color: "#008c99" }}
             >
-              09:00 - 20:00
+              09:00 - 18:00
             </Typography>
             <Typography variant="body1" sx={{ fontSize: { xs: "20px", md: "24px" }, color: "#008c99" }}>
               Понеділок

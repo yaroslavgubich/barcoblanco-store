@@ -5,7 +5,7 @@ import { Phone } from "lucide-react";
 
 const CallButton: React.FC = () => {
   const handleCall = () => {
-    window.location.href = "tel:+380666924322";
+    window.location.href = "tel:+380504730644";
   };
 
   return (

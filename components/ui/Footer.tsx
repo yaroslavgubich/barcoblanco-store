@@ -11,8 +11,8 @@ const Footer = () => {
           {/* Контакти */}
           <div className="flex flex-col items-center">
             <h3 className="text-xl font-semibold mb-2">Контакти</h3>
-            <a href="tel:+380666924322" className="hover:underline">
-              +38 (066) 69-24-322
+            <a href="tel:+380504730644" className="hover:underline">
+              +38 (050) 47-30-644
             </a>
             <a href="mailto:avsdom@ukr.net" className="hover:underline">
               avsdom@ukr.net
@@ -82,8 +82,8 @@ const Footer = () => {
           {/* Ми працюємо + (MOBILE Icons) */}
           <div className="flex flex-col items-center">
             <h3 className="text-xl font-semibold mb-2">Ми працюємо</h3>
-            <p>Вт-Нед: з 9.00 до 20.00</p>
-            <p>Вихідний: Понеділок</p>
+            <p>Пн-Сб: з 9.00 до 18.00</p>
+            <p>Вихідний: Неділя</p>
 
             {/* Icons: show on mobile (below md) only */}
             <div className="flex md:hidden justify-center gap-8 mt-4">
