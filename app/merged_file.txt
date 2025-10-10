@@ -339,7 +339,7 @@ const Navbar: FC<NavbarProps> = () => {
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton component={Link} href="/category/mirrors">
+              <ListItemButton component={Link} href="/category/dzerkala">
                 <ListItemText primary="Дзеркала" />
               </ListItemButton>
             </ListItem>

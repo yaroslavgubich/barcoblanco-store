@@ -112,7 +112,9 @@ const BurgerMenuContainer = styled(Box)({
 const Navbar: FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [suggestions, setSuggestions] = useState<{ name: string; slug: string }[]>([]);
+  const [suggestions, setSuggestions] = useState<
+    { name: string; slug: string }[]
+  >([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -238,7 +240,7 @@ const Navbar: FC = () => {
             {[
               { text: "Шафи", href: "/category/wardrobe" },
               { text: "Тумби", href: "/category/cabinet" },
-              { text: "Дзеркала", href: "/category/mirrors" },
+              { text: "Дзеркала", href: "/category/dzerkala" },
               { text: "Водонепроникні", href: "/category/waterproof" },
             ].map((item) => (
               <ListItem key={item.href} disablePadding>

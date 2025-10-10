@@ -66,11 +66,11 @@ const producjschema = {
       type: "string",
       options: {
         list: [
-          { title: "Дзеркала", value: "mirrors" },
-          { title: "Шафи", value: "wardrobes" },
-          { title: "Тумби", value: "cabinets" },
-          { title: "Вологостійке", value: "waterproof" },
-          { title: "Комоди", value: "dressers" },
+          { title: "Дзеркала", value: "dzerkala" },
+          { title: "Шафи", value: "shafy" },
+          { title: "Тумби", value: "tumby" },
+          { title: "Вологостійке", value: "vologostiike" },
+          { title: "Комоди", value: "komody" },
         ],
         layout: "dropdown",
       },
@@ -105,7 +105,6 @@ const producjschema = {
       description:
         "Позначте цей товар як популярний, щоб відобразити його у відповідному розділі.",
       initialValue: false,
-      // validation removed
     },
     {
       name: "isAvailable",
@@ -113,7 +112,6 @@ const producjschema = {
       type: "boolean",
       description: "Позначте, щоб відобразити, що товар є на складі.",
       initialValue: false,
-      // validation removed
     },
   ],
   preview: {

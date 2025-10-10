@@ -5,7 +5,7 @@ function Categories() {
   const categories = [
     {
       title: "Дзеркала",
-      href: "/category/mirrors",
+      href: "/category/dzerkala",
       image: "/images/mirror.png",
     },
     {
@@ -28,7 +28,6 @@ function Categories() {
       href: "/category/waterproof",
       image: "/images/waterproof.jpg",
     },
- 
   ];
 
   return (

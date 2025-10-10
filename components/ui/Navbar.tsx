@@ -127,7 +127,7 @@ const Navbar: FC = () => {
 
   const isMobile = useMediaQuery("(max-width: 600px)");
   const isVeryNarrow = useMediaQuery("(max-width: 468px)");
-const isNarrowScreen = useMediaQuery("(max-width:475px)");
+  const isNarrowScreen = useMediaQuery("(max-width:475px)");
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -252,7 +252,7 @@ const isNarrowScreen = useMediaQuery("(max-width:475px)");
             {[
               { text: "Шафи", href: "/category/wardrobe" },
               { text: "Тумби", href: "/category/cabinet" },
-              { text: "Дзеркала", href: "/category/mirrors" },
+              { text: "Дзеркала", href: "/category/dzerkala" },
               { text: "Водонепроникні", href: "/category/waterproof" },
             ].map((item) => (
               <ListItem key={item.href} disablePadding>
@@ -378,9 +378,15 @@ const isNarrowScreen = useMediaQuery("(max-width:475px)");
                   setSearchValue(e.target.value);
                   setShowSuggestions(true);
                 }}
-                onClick={() => { if (isNarrowScreen) setHideLogo(true); }}
-                onFocus={() => { if (isNarrowScreen) setHideLogo(true); }}
-                onBlur={() => { if (isNarrowScreen) setHideLogo(false); }}
+                onClick={() => {
+                  if (isNarrowScreen) setHideLogo(true);
+                }}
+                onFocus={() => {
+                  if (isNarrowScreen) setHideLogo(true);
+                }}
+                onBlur={() => {
+                  if (isNarrowScreen) setHideLogo(false);
+                }}
                 onKeyDown={handleKeyDown}
               />
             </SearchContainer>
@@ -424,7 +430,7 @@ const isNarrowScreen = useMediaQuery("(max-width:475px)");
                     "& .MuiBadge-badge": {
                       backgroundColor: "#008c99",
                       color: "#fff",
-                      
+
                       fontSize: { xs: "0.8rem", sm: "0.9rem" },
                       minWidth: { xs: 16, sm: 20 },
                       height: { xs: 16, sm: 20 },
