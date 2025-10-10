@@ -1,5 +1,7 @@
 // sanity/schemaTypes/product.ts
-//sanity/schemaTypes/product.ts
+
+import { Rule } from "sanity";
+
 const producjschema = {
   name: "product",
   title: "Product",
@@ -7,94 +9,111 @@ const producjschema = {
   fields: [
     {
       name: "image",
-      title: "Image",
+      title: "Зображення",
       type: "array",
       of: [
         {
           type: "image",
           fields: [
-            // Optional alt text field
             {
               name: "alt",
-              title: "Alternative text",
+              title: "Альтернативний текст",
               type: "string",
             },
           ],
           options: { hotspot: true },
         },
       ],
+      validation: (Rule: Rule) =>
+        Rule.required()
+          .min(1)
+          .error("Потрібно додати принаймні одне зображення."),
     },
     {
       name: "name",
-      title: "Name",
+      title: "Назва",
       type: "string",
-    },
-    {
-      name: "article",
-      title: "Article",
-      type: "string",
+      validation: (Rule: Rule) =>
+        Rule.required().error("Назва товару є обов'язковою."),
     },
     {
       name: "slug",
-      title: "Slug",
+      title: "Слаг (URL-адреса)",
       type: "slug",
       options: { source: "name", maxLength: 90 },
+      validation: (Rule: Rule) =>
+        Rule.required().error("Слаг (частина URL) є обов'язковим."),
     },
     {
       name: "price",
-      title: "Price",
+      title: "Ціна",
       type: "number",
+      validation: (Rule: Rule) =>
+        Rule.required()
+          .positive()
+          .error("Ціна має бути обов'язковим, додатним числом."),
     },
     {
       name: "details",
-      title: "Details",
+      title: "Опис/Деталі",
       type: "text",
+      validation: (Rule: Rule) =>
+        Rule.required().error("Детальний опис є обов'язковим."),
     },
     {
       name: "category",
-      title: "Category",
+      title: "Категорія",
       type: "string",
       options: {
         list: [
-          { title: "Mirrors", value: "mirrors" },
-          { title: "Wardrobes", value: "wardrobes" },
-          { title: "Cabinets", value: "cabinets" },
-          { title: "Waterproof", value: "waterproof" },
-          { title: "dressers", value: "dressers" },
+          { title: "Дзеркала", value: "mirrors" },
+          { title: "Шафи", value: "wardrobes" },
+          { title: "Тумби", value: "cabinets" },
+          { title: "Вологостійке", value: "waterproof" },
+          { title: "Комоди", value: "dressers" },
         ],
         layout: "dropdown",
       },
+      validation: (Rule: Rule) =>
+        Rule.required().error("Потрібно обрати категорію."),
     },
     {
       name: "width",
-      title: "Width",
+      title: "Ширина (см)",
       type: "number",
+      validation: (Rule: Rule) =>
+        Rule.required().positive().error("Ширина є обов'язковою."),
     },
     {
       name: "height",
-      title: "Height",
+      title: "Висота (см)",
       type: "number",
+      validation: (Rule: Rule) =>
+        Rule.required().positive().error("Висота є обов'язковою."),
     },
     {
       name: "depth",
-      title: "Depth",
+      title: "Глибина (см)",
       type: "number",
+      validation: (Rule: Rule) =>
+        Rule.required().positive().error("Глибина є обов'язковою."),
     },
     {
       name: "isPopular",
-      title: "Popular",
+      title: "Популярний",
       type: "boolean",
       description:
-        "Mark this product as popular to display it in the popular products section.",
+        "Позначте цей товар як популярний, щоб відобразити його у відповідному розділі.",
       initialValue: false,
+      // validation removed
     },
     {
       name: "isAvailable",
-      title: "Is Available",
+      title: "В наявності",
       type: "boolean",
-      description:
-        "Mark this product as available to display that it is in a warehouse.",
+      description: "Позначте, щоб відобразити, що товар є на складі.",
       initialValue: false,
+      // validation removed
     },
   ],
   preview: {
