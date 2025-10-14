@@ -8,3 +8,5 @@ export { default as HeroBanner } from "./HeroBanner";
 export { default as Cart } from "./Cart";
 export { default as PopularProducts } from "./PopularProducts";
 export { default as ProductDetails } from "./ProductDetails";
+export { default as ErrorModal } from "./ErrorModal";
+export { default as SuccessModal } from "./SuccessModal";
