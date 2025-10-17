@@ -1,4 +1,5 @@
 "use client";
+import { useMemo } from "react";
 import { useCart } from "@/context/CartContext";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
