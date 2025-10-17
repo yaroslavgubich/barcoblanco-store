@@ -6,7 +6,7 @@ function Categories() {
     {
       title: "Дзеркала",
       href: "/category/mirrors",
-      image: "/images/mirror.png",
+      image: "/images/mirror.jpg",
     },
     {
       title: "Тумби",
@@ -26,7 +26,7 @@ function Categories() {
     {
       title: "Water",
       href: "/category/waterproof",
-      image: "/images/waterproof.jpg",
+      image: "/images/waterproof.jpeg",
     },
  
   ];

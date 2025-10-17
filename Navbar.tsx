@@ -236,9 +236,10 @@ const Navbar: FC = () => {
               </ListItemButton>
             </ListItem>
             {[
-              { text: "Шафи", href: "/category/wardrobe" },
-              { text: "Тумби", href: "/category/cabinet" },
               { text: "Дзеркала", href: "/category/mirrors" },
+              { text: "Тумби", href: "/category/cabinet" },
+              { text: "Пенали", href: "/category/dressers" },
+              { text: "Нависні шафи", href: "/category/wardrobe" },
               { text: "Водонепроникні", href: "/category/waterproof" },
             ].map((item) => (
               <ListItem key={item.href} disablePadding>
