@@ -618,7 +618,7 @@ export default function OrderForm() {
                     {/* Самовивіз */}
                     <TabsContent value="pickup">
                       <div className="space-y-4 p-4 rounded-lg bg-gray-50 text-sm">
-                        <p>Ви можете забрати замовлення самостійно. <br></br>Деталі по телефону: +38 (066) 69-24-322</p>
+                        <p>Ви можете забрати замовлення самостійно. <br></br>Деталі по телефону: +38 (050) 47-30-644</p>
                       </div>
                     </TabsContent>
                   </Tabs>
