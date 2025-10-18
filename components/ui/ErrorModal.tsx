@@ -114,11 +114,11 @@ export default function ErrorModal({
                   Або зв&apos;яжіться з нами напряму:
                 </p>
                 <a
-                  href="tel:+380666924322"
+                  href="tel:+380504730644"
                   className="flex items-center justify-center gap-2 text-[#1996A3] font-semibold hover:text-[#4FA7B9] transition-colors"
                 >
                   <Phone className="w-5 h-5" />
-                  <span>+38 (066) 69-24-322</span>
+                  <span>+38 (050) 47-30-644</span>
                 </a>
               </div>
 
