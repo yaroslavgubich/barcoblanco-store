@@ -7,8 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import Select from "react-select";
 import * as z from "zod"
 import logo from "/public/icons/nova_poshta_2014_logo.svg(1).png";
-import ukrLogo from "/public/icons/Ukrposhta.png"
-import pickupLogo from "/public/icons/pickup.png"
+import ukrLogo from "/public/icons/Ukrposhta.png";
+import pickupLogo from "/public/icons/pickup.png";
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -35,6 +36,7 @@ import Image from "next/image"
 import { Warehouse } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FormProvider } from "react-hook-form";
+
 
 
 type CartItem = {
@@ -799,7 +801,6 @@ export default function OrderForm() {
         </div>
       )}
     </FormProvider>
-
 
   );
 }
