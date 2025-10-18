@@ -6,9 +6,9 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Select from "react-select";
 import * as z from "zod"
-import logo from "/public/icons/nova_poshta_2014_logo.svg(1).png";
-import ukrLogo from "/public/icons/Ukrposhta.png";
-import pickupLogo from "/public/icons/pickup.png";
+import logo from "../../../public/icons/nova_poshta_2014_logo.svg(1).png";
+import ukrLogo from "../../../public/icons/Ukrposhta.png";
+import pickupLogo from "../../../public/icons/pickup.png";
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -353,7 +353,7 @@ export default function OrderForm() {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-        <div className="grid gap-5 sm:grid-cols-1 md:grid-cols-2 py-12 text-lg max-w-7xl mx-auto mt-0 p-3">
+        <div className="grid gap-5 sm:grid-cols-1 md:grid-cols-2 py-12 text-lg max-w-7xl mx-auto mt-0 p-3 overflow-hidden">
           <Card className="border-none shadow-none outline-none ring-0 p-0 gap-0 max-w-full overflow-hidden">
             <CardContent>
               <Card className="shadow-md p-4 m-2 w-full">
@@ -429,7 +429,7 @@ export default function OrderForm() {
                     Доставка
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="overflow-hidden">
                   <Tabs value={activeTab} onValueChange={(value) => {
                     setActiveTab(value);
                     form.setValue("deliveryMethod", value as "nova-poshta" | "pickup" | "ukr-poshta");
@@ -440,7 +440,7 @@ export default function OrderForm() {
                       form.setValue("city", "");
                       form.setValue("warehouse", "");
                     }
-                  }} className="w-full">
+                  }} className="w-full overflow-hidden">
                     <TabsList className="flex flex-wrap sm:flex-nowrap overflow-x-auto gap-2 w-full mb-2">
                       <TabsTrigger value="nova-poshta"><Image src={logo} alt="Nova Poshta" className="w-3 h-auto mr-2" />Нова Пошта</TabsTrigger>
                       <TabsTrigger value="ukr-poshta" className="hidden"><Image src={ukrLogo} alt="Ukr Poshta" className="w-2 h-auto mr-2" />Укр Пошта</TabsTrigger>
@@ -454,11 +454,11 @@ export default function OrderForm() {
 
                     {/* Нова Пошта */}
                     <TabsContent value="nova-poshta">
-                      <div>
-                        <div className="border-b-0 p-3 py-1 rounded-lg w-full max-w-full overflow-x-hidden">
-                          <div className="w-full max-w-full overflow-x-hidden">
-                            <div className="space-y-4 p-3 sm:p-5 rounded-lg text-sm sm:text-base max-w-full overflow-x-hidden">
-                              {/* ToggleGroup (відділення / поштомат / кур’єр) */}
+                      <div className="w-full overflow-hidden">
+                        <div className="border-b-0 p-3 py-1 rounded-lg w-full overflow-hidden">
+                          <div className="w-full overflow-hidden">
+                            <div className="space-y-4 p-3 sm:p-5 rounded-lg text-sm sm:text-base w-full overflow-hidden">
+                              {/* ToggleGroup (відділення / поштомат / кур'єр) */}
                               <ToggleGroup
                                 type="single"
                                 value={selectedToggle}
@@ -484,7 +484,20 @@ export default function OrderForm() {
                                       <CreatableSelect
                                         options={cities}
                                         value={selectedCity ? { value: selectedCity, label: selectedCity } : null}
-                                        styles={{ menu: (provided) => ({ ...provided, zIndex: 9999 }) }}
+                                        styles={{ 
+                                          menu: (provided) => ({ ...provided, zIndex: 9999 }),
+                                          container: (provided) => ({
+                                            ...provided,
+                                            width: "100%",
+                                            maxWidth: "100%",
+                                          }),
+                                          control: (provided) => ({
+                                            ...provided,
+                                            width: "100%",
+                                            maxWidth: "100%",
+                                            minHeight: 42,
+                                          })
+                                        }}
                                         menuPortalTarget={document.body}
                                         onChange={(city) => {
                                           if (city) {
@@ -526,7 +539,38 @@ export default function OrderForm() {
                                               <span>Завантаження відділень...</span>
                                             </div>
                                           )}
-                                          styles={{ menu: (provided) => ({ ...provided, zIndex: 9999 }) }}
+                                          styles={{ 
+                                            menu: (provided) => ({ ...provided, zIndex: 9999 }),
+                                            container: (provided) => ({
+                                              ...provided,
+                                              width: "100%",
+                                              maxWidth: "100%",
+                                            }),
+                                            control: (provided) => ({
+                                              ...provided,
+                                              width: "100%",
+                                              maxWidth: "100%",
+                                              minHeight: 42,
+                                            }),
+                                            valueContainer: (provided) => ({
+                                              ...provided,
+                                              maxWidth: "calc(100% - 40px)",
+                                              overflow: "hidden",
+                                            }),
+                                            singleValue: (provided) => ({
+                                              ...provided,
+                                              maxWidth: "100%",
+                                              overflow: "hidden",
+                                              textOverflow: "ellipsis",
+                                              whiteSpace: "nowrap",
+                                            }),
+                                            placeholder: (provided) => ({
+                                              ...provided,
+                                              overflow: "hidden",
+                                              textOverflow: "ellipsis",
+                                              whiteSpace: "nowrap",
+                                            })
+                                          }}
                                           menuPortalTarget={document.body}
                                         />
                                       )}
@@ -554,11 +598,11 @@ export default function OrderForm() {
 
                     {/* Укр Пошта */}
                     <TabsContent value="ukr-poshta">
-                      <div>
-                        <div className="border-b-0 p-3 py-1 rounded-lg w-full">
-                          <div className="w-full max-w-full overflow-x-hidden">
-                          <div className="space-y-4 p-3 sm:p-5 rounded-lg text-sm sm:text-base w-full min-w-0 overflow-hidden">
-                              {/* ToggleGroup (відділення / поштомат / кур’єр) */}
+                      <div className="w-full overflow-hidden">
+                        <div className="border-b-0 p-3 py-1 rounded-lg w-full overflow-hidden">
+                          <div className="w-full overflow-hidden">
+                            <div className="space-y-4 p-3 sm:p-5 rounded-lg text-sm sm:text-base w-full overflow-hidden">
+                              {/* ToggleGroup (відділення / поштомат / кур'єр) */}
                               <ToggleGroup
                                 type="single"
                                 value={selectedToggle}
@@ -584,7 +628,20 @@ export default function OrderForm() {
                                       <CreatableSelect
                                         options={cities}
                                         value={selectedCity ? { value: selectedCity, label: selectedCity } : null}
-                                        styles={{ menu: (provided) => ({ ...provided, zIndex: 9999 }) }}
+                                        styles={{ 
+                                          menu: (provided) => ({ ...provided, zIndex: 9999 }),
+                                          container: (provided) => ({
+                                            ...provided,
+                                            width: "100%",
+                                            maxWidth: "100%",
+                                          }),
+                                          control: (provided) => ({
+                                            ...provided,
+                                            width: "100%",
+                                            maxWidth: "100%",
+                                            minHeight: 42,
+                                          })
+                                        }}
                                         menuPortalTarget={document.body}
                                         onChange={(city) => {
                                           if (city) {
@@ -607,8 +664,8 @@ export default function OrderForm() {
                                 <FormField name="warehouse" render={({ field }) => (
                                   <FormItem>
                                     <FormLabel>Відділення</FormLabel>
-                                    <FormControl className="min-w-0 overflow-hidden w-full">
-                                      {isClient && (  
+                                    <FormControl>
+                                      {isClient && (
                                         <Select
                                           {...field}
                                           onChange={(selectedOption) => {
@@ -620,57 +677,39 @@ export default function OrderForm() {
                                           placeholder={loadingWarehouses ? "Завантаження..." : "Оберіть відділення"}
                                           isDisabled={!selectedCity || loadingWarehouses}
                                           styles={{
+                                            menu: (provided) => ({ ...provided, zIndex: 9999 }),
                                             container: (provided) => ({
                                               ...provided,
+                                              width: "100%",
                                               maxWidth: "100%",
-                                              minWidth: 0,
                                             }),
                                             control: (provided) => ({
                                               ...provided,
-                                              minHeight: 42,
+                                              width: "100%",
                                               maxWidth: "100%",
-                                              overflow: "hidden",
-                                              display: "flex",
-                                              flexWrap: "nowrap",
+                                              minHeight: 42,
                                             }),
                                             valueContainer: (provided) => ({
                                               ...provided,
-                                              flex: 1,
-                                              minWidth: 0,
+                                              maxWidth: "calc(100% - 40px)",
                                               overflow: "hidden",
                                             }),
                                             singleValue: (provided) => ({
                                               ...provided,
-                                              whiteSpace: "nowrap",
+                                              maxWidth: "100%",
                                               overflow: "hidden",
                                               textOverflow: "ellipsis",
-                                              maxWidth: "100%",
-                                              title: field.value,
+                                              whiteSpace: "nowrap",
                                             }),
                                             placeholder: (provided) => ({
                                               ...provided,
-                                              whiteSpace: "nowrap",
                                               overflow: "hidden",
                                               textOverflow: "ellipsis",
-                                            }),
-                                            indicatorsContainer: (provided) => ({
-                                              ...provided,
-                                              flexShrink: 0,
-                                            }),
-                                            menu: (provided) => ({
-                                              ...provided,
-                                              zIndex: 9999,
-                                              maxHeight: 200,
-                                              overflowY: "auto",
-                                            }),
-                                            option: (provided) => ({
-                                              ...provided,
-                                              whiteSpace: "normal",
-                                              wordBreak: "break-word",
-                                            }),
-                                          }}                                          
+                                              whiteSpace: "nowrap",
+                                            })
+                                          }}
                                           menuPortalTarget={document.body}
-                                        />  
+                                        />
                                       )}
                                     </FormControl>
                                     <FormMessage />
@@ -760,8 +799,8 @@ export default function OrderForm() {
             </CardContent>
           </Card>
 
-          <Card className="border-none shadow-none outline-none ring-0 p-0 gap-0">
-            <CardContent className="space-y-5">
+          <Card className="border-none shadow-none outline-none ring-0 p-0 gap-0 max-w-full overflow-hidden">
+            <CardContent className="space-y-5 overflow-hidden">
               <Card className="shadow-md p-4 m-2 w-full">
                 <CardHeader>
                   <CardTitle className="text-[#1996A3] text-[25px] font-semibold">
@@ -812,7 +851,7 @@ export default function OrderForm() {
                     {form.watch("warehouse") && (
                       <div className="flex justify-between border-b pb-2">
                         <span className="font-semibold text-gray-600">Відділення:</span>
-                        <span className="truncate max-w-[300px] overflow-hidden">{form.watch("warehouse")}</span>
+                        <span className="truncate max-w-[200px] sm:max-w-[300px] overflow-hidden text-right">{form.watch("warehouse")}</span>
                       </div>
                     )}
                     {form.watch("addressCourier") && (
