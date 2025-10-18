@@ -111,7 +111,7 @@ export default function ErrorModal({
               {/* Contact Info */}
               <div className="bg-[#4FA7B9]/10 rounded-lg p-4 mb-6">
                 <p className="text-sm text-gray-700 text-center mb-2">
-                  Або зв'яжіться з нами напряму:
+                  Або зв&apos;яжіться з нами напряму:
                 </p>
                 <a
                   href="tel:+380666924322"

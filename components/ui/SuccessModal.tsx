@@ -106,7 +106,7 @@ export default function SuccessModal({
                 className="bg-gray-50 rounded-lg p-4 mb-6"
               >
                 <p className="text-sm text-gray-700 text-center">
-                  Наш менеджер зв'яжеться з вами найближчим часом для підтвердження замовлення.
+                  Наш менеджер зв&apos;яжеться з вами найближчим часом для підтвердження замовлення.
                 </p>
               </motion.div>
 
