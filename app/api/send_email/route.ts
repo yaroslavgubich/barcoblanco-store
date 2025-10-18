@@ -1,15 +1,10 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
-const SMTP_SERVER = process.env.SMTP_SERVER || "smtp.ukr.net";
-const SMTP_PORT = parseInt(process.env.SMTP_PORT || "465");
-const SMTP_USERNAME = process.env.SMTP_USERNAME || "";
-const SMTP_PASSWORD = process.env.SMTP_PASSWORD || "";
-const MANAGER_EMAIL = process.env.MANAGER_EMAIL || "barcoblanco@ukr.net";
-
-// Fallback Gmail configuration
+// Gmail as primary email service
 const GMAIL_USERNAME = "barcoblancoshop@gmail.com";
 const GMAIL_APP_PASSWORD = "hiob zzzv eqgy qplm";
+const MANAGER_EMAIL = "barcoblancoshop@gmail.com";
 
 interface OrderItem {
     id: string;
@@ -39,66 +34,38 @@ interface OrderData {
     pickupDeatails?: string;
 }
 
-async function sendEmail(toEmail: string, subject: string, htmlBody: string): Promise<void> {    // Try primary SMTP service first
+async function sendEmail(toEmail: string, subject: string, htmlBody: string): Promise<void> {
     try {
         const transporter = nodemailer.createTransport({
-            host: SMTP_SERVER,
-            port: SMTP_PORT,
-            secure: true,
+            service: 'gmail',
             auth: {
-                user: SMTP_USERNAME,
-                pass: SMTP_PASSWORD,
+                user: GMAIL_USERNAME,
+                pass: GMAIL_APP_PASSWORD,
             },
         });
 
         const mailOptions = {
-            from: SMTP_USERNAME,
+            from: GMAIL_USERNAME,
             to: toEmail,
             subject: subject,
             html: htmlBody,
         };
 
         await transporter.sendMail(mailOptions);
-        console.log(`Email sent successfully via primary SMTP to ${toEmail}`);
-        return;
-    } catch (primaryError) {
-        console.error("Primary SMTP failed:", primaryError);
-        
-        // Fallback to Gmail
-        try {
-            console.log("Attempting fallback to Gmail...");
-            const gmailTransporter = nodemailer.createTransport({
-                service: 'gmail',
-                auth: {
-                    user: GMAIL_USERNAME,
-                    pass: GMAIL_APP_PASSWORD,
-                },
-            });
-
-            const gmailMailOptions = {
-                from: GMAIL_USERNAME,
-                to: toEmail,
-                subject: subject,
-                html: htmlBody,
-            };
-
-            await gmailTransporter.sendMail(gmailMailOptions);
-            console.log(`Email sent successfully via Gmail fallback to ${toEmail}`);
-            return;
-        } catch (gmailError) {
-            console.error("Gmail fallback also failed:", gmailError);
-            throw new Error(`Both primary SMTP and Gmail fallback failed. Primary error: ${primaryError instanceof Error ? primaryError.message : 'Unknown'}, Gmail error: ${gmailError instanceof Error ? gmailError.message : 'Unknown'}`);
-        }
+        console.log(`Email sent successfully via Gmail to ${toEmail}`);
+    } catch (error) {
+        console.error("Gmail email sending failed:", error);
+        throw new Error(`Failed to send email via Gmail: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
 }
 
 export async function POST(request: Request) {
     try {
-        // Check SMTP credentials
-        if (!SMTP_USERNAME || !SMTP_PASSWORD) {
-            console.error("SMTP credentials are missing!");
+        // Check Gmail credentials
+        if (!GMAIL_USERNAME || !GMAIL_APP_PASSWORD) {
+            console.error("Gmail credentials are missing!");
             return NextResponse.json({ 
-                error: "Email service not configured properly" 
+                error: "Gmail email service not configured properly" 
             }, { status: 500 });
         }
         
