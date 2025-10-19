@@ -29,7 +29,7 @@ const categoryWidthFilters: { [key: string]: number[] } = {
   dzerkala: [45, 50, 55, 60, 65, 70, 80, 90],
   tumby: [40, 45, 50, 55, 60, 65, 70, 75, 80, 90, 100],
   shafy: [40, 50, 60],
-  komodys: [30, 35, 40],
+  penaly: [30, 35, 40],
 };
 
 const categoryLabels: Record<string, string> = {
@@ -37,7 +37,7 @@ const categoryLabels: Record<string, string> = {
   tumby: "Тумби",
   shafy: "Нависні шафи",
   vologostiike: "WATER",
-  komodys: "Пенали",
+  penaly: "Пенали",
 };
 
 export default function ProductsClient({
@@ -57,7 +57,7 @@ export default function ProductsClient({
   const allCategories = [
     "dzerkala",
     "tumby",
-    "komodys",
+    "penaly",
     "shafy",
     "vologostiike",
   ];

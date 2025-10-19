@@ -71,9 +71,9 @@ const producjschema = {
           { title: "Шафи", value: "shafy" },
           { title: "Тумби", value: "tumby" },
           { title: "Вологостійке", value: "vologostiike" },
-          { title: "Комоди", value: "komody" },
+          { title: "Пенали", value: "penaly" },
         ],
-        
+
         layout: "radio",
       },
       validation: (Rule: Rule) =>

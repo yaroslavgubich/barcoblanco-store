@@ -252,7 +252,7 @@ const Navbar: FC = () => {
             {[
               { text: "Дзеркала", href: "/category/dzerkala" },
               { text: "Тумби", href: "/category/tumby" },
-              { text: "Пенали", href: "/category/komodys" },
+              { text: "Пенали", href: "/category/penaly" },
               { text: "Нависні шафи", href: "/category/shafy" },
               { text: "Водонепроникні", href: "/category/vologostiike" },
             ].map((item) => (

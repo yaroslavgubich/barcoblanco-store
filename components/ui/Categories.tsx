@@ -15,7 +15,7 @@ function Categories() {
     },
     {
       title: "Пенали",
-      href: "/category/komodys",
+      href: "/category/penaly",
       image: "/images/dresser.webp",
     },
     {
