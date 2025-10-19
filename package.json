@@ -53,6 +53,7 @@
     "react-range": "^1.10.0",
     "react-select": "^5.10.1",
     "sanity": "^3.71.2",
+    "scrollmirror": "^1.2.4",
     "styled-components": "^6.1.14",
     "swiper": "^11.2.6",
     "tailwind-merge": "^2.6.0",
