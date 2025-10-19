@@ -36,7 +36,6 @@ const producjschema = {
       validation: (Rule: Rule) =>
         Rule.required().error("Назва товару є обов'язковою."),
     },
-
     {
       name: "slug",
       title: "Слаг (URL-адреса)",
@@ -65,6 +64,7 @@ const producjschema = {
       name: "category",
       title: "Категорія",
       type: "string",
+      initialValue: () => "dzerkala",
       options: {
         list: [
           { title: "Дзеркала", value: "dzerkala" },
@@ -73,7 +73,8 @@ const producjschema = {
           { title: "Вологостійке", value: "vologostiike" },
           { title: "Комоди", value: "komody" },
         ],
-        layout: "dropdown",
+        
+        layout: "radio",
       },
       validation: (Rule: Rule) =>
         Rule.required().error("Потрібно обрати категорію."),
