@@ -329,22 +329,22 @@ const Navbar: FC<NavbarProps> = () => {
               Каталог
             </Typography>
             <ListItem disablePadding>
-              <ListItemButton component={Link} href="/category/wardrobe">
+              <ListItemButton component={Link} href="/category/shafy">
                 <ListItemText primary="Шафи" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton component={Link} href="/category/cabinet">
+              <ListItemButton component={Link} href="/category/tumby">
                 <ListItemText primary="Тумби" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton component={Link} href="/category/mirrors">
+              <ListItemButton component={Link} href="/category/dzerkala">
                 <ListItemText primary="Дзеркала" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton component={Link} href="/category/waterproof">
+              <ListItemButton component={Link} href="/category/vologostiike">
                 <ListItemText primary="Водонепроникні" />
               </ListItemButton>
             </ListItem>

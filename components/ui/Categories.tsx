@@ -5,30 +5,29 @@ function Categories() {
   const categories = [
     {
       title: "Дзеркала",
-      href: "/category/mirrors",
-      image: "/images/mirror.png",
+      href: "/category/dzerkala",
+      image: "/images/mirror.jpg",
     },
     {
       title: "Тумби",
-      href: "/category/cabinet",
+      href: "/category/tumby",
       image: "/images/cabinet.png",
     },
     {
       title: "Пенали",
-      href: "/category/dressers",
+      href: "/category/penaly",
       image: "/images/dresser.webp",
     },
     {
       title: "Нависні Шафи",
-      href: "/category/wardrobe",
+      href: "/category/shafy",
       image: "/images/wardrobe.png",
     },
     {
       title: "Water",
-      href: "/category/waterproof",
-      image: "/images/waterproof.jpg",
+      href: "/category/vologostiike",
+      image: "/images/waterproof.jpeg",
     },
- 
   ];
 
   return (

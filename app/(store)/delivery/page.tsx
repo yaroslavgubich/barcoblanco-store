@@ -55,7 +55,7 @@ const Delivery = () => {
             marginBottom: "2rem",
           }}
         >
-          LiqPay або по домовленості
+          По домовленості
         </Box>
         <Typography
           variant="body1"
@@ -102,7 +102,7 @@ const Delivery = () => {
             href="tel:+380666924322"
             style={{ textDecoration: "none", color: "inherit" }}
           >
-            +380-66-69-24-322
+            +38 (050) 47-30-644
           </a>
         </Typography>
 
@@ -130,7 +130,7 @@ const Delivery = () => {
             href="mailto:barcoblanco@ukr.net"
             style={{ textDecoration: "none", color: "inherit" }}
           >
-            barcoblanco@ukr.net
+            avsdom@ukr.net
           </a>
         </Typography>
 

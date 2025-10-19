@@ -53,7 +53,8 @@ export default function BasketPage() {
                 className="bg-white shadow-md rounded-xl px-4 py-6 md:py-4 grid grid-cols-1 md:grid-cols-[1fr_150px_180px_150px_40px] gap-4 mb-4 min-h-[140px] md:min-h-[120px] items-stretch"
               >
                 <div className="flex flex-col md:flex-row gap-4 col-span-full md:col-span-1 h-full">
-                  <div className="flex gap-4">
+                  {/* изменено: добавил items-center и w-full */}
+                  <div className="flex gap-4 items-center w-full">
                     <Image
                       src={item.image}
                       width={80}
@@ -61,8 +62,10 @@ export default function BasketPage() {
                       alt={item.name}
                       className="object-cover rounded-md shrink-0"
                     />
-                    <div className="flex flex-col justify-between h-full py-1">
-                      <h2 className="text-base sm:text-lg font-medium text-[#1996A3] leading-tight line-clamp-2">
+                    {/* изменено: центрируем контейнер и даем ему ширину */}
+                    <div className="flex flex-col justify-center items-center h-full py-1 w-full">
+                      {/* изменено: добавлен text-center */}
+                      <h2 className="text-base sm:text-lg font-medium text-[#1996A3] leading-tight line-clamp-2 text-center">
                         {item.name}
                       </h2>
 
@@ -75,7 +78,7 @@ export default function BasketPage() {
                         </div>
                         <div className="flex justify-between w-[180px]">
                           <span className="text-gray-500">Сума:</span>
-                          <span className="font-semibold  space-y-4 text-gray-700">
+                          <span className="font-semibold space-y-4 text-gray-700">
                             {(item.price * item.quantity).toLocaleString()} грн.
                           </span>
                         </div>
@@ -114,7 +117,7 @@ export default function BasketPage() {
                   </div>
                 </div>
 
-                <div className="hidden md:flex items-center text-semibold text-[#1996A3] space-y-6 justify-end  ">
+                <div className="hidden md:flex items-center font-semibold text-[#1996A3] justify-end">
                   {item.price.toLocaleString()} грн.
                 </div>
 
@@ -129,7 +132,7 @@ export default function BasketPage() {
                   >
                     −
                   </button>
-                  <span className=" ">{item.quantity}</span>
+                  <span>{item.quantity}</span>
                   <button
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
                     className="px-3 py-1 bg-[#1996A3] text-white rounded hover:bg-[#147A86] text-lg"
@@ -138,7 +141,7 @@ export default function BasketPage() {
                   </button>
                 </div>
 
-                <div className="hidden  md:flex items-center  justify-end  font-semibold ">
+                <div className="hidden md:flex items-center justify-end font-semibold">
                   {(item.price * item.quantity).toLocaleString()} грн.
                 </div>
 
@@ -183,6 +186,7 @@ export default function BasketPage() {
     </div>
   );
 }
+
 
 
 

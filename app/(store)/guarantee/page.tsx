@@ -58,10 +58,10 @@ const Guarantee = () => {
           }}
         >
           <a
-            href="tel:+380666924322"
+            href="tel:+380504730644"
             style={{ textDecoration: "none", color: "inherit" }}
           >
-            +380-66-69-24-322
+            +38 (050) 47-30-644
           </a>
         </Typography>
         <Typography variant="body1" paragraph sx={{ fontSize: "18px" }}>
@@ -81,10 +81,10 @@ const Guarantee = () => {
           }}
         >
           <a
-            href="mailto:barcoblanco@ukr.net"
+            href="mailto:avsdom@ukr.net"
             style={{ textDecoration: "none", color: "inherit" }}
           >
-            barcoblanco@ukr.net
+            avsdom@ukr.net
           </a>
         </Typography>
         <Typography variant="body1" paragraph sx={{ fontSize: "18px" }}>

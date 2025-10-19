@@ -6,9 +6,10 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Select from "react-select";
 import * as z from "zod"
-import logo from "/public/icons/nova_poshta_2014_logo.svg(1).png";
-import ukrLogo from "/public/icons/Ukrposhta.png"
-import pickupLogo from "/public/icons/pickup.png"
+import logo from "../../../public/icons/nova_poshta_2014_logo.svg(1).png";
+import ukrLogo from "../../../public/icons/Ukrposhta.png";
+import pickupLogo from "../../../public/icons/pickup.png";
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -32,9 +33,12 @@ import {
 } from "@/components/ui/card"
 import { useCart } from "@/context/CartContext"
 import Image from "next/image"
-import { Warehouse } from "lucide-react";
+import { Warehouse, Loader2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FormProvider } from "react-hook-form";
+import ErrorModal from "@/components/ui/ErrorModal";
+import SuccessModal from "@/components/ui/SuccessModal";
+
 
 
 type CartItem = {
@@ -107,8 +111,8 @@ const formSchema = z
   })
   .superRefine((data, ctx) => {
     if (data.deliveryMethod === "pickup") {
-    }
-    else {
+      // No additional validation needed for pickup
+    } else {
       if (!data.city || data.city.trim().length < 2) {
         ctx.addIssue({
           path: ["city"],
@@ -154,6 +158,14 @@ export default function OrderForm() {
   const [selectedPayment, setSelectedPayment] = useState<string>("");
   const [isClient, setIsClient] = useState(false);
   const [activeTab, setActiveTab] = useState<string | undefined>(undefined);
+  
+  // Error Modal State
+  const [errorModal, setErrorModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    errorType: "server" as "email" | "network" | "validation" | "server",
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -247,15 +259,53 @@ export default function OrderForm() {
       });
 
       if (!response.ok) {
-        throw new Error("Помилка оформлення замовлення.");
+        const errorData = await response.json().catch(() => ({}));
+        
+        // Check for specific error types
+        if (response.status === 500) {
+          // Email service error
+          setErrorModal({
+            isOpen: true,
+            title: "Помилка поштового сервісу",
+            message: errorData.details || "На жаль, поштовий сервіс тимчасово недоступний. Ваше замовлення не було відправлено. Будь ласка, спробуйте ще раз або зв'яжіться з нами телефоном.",
+            errorType: "email",
+          });
+        } else if (response.status === 400) {
+          // Validation error
+          setErrorModal({
+            isOpen: true,
+            title: "Помилка валідації",
+            message: errorData.error || "Перевірте правильність введених даних.",
+            errorType: "validation",
+          });
+        } else {
+          // General server error
+          setErrorModal({
+            isOpen: true,
+            title: "Помилка сервера",
+            message: "Виникла технічна помилка. Спробуйте ще раз через кілька хвилин.",
+            errorType: "server",
+          });
+        }
+        return;
       }
 
-
+      // Success
       setOpen(true);
       form.reset();
       setSelectedPayment("");
-    } catch {
-      alert("Не вдалося оформити замовлення. Спробуйте ще раз.");
+      setSelectedCity(undefined);
+      setWarehouses([]);
+      localStorage.removeItem('orderFormData'); // Clear saved data
+    } catch (error) {
+      // Network error or other unexpected error
+      console.error("Order submission error:", error);
+      setErrorModal({
+        isOpen: true,
+        title: "Помилка підключення",
+        message: "Не вдалося з'єднатися з сервером. Перевірте ваше інтернет-з'єднання та спробуйте ще раз.",
+        errorType: "network",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -276,10 +326,34 @@ export default function OrderForm() {
     setIsClient(true);
   }, []);
 
+  // Auto-save form data to localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('orderFormData');
+    if (saved && isClient) {
+      try {
+        const savedData = JSON.parse(saved);
+        form.reset(savedData);
+        if (savedData.city) setSelectedCity(savedData.city);
+      } catch (error) {
+        console.error('Error loading saved form data:', error);
+      }
+    }
+  }, [isClient, form]);
+
+  // Save form data on change
+  useEffect(() => {
+    if (!isClient) return;
+    
+    const subscription = form.watch((value) => {
+      localStorage.setItem('orderFormData', JSON.stringify(value));
+    });
+    return () => subscription.unsubscribe();
+  }, [form, isClient]);
+
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-        <div className="grid gap-5 sm:grid-cols-1 md:grid-cols-2 py-12 text-lg max-w-7xl mx-auto mt-0 p-3">
+        <div className="grid gap-5 sm:grid-cols-1 md:grid-cols-2 py-12 text-lg max-w-7xl mx-auto mt-0 p-3 overflow-hidden">
           <Card className="border-none shadow-none outline-none ring-0 p-0 gap-0 max-w-full overflow-hidden">
             <CardContent>
               <Card className="shadow-md p-4 m-2 w-full">
@@ -355,7 +429,7 @@ export default function OrderForm() {
                     Доставка
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="overflow-hidden">
                   <Tabs value={activeTab} onValueChange={(value) => {
                     setActiveTab(value);
                     form.setValue("deliveryMethod", value as "nova-poshta" | "pickup" | "ukr-poshta");
@@ -366,7 +440,7 @@ export default function OrderForm() {
                       form.setValue("city", "");
                       form.setValue("warehouse", "");
                     }
-                  }} className="w-full">
+                  }} className="w-full overflow-hidden">
                     <TabsList className="flex flex-wrap sm:flex-nowrap overflow-x-auto gap-2 w-full mb-2">
                       <TabsTrigger value="nova-poshta"><Image src={logo} alt="Nova Poshta" className="w-3 h-auto mr-2" />Нова Пошта</TabsTrigger>
                       <TabsTrigger value="ukr-poshta" className="hidden"><Image src={ukrLogo} alt="Ukr Poshta" className="w-2 h-auto mr-2" />Укр Пошта</TabsTrigger>
@@ -380,11 +454,11 @@ export default function OrderForm() {
 
                     {/* Нова Пошта */}
                     <TabsContent value="nova-poshta">
-                      <div>
-                        <div className="border-b-0 p-3 py-1 rounded-lg w-full max-w-full overflow-x-hidden">
-                          <div className="w-full max-w-full overflow-x-hidden">
-                            <div className="space-y-4 p-3 sm:p-5 rounded-lg text-sm sm:text-base max-w-full overflow-x-hidden">
-                              {/* ToggleGroup (відділення / поштомат / кур’єр) */}
+                      <div className="w-full overflow-hidden">
+                        <div className="border-b-0 p-3 py-1 rounded-lg w-full overflow-hidden">
+                          <div className="w-full overflow-hidden">
+                            <div className="space-y-4 p-3 sm:p-5 rounded-lg text-sm sm:text-base w-full overflow-hidden">
+                              {/* ToggleGroup (відділення / поштомат / кур'єр) */}
                               <ToggleGroup
                                 type="single"
                                 value={selectedToggle}
@@ -410,7 +484,20 @@ export default function OrderForm() {
                                       <CreatableSelect
                                         options={cities}
                                         value={selectedCity ? { value: selectedCity, label: selectedCity } : null}
-                                        styles={{ menu: (provided) => ({ ...provided, zIndex: 9999 }) }}
+                                        styles={{ 
+                                          menu: (provided) => ({ ...provided, zIndex: 9999 }),
+                                          container: (provided) => ({
+                                            ...provided,
+                                            width: "100%",
+                                            maxWidth: "100%",
+                                          }),
+                                          control: (provided) => ({
+                                            ...provided,
+                                            width: "100%",
+                                            maxWidth: "100%",
+                                            minHeight: 42,
+                                          })
+                                        }}
                                         menuPortalTarget={document.body}
                                         onChange={(city) => {
                                           if (city) {
@@ -445,7 +532,45 @@ export default function OrderForm() {
                                           options={warehouses.map(w => ({ value: w.Description, label: w.Description }))}
                                           placeholder={loadingWarehouses ? "Завантаження..." : "Оберіть відділення"}
                                           isDisabled={!selectedCity || loadingWarehouses}
-                                          styles={{ menu: (provided) => ({ ...provided, zIndex: 9999 }) }}
+                                          isLoading={loadingWarehouses}
+                                          loadingMessage={() => (
+                                            <div className="flex items-center gap-2 py-2">
+                                              <Loader2 className="w-4 h-4 animate-spin" />
+                                              <span>Завантаження відділень...</span>
+                                            </div>
+                                          )}
+                                          styles={{ 
+                                            menu: (provided) => ({ ...provided, zIndex: 9999 }),
+                                            container: (provided) => ({
+                                              ...provided,
+                                              width: "100%",
+                                              maxWidth: "100%",
+                                            }),
+                                            control: (provided) => ({
+                                              ...provided,
+                                              width: "100%",
+                                              maxWidth: "100%",
+                                              minHeight: 42,
+                                            }),
+                                            valueContainer: (provided) => ({
+                                              ...provided,
+                                              maxWidth: "calc(100% - 40px)",
+                                              overflow: "hidden",
+                                            }),
+                                            singleValue: (provided) => ({
+                                              ...provided,
+                                              maxWidth: "100%",
+                                              overflow: "hidden",
+                                              textOverflow: "ellipsis",
+                                              whiteSpace: "nowrap",
+                                            }),
+                                            placeholder: (provided) => ({
+                                              ...provided,
+                                              overflow: "hidden",
+                                              textOverflow: "ellipsis",
+                                              whiteSpace: "nowrap",
+                                            })
+                                          }}
                                           menuPortalTarget={document.body}
                                         />
                                       )}
@@ -473,11 +598,11 @@ export default function OrderForm() {
 
                     {/* Укр Пошта */}
                     <TabsContent value="ukr-poshta">
-                      <div>
-                        <div className="border-b-0 p-3 py-1 rounded-lg w-full">
-                          <div className="w-full max-w-full overflow-x-hidden">
-                          <div className="space-y-4 p-3 sm:p-5 rounded-lg text-sm sm:text-base w-full min-w-0 overflow-hidden">
-                              {/* ToggleGroup (відділення / поштомат / кур’єр) */}
+                      <div className="w-full overflow-hidden">
+                        <div className="border-b-0 p-3 py-1 rounded-lg w-full overflow-hidden">
+                          <div className="w-full overflow-hidden">
+                            <div className="space-y-4 p-3 sm:p-5 rounded-lg text-sm sm:text-base w-full overflow-hidden">
+                              {/* ToggleGroup (відділення / поштомат / кур'єр) */}
                               <ToggleGroup
                                 type="single"
                                 value={selectedToggle}
@@ -503,7 +628,20 @@ export default function OrderForm() {
                                       <CreatableSelect
                                         options={cities}
                                         value={selectedCity ? { value: selectedCity, label: selectedCity } : null}
-                                        styles={{ menu: (provided) => ({ ...provided, zIndex: 9999 }) }}
+                                        styles={{ 
+                                          menu: (provided) => ({ ...provided, zIndex: 9999 }),
+                                          container: (provided) => ({
+                                            ...provided,
+                                            width: "100%",
+                                            maxWidth: "100%",
+                                          }),
+                                          control: (provided) => ({
+                                            ...provided,
+                                            width: "100%",
+                                            maxWidth: "100%",
+                                            minHeight: 42,
+                                          })
+                                        }}
                                         menuPortalTarget={document.body}
                                         onChange={(city) => {
                                           if (city) {
@@ -526,8 +664,8 @@ export default function OrderForm() {
                                 <FormField name="warehouse" render={({ field }) => (
                                   <FormItem>
                                     <FormLabel>Відділення</FormLabel>
-                                    <FormControl className="min-w-0 overflow-hidden w-full">
-                                      {isClient && (  
+                                    <FormControl>
+                                      {isClient && (
                                         <Select
                                           {...field}
                                           onChange={(selectedOption) => {
@@ -539,57 +677,39 @@ export default function OrderForm() {
                                           placeholder={loadingWarehouses ? "Завантаження..." : "Оберіть відділення"}
                                           isDisabled={!selectedCity || loadingWarehouses}
                                           styles={{
+                                            menu: (provided) => ({ ...provided, zIndex: 9999 }),
                                             container: (provided) => ({
                                               ...provided,
+                                              width: "100%",
                                               maxWidth: "100%",
-                                              minWidth: 0,
                                             }),
                                             control: (provided) => ({
                                               ...provided,
-                                              minHeight: 42,
+                                              width: "100%",
                                               maxWidth: "100%",
-                                              overflow: "hidden",
-                                              display: "flex",
-                                              flexWrap: "nowrap",
+                                              minHeight: 42,
                                             }),
                                             valueContainer: (provided) => ({
                                               ...provided,
-                                              flex: 1,
-                                              minWidth: 0,
+                                              maxWidth: "calc(100% - 40px)",
                                               overflow: "hidden",
                                             }),
                                             singleValue: (provided) => ({
                                               ...provided,
-                                              whiteSpace: "nowrap",
+                                              maxWidth: "100%",
                                               overflow: "hidden",
                                               textOverflow: "ellipsis",
-                                              maxWidth: "100%",
-                                              title: field.value,
+                                              whiteSpace: "nowrap",
                                             }),
                                             placeholder: (provided) => ({
                                               ...provided,
-                                              whiteSpace: "nowrap",
                                               overflow: "hidden",
                                               textOverflow: "ellipsis",
-                                            }),
-                                            indicatorsContainer: (provided) => ({
-                                              ...provided,
-                                              flexShrink: 0,
-                                            }),
-                                            menu: (provided) => ({
-                                              ...provided,
-                                              zIndex: 9999,
-                                              maxHeight: 200,
-                                              overflowY: "auto",
-                                            }),
-                                            option: (provided) => ({
-                                              ...provided,
-                                              whiteSpace: "normal",
-                                              wordBreak: "break-word",
-                                            }),
-                                          }}                                          
+                                              whiteSpace: "nowrap",
+                                            })
+                                          }}
                                           menuPortalTarget={document.body}
-                                        />  
+                                        />
                                       )}
                                     </FormControl>
                                     <FormMessage />
@@ -616,7 +736,7 @@ export default function OrderForm() {
                     {/* Самовивіз */}
                     <TabsContent value="pickup">
                       <div className="space-y-4 p-4 rounded-lg bg-gray-50 text-sm">
-                        <p>Ви можете забрати замовлення самостійно. <br></br>Деталі по телефону: +38 (066) 69-24-322</p>
+                        <p>Ви можете забрати замовлення самостійно. <br></br>Деталі по телефону: +38 (050) 47-30-644</p>
                       </div>
                     </TabsContent>
                   </Tabs>
@@ -679,8 +799,8 @@ export default function OrderForm() {
             </CardContent>
           </Card>
 
-          <Card className="border-none shadow-none outline-none ring-0 p-0 gap-0">
-            <CardContent className="space-y-5">
+          <Card className="border-none shadow-none outline-none ring-0 p-0 gap-0 max-w-full overflow-hidden">
+            <CardContent className="space-y-5 overflow-hidden">
               <Card className="shadow-md p-4 m-2 w-full">
                 <CardHeader>
                   <CardTitle className="text-[#1996A3] text-[25px] font-semibold">
@@ -731,7 +851,7 @@ export default function OrderForm() {
                     {form.watch("warehouse") && (
                       <div className="flex justify-between border-b pb-2">
                         <span className="font-semibold text-gray-600">Відділення:</span>
-                        <span className="truncate max-w-[300px] overflow-hidden">{form.watch("warehouse")}</span>
+                        <span className="truncate max-w-[200px] sm:max-w-[300px] overflow-hidden text-right">{form.watch("warehouse")}</span>
                       </div>
                     )}
                     {form.watch("addressCourier") && (
@@ -757,7 +877,21 @@ export default function OrderForm() {
                     <p>Товари в замовленні</p>
                   </CardTitle>
                   {cart.length === 0 ? (
-                    <p>Ваш кошик порожній.</p>
+                    <div className="text-center py-8 bg-yellow-50 rounded-lg border border-yellow-200">
+                      <div className="text-yellow-600 mb-2">
+                        <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                        </svg>
+                      </div>
+                      <p className="text-lg font-semibold text-yellow-800 mb-2">Ваш кошик порожній</p>
+                      <p className="text-yellow-700 mb-4">Додайте товари до кошика, щоб оформити замовлення</p>
+                      <Button 
+                        onClick={() => router.push("/products")}
+                        className="bg-[#1996A3] hover:bg-[#4FA7B9] text-white"
+                      >
+                        Перейти до каталогу
+                      </Button>
+                    </div>
                   ) : (
                     cart.map((item) => (
                       <div key={item.id} className="flex items-center justify-between p-3 text-base mt-3 border-b">
@@ -777,8 +911,19 @@ export default function OrderForm() {
                 <CardFooter>
                   <p className="text-xl font-semibold p-2">Всього: {totalPrice.toFixed(2)} грн.</p>
                 </CardFooter>
-                <Button type="submit" className="w-full bg-[#1996A3] hover:bg-[#167A8A] sm:w-auto text-white text-lg font-semibold py-3" disabled={isSubmitting}>
-                  {isSubmitting ? "Обробка..." : "Оформити замовлення"}
+                <Button 
+                  type="submit" 
+                  className="w-full bg-[#1996A3] hover:bg-[#167A8A] sm:w-auto text-white text-lg font-semibold py-3" 
+                  disabled={isSubmitting || cart.length === 0}
+                >
+                  {isSubmitting ? (
+                    <div className="flex items-center gap-2">
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Обробка...
+                    </div>
+                  ) : (
+                    "Оформити замовлення"
+                  )}
                 </Button>
               </Card>
             </CardContent>
@@ -786,20 +931,35 @@ export default function OrderForm() {
           </Card>
         </div>
       </form>
-      {open && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-6">
-          <div className="bg-white p-6 rounded-lg shadow-lg space-y-3 grid">
-            <h1 className="text-lg font-semibold text-center">Замовлення успішно оформлене!</h1>
-            <p className="text-gray-600 text-[14px] pb-3 text-center"> Вам надіслано підтвердження на пошту.</p>
-            <Button className="flex bg-[#1996A3] p-3" onClick={() => {
-              setOpen(false);
-              router.push("/"); // ⬅️ redirect to homepage
-            }}>Закрити</Button>
-          </div>
-        </div>
-      )}
+      {/* Success Modal */}
+      <SuccessModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onGoHome={() => {
+          setOpen(false);
+          router.push("/");
+        }}
+        onContinueShopping={() => {
+          setOpen(false);
+          router.push("/products");
+        }}
+        title="Замовлення успішно оформлене!"
+        message="Вам надіслано підтвердження на пошту. Наш менеджер зв'яжеться з вами найближчим часом."
+      />
+      
+      {/* Error Modal */}
+      <ErrorModal
+        isOpen={errorModal.isOpen}
+        onClose={() => setErrorModal({ ...errorModal, isOpen: false })}
+        onRetry={() => {
+          setErrorModal({ ...errorModal, isOpen: false });
+          form.handleSubmit(onSubmit)();
+        }}
+        title={errorModal.title}
+        message={errorModal.message}
+        errorType={errorModal.errorType}
+      />
     </FormProvider>
-
 
   );
 }

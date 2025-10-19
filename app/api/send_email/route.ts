@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
-const SMTP_SERVER = "smtp.ukr.net";
-const SMTP_PORT = 465;
-const SMTP_USERNAME = "barcoblanco@ukr.net";
-const SMTP_PASSWORD = "6ZixeIqjaqsfQF9A";
-const MANAGER_EMAIL = "barcoblanco@ukr.net";
+// Gmail as primary email service
+const GMAIL_USERNAME = "barcoblancoshop@gmail.com";
+const GMAIL_APP_PASSWORD = "hiob zzzv eqgy qplm";
+const MANAGER_EMAIL = "barcoblancoshop@gmail.com";
 
 interface OrderItem {
     id: string;
@@ -22,43 +21,67 @@ interface OrderData {
     lastName: string;
     email: string;
     phone: string;
-    address: string;
-    city: string;
+    address?: string;
+    city?: string;
     addressCourier?: string;
     additionalInfo?: string;
-    selectedToggle: "",
+    selectedToggle?: string;
     cart: OrderItem[];
-    warehouse: string;
+    warehouse?: string;
     paymentMethods: string;
     deliveryMethod: DeliveryMethod;
+    pickup?: string;
+    pickupDeatails?: string;
 }
 
 async function sendEmail(toEmail: string, subject: string, htmlBody: string): Promise<void> {
-    const transporter = nodemailer.createTransport({
-        host: SMTP_SERVER,
-        port: SMTP_PORT,
-        secure: true,
-        auth: {
-            user: SMTP_USERNAME,
-            pass: SMTP_PASSWORD,
-        },
-    });
+    try {
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: GMAIL_USERNAME,
+                pass: GMAIL_APP_PASSWORD,
+            },
+        });
 
-    const mailOptions = {
-        from: SMTP_USERNAME,
-        to: toEmail,
-        subject: subject,
-        html: htmlBody,
-    };
+        const mailOptions = {
+            from: GMAIL_USERNAME,
+            to: toEmail,
+            subject: subject,
+            html: htmlBody,
+        };
 
-    await transporter.sendMail(mailOptions);
+        await transporter.sendMail(mailOptions);
+        console.log(`Email sent successfully via Gmail to ${toEmail}`);
+    } catch (error) {
+        console.error("Gmail email sending failed:", error);
+        throw new Error(`Failed to send email via Gmail: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
 }
 
 export async function POST(request: Request) {
     try {
+        // Check Gmail credentials
+        if (!GMAIL_USERNAME || !GMAIL_APP_PASSWORD) {
+            console.error("Gmail credentials are missing!");
+            return NextResponse.json({ 
+                error: "Gmail email service not configured properly" 
+            }, { status: 500 });
+        }
+        
         const data: OrderData = await request.json();
+        
+        // Validate required fields
         if (!data || !data.cart || data.cart.length === 0) {
-            return NextResponse.json({ error: "Invalid data received" }, { status: 400 });
+            return NextResponse.json({ error: "Invalid data: cart is empty" }, { status: 400 });
+        }
+        
+        if (!data.firstName || !data.lastName || !data.email || !data.phone) {
+            return NextResponse.json({ error: "Missing required customer information" }, { status: 400 });
+        }
+        
+        if (!data.deliveryMethod) {
+            return NextResponse.json({ error: "Missing delivery method" }, { status: 400 });
         }
 
         const totalAmount = data.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -85,7 +108,10 @@ export async function POST(request: Request) {
                 ? `<li><strong>Вид доставки:</strong> ${data.selectedToggle === 'courier' ? "Кур'єром" : data.selectedToggle}</li>`
                 : ""}
     ${data.warehouse ? `<li><strong>Відділення:</strong> ${data.warehouse}</li>` : ""}
+    ${data.addressCourier ? `<li><strong>Адреса кур'єра:</strong> ${data.addressCourier}</li>` : ""}
+    ${data.pickup ? `<li><strong>Самовивіз:</strong> ${data.pickup}</li>` : ""}
     ${data.paymentMethods ? `<li><strong>Оплата:</strong> ${data.paymentMethods}</li>` : ""}
+    ${data.additionalInfo ? `<li><strong>Додаткова інформація:</strong> ${data.additionalInfo}</li>` : ""}
     <li><strong>Загальна сума:</strong> ${totalAmount.toFixed(2)} грн.</li>
   </ul>
 
@@ -130,13 +156,15 @@ export async function POST(request: Request) {
     <p style="font-size: 16px; color: #555;">Дякуємо за ваше замовлення! Ось його деталі:</p>
     <ul style="font-size: 16px; color: #555;">
         <li><b>Клієнт:</b> ${data.lastName} ${data.firstName}</li>
-        <li><b>Адреса:</b> ${data.address}</li>
-        <li><b>Місто:</b> ${data.city}</li>
+        ${data.address ? `<li><b>Адреса:</b> ${data.address}</li>` : ""}
+        ${data.city ? `<li><b>Місто:</b> ${data.city}</li>` : ""}
         <li><b>Вид доставки:</b> ${data.selectedToggle
                 ? (data.selectedToggle === 'courier' ? "Кур'єром" : data.selectedToggle)
                 : "Не вказано"}  
         </li>
-        <li><b>Відділення:</b> ${data.warehouse}</li>
+        ${data.warehouse ? `<li><b>Відділення:</b> ${data.warehouse}</li>` : ""}
+        ${data.addressCourier ? `<li><b>Адреса кур'єра:</b> ${data.addressCourier}</li>` : ""}
+        ${data.pickup ? `<li><b>Самовивіз:</b> ${data.pickup}</li>` : ""}
         <li><b>Оплата:</b> ${data.paymentMethods}</li>
         <li><b>Загальна сума:</b> ${totalAmount.toFixed(2)} грн.</li>
     </ul>
@@ -193,7 +221,10 @@ export async function POST(request: Request) {
         ? `<li><strong>Вид доставки:</strong> ${data.selectedToggle === 'courier' ? "Кур'єром" : data.selectedToggle}</li>`
         : ""}
     ${data.warehouse ? `<li><strong>Відділення:</strong> ${data.warehouse}</li>` : ""}
+    ${data.addressCourier ? `<li><strong>Адреса кур'єра:</strong> ${data.addressCourier}</li>` : ""}
+    ${data.pickup ? `<li><strong>Самовивіз:</strong> ${data.pickup}</li>` : ""}
     ${data.paymentMethods ? `<li><strong>Оплата:</strong> ${data.paymentMethods}</li>` : ""}
+    ${data.additionalInfo ? `<li><strong>Додаткова інформація:</strong> ${data.additionalInfo}</li>` : ""}
     <li><strong>Загальна сума:</strong> ${totalAmount.toFixed(2)} грн.</li>
   </ul>
 
@@ -228,7 +259,12 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ message: "Замовлення оброблено, електронні листи надіслано" }, { status: 200 });
     } catch (error) {
-        return NextResponse.json({ error: "Error to sent email", details: (error as Error).message }, { status: 500 });
+        console.error("Error sending email:", error);
+        return NextResponse.json({ 
+            error: "Failed to send email", 
+            details: error instanceof Error ? error.message : "Unknown error",
+            stack: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.stack : undefined) : undefined
+        }, { status: 500 });
     }
 }
 

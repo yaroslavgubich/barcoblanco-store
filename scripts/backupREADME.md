@@ -9,7 +9,7 @@ It runs a backup script (`backup.sh`) **every 10 minutes**, ensuring that:
 
 - The project is built successfully before committing.
 - The latest changes are saved on the current branch.
-- The `backups` branch is updated to mirror the current branch.
+- The `backups` branch is updated to dzerkala the current branch.
 
 Additionally, a **test cron job runs every minute** to verify that cron is working.
 

@@ -84,10 +84,10 @@ const Contacts = () => {
               variant="body1"
               sx={{ fontSize: { xs: "20px", md: "24px" }, mb: "10px", color: "#008c99" }}
             >
-              09:00 - 20:00
+              09:00 - 18:00
             </Typography>
             <Typography variant="body1" sx={{ fontSize: { xs: "20px", md: "24px" }, color: "#008c99" }}>
-              Понеділок
+              Неділя
             </Typography>
           </Box>
         </Box>
@@ -105,7 +105,7 @@ const Contacts = () => {
             <Typography
               variant="body1"
               component="a"
-              href="tel:+380666924322"
+              href="tel:+380504730644"
               sx={{
                 fontSize: { xs: "20px", md: "24px" },
                 color: "#1996A3",
@@ -113,7 +113,7 @@ const Contacts = () => {
                 "&:hover": { transform: "scale(1.1)" },
               }}
             >
-              +380-66-69-24-322
+              +38 (050) 47-30-644
             </Typography>
 
             <Typography

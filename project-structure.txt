@@ -86,14 +86,14 @@
 │   └── images
 │       ├── about_image.png
 │       ├── about_rectangle .png
-│       ├── cabinet.png
+│       ├── tumby.png
 │       ├── contact_photo.jpg
-│       ├── mirror.png
+│       ├── dzerkala.png
 │       ├── photo_2025-01-09_19-02-21.jpg
 │       ├── placeholder.svg
-│       ├── wardrobe.png
+│       ├── shafy.png
 │       ├── WATER.png
-│       ├── waterproof.jpg
+│       ├── vologostiike.jpg
 │       ├── Дзеркала.png
 │       ├── Тумби.png
 │       └── Шафи.png

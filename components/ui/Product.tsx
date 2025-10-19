@@ -19,9 +19,9 @@ const Product: React.FC<ProductProps> = ({ product }) => {
   const { image, name, slug } = product;
 
   const imageUrl =
-    image && Array.isArray(image) && image.length > 0
-      ? image[0].asset.url
-      : "/images/placeholder.svg";
+  image && Array.isArray(image) && image.length > 0 && image[0]?.asset?.url
+    ? image[0].asset.url
+    : "/images/placeholder.svg";
 
   // Fallback if slug is missing
   if (!slug?.current) {

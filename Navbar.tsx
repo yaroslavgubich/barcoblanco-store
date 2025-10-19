@@ -112,7 +112,9 @@ const BurgerMenuContainer = styled(Box)({
 const Navbar: FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [suggestions, setSuggestions] = useState<{ name: string; slug: string }[]>([]);
+  const [suggestions, setSuggestions] = useState<
+    { name: string; slug: string }[]
+  >([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -236,10 +238,11 @@ const Navbar: FC = () => {
               </ListItemButton>
             </ListItem>
             {[
-              { text: "Шафи", href: "/category/wardrobe" },
-              { text: "Тумби", href: "/category/cabinet" },
-              { text: "Дзеркала", href: "/category/mirrors" },
-              { text: "Водонепроникні", href: "/category/waterproof" },
+              { text: "Дзеркала", href: "/category/dzerkala" },
+              { text: "Тумби", href: "/category/tumby" },
+              { text: "Пенали", href: "/category/penaly" },
+              { text: "Нависні шафи", href: "/category/shafy" },
+              { text: "Водонепроникні", href: "/category/vologostiike" },
             ].map((item) => (
               <ListItem key={item.href} disablePadding>
                 <ListItemButton

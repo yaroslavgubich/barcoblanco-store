@@ -53,7 +53,7 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
 
   const images =
     Array.isArray(image) && image.length > 0
-      ? image
+      ? image.filter(img => img?.asset?.url) // Filter out images with null asset
       : [{ asset: { url: "/images/placeholder.svg" }, alt: "placeholder" }];
 
   const handleAddToCart = () => {
@@ -61,7 +61,7 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
       id: name,
       name,
       price,
-      image: images[0].asset.url,
+      image: images[0]?.asset?.url || "/images/placeholder.svg",
       quantity: 1,
     });
   };
@@ -101,8 +101,8 @@ export default function ProductDetails({ productData }: ProductDetailsProps) {
                 <SwiperSlide key={index}>
                   <div className="relative w-full h-full">
                     <Image
-                      src={img.asset.url}
-                      alt={img.alt || `image-${index}`}
+                      src={img?.asset?.url || "/images/placeholder.svg"}
+                      alt={img?.alt || `image-${index}`}
                       fill
                       className="object-cover transition-transform duration-300 hover:scale-105"
                     />
