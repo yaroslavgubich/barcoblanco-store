@@ -57,7 +57,7 @@ const producjschema = {
       name: "details",
       title: "Опис/Деталі",
       type: "text",
-      // Validation rule for 'details' was removed in the previous step.
+      // No validation
     },
     {
       name: "category",
@@ -82,21 +82,20 @@ const producjschema = {
       name: "width",
       title: "Ширина (см)",
       type: "number",
-      // Validation rule for 'width' has been removed.
+      validation: (Rule: Rule) =>
+        Rule.required().positive().error("Ширина є обов'язковою."),
     },
     {
       name: "height",
       title: "Висота (см)",
       type: "number",
-      validation: (Rule: Rule) =>
-        Rule.required().positive().error("Висота є обов'язковою."),
+
     },
     {
       name: "depth",
       title: "Глибина (см)",
       type: "number",
-      validation: (Rule: Rule) =>
-        Rule.required().positive().error("Глибина є обов'язковою."),
+     
     },
     {
       name: "isPopular",
