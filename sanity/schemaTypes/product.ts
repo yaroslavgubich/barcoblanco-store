@@ -57,8 +57,7 @@ const producjschema = {
       name: "details",
       title: "Опис/Деталі",
       type: "text",
-      validation: (Rule: Rule) =>
-        Rule.required().error("Детальний опис є обов'язковим."),
+      // Validation rule for 'details' was removed in the previous step.
     },
     {
       name: "category",
@@ -83,8 +82,7 @@ const producjschema = {
       name: "width",
       title: "Ширина (см)",
       type: "number",
-      validation: (Rule: Rule) =>
-        Rule.required().positive().error("Ширина є обов'язковою."),
+      // Validation rule for 'width' has been removed.
     },
     {
       name: "height",
