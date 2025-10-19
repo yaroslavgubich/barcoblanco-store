@@ -11,17 +11,17 @@ function Categories() {
     {
       title: "Тумби",
       href: "/category/tumby",
-      image: "/images/cabinet.png",
+      image: "/images/cabinet.jpeg",
     },
     {
       title: "Пенали",
       href: "/category/penaly",
-      image: "/images/dresser.webp",
+      image: "/images/dresser.jpg",
     },
     {
       title: "Нависні Шафи",
       href: "/category/shafy",
-      image: "/images/wardrobe.png",
+      image: "/images/wardrobe.jpeg",
     },
     {
       title: "Water",
