@@ -127,7 +127,7 @@ const Navbar: FC = () => {
 
   const isMobile = useMediaQuery("(max-width: 600px)");
   const isVeryNarrow = useMediaQuery("(max-width: 468px)");
-const isNarrowScreen = useMediaQuery("(max-width:475px)");
+  const isNarrowScreen = useMediaQuery("(max-width:475px)");
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -250,11 +250,11 @@ const isNarrowScreen = useMediaQuery("(max-width:475px)");
               </ListItemButton>
             </ListItem>
             {[
-             { text: "Дзеркала", href: "/category/mirrors" },
-              { text: "Тумби", href: "/category/cabinet" },
-              { text: "Пенали", href: "/category/dressers" },
-              { text: "Нависні шафи", href: "/category/wardrobe" },
-              { text: "Водонепроникні", href: "/category/waterproof" },
+              { text: "Дзеркала", href: "/category/dzerkala" },
+              { text: "Тумби", href: "/category/tumby" },
+              { text: "Пенали", href: "/category/komodys" },
+              { text: "Нависні шафи", href: "/category/shafy" },
+              { text: "Водонепроникні", href: "/category/vologostiike" },
             ].map((item) => (
               <ListItem key={item.href} disablePadding>
                 <ListItemButton
@@ -379,9 +379,15 @@ const isNarrowScreen = useMediaQuery("(max-width:475px)");
                   setSearchValue(e.target.value);
                   setShowSuggestions(true);
                 }}
-                onClick={() => { if (isNarrowScreen) setHideLogo(true); }}
-                onFocus={() => { if (isNarrowScreen) setHideLogo(true); }}
-                onBlur={() => { if (isNarrowScreen) setHideLogo(false); }}
+                onClick={() => {
+                  if (isNarrowScreen) setHideLogo(true);
+                }}
+                onFocus={() => {
+                  if (isNarrowScreen) setHideLogo(true);
+                }}
+                onBlur={() => {
+                  if (isNarrowScreen) setHideLogo(false);
+                }}
                 onKeyDown={handleKeyDown}
               />
             </SearchContainer>
@@ -425,7 +431,7 @@ const isNarrowScreen = useMediaQuery("(max-width:475px)");
                     "& .MuiBadge-badge": {
                       backgroundColor: "#008c99",
                       color: "#fff",
-                      
+
                       fontSize: { xs: "0.8rem", sm: "0.9rem" },
                       minWidth: { xs: 16, sm: 20 },
                       height: { xs: 16, sm: 20 },
